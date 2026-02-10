@@ -9,6 +9,11 @@ body {
   color: white;
   font-family: "Inter", sans-serif;
 }
+.t1 {
+  font-size: 32px;
+  margin-left: 10px;
+  margin-bottom: -10px;
+}
 /* 2. ORIGINALS TAG / SERIES TAG */
 .originals-tag {
   letter-spacing: 1.5px;
@@ -285,13 +290,14 @@ body {
 /* Movie Row */
 .row {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   padding: 0 20px;
 }
 
 .row h2 {
-  margin-bottom: 15px;
-  font-size: clamp(18px, 4vw, 32px);
+  margin-bottom: -10px;
+  font-size: clamp(32px, 4vw, 32px);
+  margin-top: 5vh;
 }
 
 .row-posters,
@@ -450,7 +456,7 @@ a {
 
 .slider {
   display: flex;
-  gap: 20px;
+  gap: 15px;
   overflow-x: auto;
   scroll-behavior: smooth;
 }
@@ -516,7 +522,7 @@ a {
 }
 
 .description {
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.4;
   color: #ccc;
 }
@@ -650,8 +656,12 @@ a {
   }
   .carde,
   .carde img {
-    width: 160px;
-    height: 240px;
+    width: 150px;
+    height: 232px;
+  }
+  .row h2 {
+    margin-bottom: -10px;
+    font-size: 20px;
   }
 
   .info-right {
@@ -675,8 +685,8 @@ a {
   }
 
   .genre {
-    font-size: 12px;
-    color: #aaa;
+    font-size: 8px;
+    color: #46d369;
     margin: 0px;
   }
 
@@ -684,8 +694,12 @@ a {
     font-size: 10px;
     line-height: 1.2;
     color: #ccc;
+    margin-top: 5px;
   }
-
+  .movie h1 {
+    font-size: 3.5rem;
+    left: 8px;
+  }
   .info-right h3 {
     margin-top: 0;
     font-size: 14px;
@@ -724,7 +738,7 @@ a {
   .row-posters,
   .trending {
     display: flex;
-    gap: 14px;
+    gap: 10px;
   }
 }
 
@@ -1286,5 +1300,10 @@ a {
   }
   #modal-desc {
     font-size: 12px;
+  }
+  .t1 {
+    font-size: 20px;
+    margin-left: 10px;
+    margin-bottom: -10px;
   }
 }

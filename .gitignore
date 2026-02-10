@@ -1,3 +1,5 @@
 node_modules/
 .env
 src/verification.env
+.vercel
+.env*.local

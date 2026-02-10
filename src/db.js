@@ -2,19 +2,18 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    // Standard Vercel Environment Variable name
-    const db = process.env.MONGODB_URI || process.env.MONGO_URI;
+    // Priority 1: Cloud Database (Render)
+    // Priority 2: Local Database (Your Laptop)
+    const db = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/netflixAuth";
 
-    if (!db) {
-      console.error("❌ CRITICAL: No MONGODB_URI found in Vercel Environment Variables.");
-      return; 
-    }
-
-    await mongoose.connect(db);
-    // This message is what we will look for in the Vercel Logs
-    console.log(`✅ DATABASE CONNECTED SUCCESSFULLY: ${mongoose.connection.host}`);
+    await mongoose.connect(db, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log(`✅ MongoDB connected: ${mongoose.connection.host}`);
   } catch (err) {
-    console.error("❌ DATABASE CONNECTION FAILED:", err.message);
+    console.error("❌ MongoDB connection error:", err);
+    process.exit(1);
   }
 };
 

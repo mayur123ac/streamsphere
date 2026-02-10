@@ -2,18 +2,19 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    // Force the use of the Vercel variable
+    // Standard Vercel Environment Variable name
     const db = process.env.MONGODB_URI || process.env.MONGO_URI;
 
     if (!db) {
-      throw new Error("❌ No MongoDB URI found in Environment Variables!");
+      console.error("❌ CRITICAL: No MONGODB_URI found in Vercel Environment Variables.");
+      return; 
     }
 
     await mongoose.connect(db);
-    console.log(`✅ MongoDB connected: ${mongoose.connection.host}`);
+    // This message is what we will look for in the Vercel Logs
+    console.log(`✅ DATABASE CONNECTED SUCCESSFULLY: ${mongoose.connection.host}`);
   } catch (err) {
-    console.error("❌ MongoDB connection error:", err);
-    // In Vercel, don't exit the process, just log the error
+    console.error("❌ DATABASE CONNECTION FAILED:", err.message);
   }
 };
 

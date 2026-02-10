@@ -153,14 +153,16 @@ app.post("/signup", async (req, res) => {
 });
 
 // --- LOGIN (Fixed for Vercel 500 Errors) ---
+// --- LOGIN ---
 app.post("/login", async (req, res) => {
   const { email, password, remember_me } = req.body;
   console.log("Login Attempt:", email);
 
   try {
+    // 1. Find the user in the database
     const user = await User.findOne({ email });
 
-    // Improved: Instead of res.status(400).send, we render the page with an error
+    // 2. Logic Check: If user doesn't exist, stay on login page
     if (!user) {
       return res.render("login", {
         title: "Sign In",
@@ -169,6 +171,7 @@ app.post("/login", async (req, res) => {
       });
     }
 
+    // 3. Compare hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.render("login", {
@@ -178,14 +181,14 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    // Set Session
+    // 4. Set Session (Only happens if password is correct)
     req.session.email = user.email;
     req.session.name = user.name || "User";
 
-    // Remember Me Logic
+    // 5. Remember Me Logic
     req.session.cookie.maxAge = remember_me === "on" ? 172800000 : 3600000;
 
-    // Email Notification
+    // 6. Email Notification (Runs in background)
     const mailOptions = {
       from: '"StreamSphere" <officialstreamsphere.help@gmail.com>',
       to: user.email,
@@ -197,12 +200,15 @@ app.post("/login", async (req, res) => {
       if (error) console.log("Email error:", error);
     });
 
-    res.redirect("/payment");
+    // 7. Success! Redirect to payment
+    return res.redirect("/payment");
+
   } catch (err) {
+    // This block catches Database connection timeouts or crashes
     console.error("Login error:", err);
     res.render("login", {
       title: "Sign In",
-      errorMessage: "Internal Server Error. Try again later.",
+      errorMessage: "Internal Server Error. Please check your DB connection.",
       email,
     });
   }

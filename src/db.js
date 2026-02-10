@@ -2,18 +2,16 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    // Priority 1: Cloud Database (Render)
-    // Priority 2: Local Database (Your Laptop)
-    const db = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/netflixAuth";
+    // Check both potential environment variable names
+    const db = process.env.MONGODB_URI || process.env.MONGO_URI || "mongodb://127.0.0.1:27017/netflixAuth";
 
-    await mongoose.connect(db, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(db); // Simplified for modern Mongoose versions
+    
     console.log(`✅ MongoDB connected: ${mongoose.connection.host}`);
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
-    process.exit(1);
+    // Do not use process.exit(1) in a Serverless environment like Vercel 
+    // as it can prevent the logs from showing the full error.
   }
 };
 

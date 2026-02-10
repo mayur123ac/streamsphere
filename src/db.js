@@ -4,7 +4,7 @@ const connectDB = async () => {
   try {
     // Priority 1: Cloud Database (Render)
     // Priority 2: Local Database (Your Laptop)
-    const db = process.env.MONGO_URI || "mongodb+srv://mayurac123_db_user:0U8fL4aioRxB2A9j@cluster0.a0a7hwd.mongodb.net/?appName=Cluster0";
+    const db = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/netflixAuth";
 
     await mongoose.connect(db, {
       useNewUrlParser: true,

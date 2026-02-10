@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>F1 (2025) - Full Movie</title>
+
+  <link rel="stylesheet" href="/css/movie.css">
+  <link rel="stylesheet" href="/css/playmovie.css">
+
+  <style>
+    /* 🔹 FIX: Ensure container fills the actual mobile viewport */
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Netflix-style zoom */
+    .zoomed {
+    
+      
+      object-fit: cover !important;
+      /* transform: scale(1.12);  <-- REMOVED: This was causing the blur */
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Overlay Styles */
+    .start-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 20;
+      cursor: pointer;
+    }
+
+    .big-play-btn {
+      font-size: 5rem;
+      color: white;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .te {
+      color: purple;
+    }
+
+    /* --- LOADER --- */
+    .loader {
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-top: 5px solid #fff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 25;
+      display: none;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    /* --- SKIP BUTTONS --- */
+    .skip-btn {
+      font-size: 18px;
+      /* Slightly larger for symbols */
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      margin: 0 15px;
+      user-select: none;
+      font-family: sans-serif;
+      transition: transform 0.1s;
+      letter-spacing: -1px;
+      /* Tighter triangles */
+    }
+
+    .skip-btn:active {
+      transform: scale(0.9);
+    }
+
+    /* Volume Group */
+    .volume-control-group {
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+    }
+
+    #volumeControl {
+      width: 80px;
+      accent-color: #ffffff;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    .progress-bar {
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="player-container" id="playerContainer">
+
+    <div id="loader" class="loader"></div>
+
+    <div class="top-overlay" id="topOverlay">
+      <h1 class="te"> | </h1>
+      <div class="title">F1 (2025)</div>
+      <div class="desc">Action • Sport • Drama • 4K HDR</div>
+    </div>
+
+    <div class="start-overlay" id="startOverlay">
+      <div class="big-play-btn">▶</div>
+    </div>
+
+    <video id="moviePlayer" preload="metadata" playsinline>
+      <source
+        src="https://my-movie-bucket01stremesphere.s3.eu-north-1.amazonaws.com/F1+The+Movie+(2025)+1080p+WEB-DL+10bit+HEVC+%5BHindi+DDP+5.1+%2B+English+DDP+5.1%5D+x265+(PSA-UHDMovies).mkv"
+        type="" />
+      <p style="color:white; position:absolute; top:50%;">Your browser cannot play .mkv/x265 files.</p>
+    </video>
+
+    <div class="controls bottom-overlay" id="controls">
+
+      <span class="skip-btn" id="rewindBtn">◀◀</span>
+
+      <span class="btn" id="playPause">▶</span>
+
+      <span class="skip-btn" id="forwardBtn">▶▶</span>
+
+      <div class="time" id="time">0:00 / 0:00</div>
+
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="volume-control-group">
+        <span class="btn" id="volumeIcon">🔊</span>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+      </div>
+
+      <span class="btn" id="zoom">🔍</span>
+      <span class="btn" id="fullscreen">⛶</span>
+    </div>
+
+  </div>
+
+  <script>
+    /* ===================== ELEMENTS ===================== */
+    const movie = document.getElementById("moviePlayer");
+    const container = document.getElementById("playerContainer");
+    const playPause = document.getElementById("playPause");
+    const fullscreen = document.getElementById("fullscreen");
+    const zoomBtn = document.getElementById("zoom");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const timeLabel = document.getElementById("time");
+    const controls = document.getElementById("controls");
+    const topOverlay = document.getElementById("topOverlay");
+    const startOverlay = document.getElementById("startOverlay");
+
+    // New Elements
+    const loader = document.getElementById("loader");
+    const rewindBtn = document.getElementById("rewindBtn");
+    const forwardBtn = document.getElementById("forwardBtn");
+    const volumeIcon = document.getElementById("volumeIcon");
+    const volumeControl = document.getElementById("volumeControl");
+
+    let hideTimeout;
+    let isZoomed = false;
+    let isDragging = false;
+
+    /* ===================== HELPERS ===================== */
+    const formatTime = (sec = 0) => {
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, "0")}`;
+    };
+
+    /* ===================== LOADER LOGIC ===================== */
+    movie.addEventListener('waiting', () => { loader.style.display = 'block'; });
+    movie.addEventListener('playing', () => { loader.style.display = 'none'; });
+    movie.addEventListener('canplay', () => { loader.style.display = 'none'; });
+
+    /* ===================== MOBILE ROTATION & FULLSCREEN ===================== */
+    async function enterImmersiveMode() {
+      try {
+        if (!document.fullscreenElement) {
+          if (container.requestFullscreen) {
+            await container.requestFullscreen();
+          } else if (container.webkitRequestFullscreen) {
+            await container.webkitRequestFullscreen();
+          } else if (movie.webkitEnterFullscreen) {
+            movie.webkitEnterFullscreen();
+          }
+        }
+        if (screen.orientation && screen.orientation.lock) {
+          setTimeout(() => {
+            screen.orientation.lock("landscape").catch((err) => {
+              console.warn("Orientation lock failed:", err);
+            });
+          }, 100);
+        }
+      } catch (err) {
+        console.log("Fullscreen Error:", err);
+      }
+    }
+
+    /* ===================== INITIAL START ===================== */
+    startOverlay.addEventListener("click", async () => {
+      startOverlay.classList.add("hidden");
+      try {
+        await movie.play();
+      } catch (err) {
+        console.error("Autoplay failed:", err);
+        alert("Video format (.mkv) might not be supported by your browser.");
+      }
+      if (window.innerWidth <= 768) {
+        await enterImmersiveMode();
+      }
+    });
+
+    /* ===================== PLAY / PAUSE ===================== */
+    playPause.onclick = (e) => {
+      e.stopPropagation();
+      togglePlay();
+    };
+
+    function togglePlay() {
+      if (movie.paused) {
+        movie.play();
+        startOverlay.classList.add("hidden");
+      } else {
+        movie.pause();
+      }
+    }
+
+    movie.onplay = () => (playPause.textContent = "⏸");
+    movie.onpause = () => (playPause.textContent = "▶");
+
+    /* ===================== SKIP BUTTONS ===================== */
+    rewindBtn.onclick = (e) => {
+      e.stopPropagation();
+      movie.currentTime = Math.max(0, movie.currentTime - 10);
+    };
+
+    forwardBtn.onclick = (e) => {
+      e.stopPropagation();
+      movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
+    };
+
+    /* ===================== PROGRESS & DRAG ===================== */
+    movie.ontimeupdate = () => {
+      if (!isDragging && movie.duration) {
+        progress.style.width = (movie.currentTime / movie.duration) * 100 + "%";
+        timeLabel.textContent = `${formatTime(movie.currentTime)} / ${formatTime(movie.duration)}`;
+      }
+    };
+
+    const updateProgressBarVisuals = (clientX) => {
+      const rect = progressBar.getBoundingClientRect();
+      let percent = (clientX - rect.left) / rect.width;
+      percent = Math.max(0, Math.min(1, percent));
+      progress.style.width = (percent * 100) + "%";
+      return percent;
+    };
+
+    progressBar.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      isDragging = true;
+      updateProgressBarVisuals(e.clientX);
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        updateProgressBarVisuals(e.clientX);
+      }
+    });
+
+    document.addEventListener('mouseup', (e) => {
+      if (isDragging) {
+        isDragging = false;
+        const percent = updateProgressBarVisuals(e.clientX);
+        if (movie.duration) {
+          movie.currentTime = percent * movie.duration;
+        }
+      }
+    });
+
+    // Touch Support
+    progressBar.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      isDragging = true;
+      updateProgressBarVisuals(e.touches[0].clientX);
+    });
+    document.addEventListener('touchmove', (e) => {
+      if (isDragging) {
+        updateProgressBarVisuals(e.touches[0].clientX);
+      }
+    });
+    document.addEventListener('touchend', () => {
+      if (isDragging) {
+        isDragging = false;
+      }
+    });
+
+    /* ===================== VOLUME CONTROL ===================== */
+    volumeControl.onclick = (e) => e.stopPropagation();
+    volumeControl.oninput = (e) => {
+      movie.volume = parseFloat(e.target.value);
+      movie.muted = false;
+      updateVolumeIcon();
+    };
+
+    volumeIcon.onclick = (e) => {
+      e.stopPropagation();
+      if (!movie.muted) {
+        movie._lastVolume = movie.volume;
+        movie.volume = 0;
+        volumeControl.value = 0;
+        movie.muted = true;
+      } else {
+        const restore = movie._lastVolume || 0.5;
+        movie.volume = restore;
+        volumeControl.value = restore;
+        movie.muted = false;
+      }
+      updateVolumeIcon();
+    };
+
+    function updateVolumeIcon() {
+      if (movie.volume === 0 || movie.muted) {
+        volumeIcon.textContent = "🔇";
+      } else if (movie.volume < 0.5) {
+        volumeIcon.textContent = "🔈";
+      } else {
+        volumeIcon.textContent = "🔊";
+      }
+    }
+
+    /* ===================== FULLSCREEN ===================== */
+    fullscreen.onclick = async (e) => {
+      e.stopPropagation();
+      if (!document.fullscreenElement) {
+        await enterImmersiveMode();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+      }
+    };
+
+    /* ===================== ZOOM ===================== */
+    zoomBtn.onclick = (e) => {
+      e.stopPropagation();
+      isZoomed = !isZoomed;
+      movie.classList.toggle("zoomed", isZoomed);
+      zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
+    };
+
+    /* ===================== AUTO HIDE CONTROLS ===================== */
+    container.addEventListener("click", (e) => {
+      if (e.target.closest(".controls") || e.target === startOverlay) return;
+      showControls();
+    });
+
+    function showControls() {
+      controls.style.opacity = 1;
+      topOverlay.style.opacity = 1;
+      container.style.cursor = "default";
+
+      clearTimeout(hideTimeout);
+      hideTimeout = setTimeout(hideControls, 3000);
+    }
+
+    function hideControls() {
+      if (movie.paused || isDragging) return;
+      controls.style.opacity = 0;
+      topOverlay.style.opacity = 0;
+      container.style.cursor = "none";
+    }
+
+    container.addEventListener("mousemove", showControls);
+    container.addEventListener("touchstart", showControls);
+
+    /* ===================== INIT ===================== */
+    showControls();
+
+  </script>
+
+  <script src="/js/css.js"></script>
+</body>
+
+</html>

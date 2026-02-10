@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Squid Game S02 Ep1 - StreamSphere</title>
+  <link rel="stylesheet" href="/css/playmovie.css" />
+  
+  <style>
+    /* 🔹 MOBILE VIEWPORT FIX */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100%;
+      height: 100dvh; /* Dynamic height for mobile */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* 🔹 START OVERLAY (Triggers Orientation Lock) */
+    .start-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      z-index: 20;
+      cursor: pointer;
+      flex-direction: column;
+    }
+    .big-play-btn {
+      font-size: 5rem;
+      color: white;
+      opacity: 0.9;
+      text-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    .tap-hint {
+      color: #ddd;
+      margin-top: 10px;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .next-episode {
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .next-episode.show {
+      opacity: 1;
+    }
+
+    /* NEXT EPISODE BUTTON */
+    #nxtEpisodeBtn {
+      display: none; /* Hidden by default */
+      position: absolute;
+      right: 30px;
+      bottom: 100px; /* Adjusted for mobile controls */
+      background: rgba(0, 0, 0, 0.75);
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      z-index: 1000;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    /* AUDIO SELECT */
+    #audioSelect {
+      background: #000;
+      color: #fff;
+      border: 1px solid #fff;
+      padding: 5px;
+      border-radius: 4px;
+    }
+
+    .language-select {
+     
+        color: white;
+        z-index: 10;
+        transition: opacity 0.5s ease;
+    }
+
+    /* VOLUME */
+    #volumeControl {
+      width: 80px;
+      accent-color: #ffffff;
+      cursor: pointer;
+      margin: 0 5px;
+    }
+    .volume-control-group {
+      display: flex;
+      align-items: center;
+    }
+
+    /* SUBTITLES */
+    video::cue {
+      background: none;
+      color: #fff;
+      font-size: 24px;
+      font-weight: 600;
+      text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.7);
+      line-height: 1.2;
+      font-style: italic;
+    }
+
+    /* UTILS */
+    .hidden { display: none !important; }
+    
+    /* 🔹 CONTROLS LAYOUT FIX */
+    .controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding-bottom: max(10px, env(safe-area-inset-bottom));
+        padding-left: 20px; 
+        padding-right: 20px;
+        box-sizing: border-box;
+        z-index: 15;
+    }
+
+    /* ================= MOBILE MEDIA QUERIES ================= */
+    @media screen and (max-width: 768px) {
+      .title {
+        font-size: 14px;
+        max-width: 60%;
+      }
+      
+      /* Scale down big buttons */
+      #nxtEpisodeBtn {
+        right: 12px;
+        bottom: 80px;
+        font-size: 14px;
+        padding: 8px 14px;
+      }
+
+      /* Adjust Language Selector position */
+      .language-select {
+          top: 15px;
+          right: 15px;
+      }
+      #audioSelect {
+          font-size: 12px;
+          padding: 2px;
+      }
+
+      /* Volume Slider Compact */
+      #volumeControl { width: 60px; }
+
+      /* Subtitles Smaller */
+      video::cue {
+        font-size: 16px;
+        line-height: 1.3;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="player-container" id="playerContainer">
+
+    <div class="top-overlay" id="topOverlay">
+      <div class="rating">| <h1></h1></div>
+      <div class="title">Squid Game S02 Ep1</div>
+      <div class="desc hidden1">Action • Thriller • Mystery • 4K HDR</div>
+      
+      <a href="SquidGameS02EP3" id="nxtEpisodeBtn">
+         ▶ Next Episode
+      </a>
+    </div>
+
+    <div class="start-overlay" id="startOverlay">
+        <div class="big-play-btn">▶</div>
+        <div class="tap-hint">Tap to Start</div>
+    </div>
+
+    <video id="moviePlayer" preload="metadata" playsinline crossorigin="anonymous">
+      <track id="engSubs" label="English" kind="subtitles" srclang="en"
+        src="https://amznseries.s3.ap-south-1.amazonaws.com/HLS_Output_Final/eng_subs.vtt" default />
+    </video>
+
+    <div class="controls bottom-overlay hidden1" id="controls">
+      <span class="btn" id="playPause">▶</span>
+      
+      <div class="time" id="time">0:00 / 0:00</div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="volume-control-group">
+        <span class="btn" id="volumeIcon">🔊</span>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+      </div>
+ <div class="language-select hidden1" id="SeleCo">
+        <label for="audioSelect">🎧 Audio:</label>
+        <select id="audioSelect">
+          <option value="English" selected>English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Tamil">Tamil</option>
+          <option value="Telugu">Telugu</option>
+          <option value="Korean">Korean</option>
+        </select>
+      </div>
+      <span class="btn" id="fullscreen">⛶</span>
+
+     
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    /* ================= ELEMENTS ================= */
+    const movie = document.getElementById("moviePlayer");
+    const container = document.getElementById("playerContainer");
+    const playPause = document.getElementById("playPause");
+    const volumeIcon = document.getElementById("volumeIcon");
+    const volumeControl = document.getElementById("volumeControl");
+    const fullscreen = document.getElementById("fullscreen");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const timeLabel = document.getElementById("time");
+    const topOverlay = document.getElementById("topOverlay");
+    const controls = document.getElementById("controls");
+    const audioSelect = document.getElementById("audioSelect");
+    const nextBtn = document.getElementById("nxtEpisodeBtn");
+    const startOverlay = document.getElementById("startOverlay");
+    const langContainer = document.getElementById("SeleCo");
+
+    let audioHideTimeout;
+    let hideControlsTimeout;
+    let hls;
+
+    const masterUrl = "https://amznseries.s3.ap-south-1.amazonaws.com/HLS_Output_Final/master.m3u8";
+
+    /* ================= INITIALIZATION ================= */
+    // Initialize HLS
+    if (Hls.isSupported()) {
+      hls = new Hls({ enableWorker: true });
+      hls.loadSource(masterUrl);
+      hls.attachMedia(movie);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        movie.volume = 1.0;
+        volumeControl.value = 1.0;
+      });
+    } else if (movie.canPlayType("application/vnd.apple.mpegurl")) {
+      movie.src = masterUrl; // Safari Support
+      movie.addEventListener("loadedmetadata", () => {
+        movie.volume = 1.0;
+        volumeControl.value = 1.0;
+      });
+    }
+
+    /* ================= MOBILE ROTATION LOGIC ================= */
+    async function enterImmersiveMode() {
+        try {
+            if (!document.fullscreenElement) {
+                if (container.requestFullscreen) await container.requestFullscreen();
+                else if (container.webkitRequestFullscreen) await container.webkitRequestFullscreen();
+                else if (movie.webkitEnterFullscreen) movie.webkitEnterFullscreen(); // iOS
+            }
+            // Lock Orientation (Android)
+            if (screen.orientation && screen.orientation.lock) {
+                setTimeout(() => {
+                    screen.orientation.lock("landscape").catch(err => console.warn("Lock failed", err));
+                }, 100);
+            }
+        } catch (err) { console.log(err); }
+    }
+
+    /* ================= START HANDLER (First Interaction) ================= */
+    startOverlay.addEventListener("click", async () => {
+        startOverlay.classList.add("hidden");
+        try {
+            await movie.play();
+            playPause.textContent = "⏸";
+        } catch (err) { console.error("Autoplay failed", err); }
+
+        // Mobile: Force Fullscreen & Landscape
+        if (window.innerWidth <= 768) {
+            await enterImmersiveMode();
+        }
+    });
+
+    /* ================= CONTROLS LOGIC ================= */
+    const formatTime = (sec) => {
+      if (!sec) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, "0")}`;
+    };
+
+    movie.ontimeupdate = () => {
+      const current = movie.currentTime || 0;
+      const duration = movie.duration || 0;
+      progress.style.width = (current / duration) * 100 + "%";
+      timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+
+      // Logic for Next Episode Button (Last 6 mins)
+      if (duration > 0 && current >= (duration - 360)) {
+         nextBtn.style.display = "block";
+      } else {
+         nextBtn.style.display = "none";
+      }
+    };
+
+    playPause.onclick = (e) => {
+      e.stopPropagation();
+      if (movie.paused) {
+        movie.play();
+        playPause.textContent = "⏸";
+        startOverlay.classList.add("hidden");
+      } else {
+        movie.pause();
+        playPause.textContent = "▶";
+      }
+    };
+
+    /* Volume */
+    volumeControl.oninput = (e) => {
+      e.stopPropagation(); // Stop control fade out
+      movie.volume = parseFloat(e.target.value);
+      movie.muted = false;
+      if (movie.volume === 0) volumeIcon.textContent = "🔇";
+      else if (movie.volume < 0.5) volumeIcon.textContent = "🔈";
+      else volumeIcon.textContent = "🔊";
+    };
+
+    volumeIcon.onclick = (e) => {
+      e.stopPropagation();
+      if (!movie.muted) {
+        movie._lastVolume = movie.volume;
+        movie.volume = 0;
+        volumeControl.value = 0;
+        volumeIcon.textContent = "🔇";
+        movie.muted = true;
+      } else {
+        const restore = movie._lastVolume || 0.5;
+        movie.volume = restore;
+        volumeControl.value = restore;
+        volumeIcon.textContent = (restore < 0.5) ? "🔈" : "🔊";
+        movie.muted = false;
+      }
+    };
+
+    /* Fullscreen */
+    fullscreen.onclick = async (e) => {
+        e.stopPropagation();
+        if(!document.fullscreenElement) {
+            await enterImmersiveMode();
+        } else {
+            if(document.exitFullscreen) document.exitFullscreen();
+            if(screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+        }
+    };
+
+    /* Seek */
+    progressBar.onclick = (e) => {
+      e.stopPropagation();
+      const rect = progressBar.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      movie.currentTime = percent * movie.duration;
+    };
+
+    /* ================= UI VISIBILITY ================= */
+    const showControls = () => {
+      controls.style.opacity = 1;
+      topOverlay.style.opacity = 1;
+      langContainer.style.opacity = 1;
+      
+      clearTimeout(hideControlsTimeout);
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+
+    const hideControls = () => {
+      if(movie.paused) return;
+      controls.style.opacity = 0;
+      topOverlay.style.opacity = 0;
+      langContainer.style.opacity = 0;
+    };
+
+    container.addEventListener("mousemove", showControls);
+    container.addEventListener("click", (e) => {
+        if(e.target.closest(".controls") || e.target === startOverlay) return;
+        showControls();
+    });
+
+    /* ================= AUDIO SELECTOR ================= */
+    audioSelect.addEventListener("change", (e) => {
+      const lang = e.target.value;
+      if (hls && hls.audioTracks) {
+        const targetTrack = hls.audioTracks.find(
+          (t) => t.name && t.name.toLowerCase() === lang.toLowerCase()
+        );
+        if (targetTrack) {
+          hls.audioTrack = targetTrack.id;
+          console.log(`Switched to audio: ${targetTrack.name}`);
+        }
+      }
+    });
+
+    /* ================= INIT ================= */
+    window.onload = () => {
+        // Show subtitles by default
+        for (let i = 0; i < movie.textTracks.length; i++) {
+            movie.textTracks[i].mode = "showing";
+        }
+        showControls();
+    };
+  </script>
+
+  <script src="/js/css.js"></script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login</title>
+  <link rel="stylesheet" href="/css/login.css">
+
+  <style>
+    /* Simple styles for the toggle functionality */
+    .hidden {
+      display: none;
+    }
+
+    a:hover {
+      color: #0056b3;
+    }
+
+    .link-btn {
+      background: none;
+      border: none;
+      display: block;
+      color: #999;
+      text-align: left;
+      padding: 5px 33px;
+      cursor: pointer;
+      text-decoration: underline;
+      margin: 10 0 0 0;
+      font-size: 0.9em;
+    }
+
+    .link-btn:hover {
+      color: #0056b3;
+    }
+
+    #otp-feedback {
+      margin-top: 10px;
+      font-size: 0.9em;
+    }
+
+    .text-success {
+      color: green;
+    }
+
+    .text-error {
+      color: #e50914;
+      /* Netflix Red */
+    }
+
+    @media (max-width: 720px) {
+      .link-btn {
+        color: #999;
+        padding: 5px 20px;
+      }
+
+      .link-btn:hover {
+        color: #0056b3;
+      }
+
+      p {
+        padding: 5px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="page">
+  <main class="auth-card">
+    <header>
+      <div class="logo hidden1">
+        <img src="/assets/hand1.png" />
+      </div>
+    </header>
+
+    <div class="login-container">
+
+      <div class="login-box" id="login-box">
+        <div id="title">
+          <h2 class="hidden1">Welcome back!</h2>
+          <h2 class="hidden1">{{email}}</h2>
+          <h2 class="hidden1">Joining Streamesphere is easy</h2>
+        </div>
+        <div class="hidden1" id="#ntime">
+          <p>Enter your password and you'll be watching in no time.</p>
+        </div>
+
+        <form action="/login" method="post" class="form">
+          <input type="text" method="post" name="name" placeholder="Enter name" required />
+          <input type="email" name="email" placeholder="{{#if email}}{{email}}{{else}}Enter email{{/if}}" required />
+          <input type="password" name="password" placeholder="Enter password" required />
+
+          <button class="btn btn-primary" type="submit">Sign In</button>
+        </form>
+
+        <p class="muted">New to Streamsphere?
+        </p>
+        <div style="#">
+          <button type="button" class="link-btn" onclick="toggleView('forgot')">Forgot Password?</button>
+          <a href="/signup">Create an account</a>
+        </div>
+
+      </div>
+
+      <div class="login-box hidden" id="forgot-box">
+        <h2>Reset Password</h2>
+        <p style="padding: 5px 50px; margin-top: 10px;">Enter your email to receive an OTP.</p>
+
+        <div id="step-1">
+          <input type="email" id="reset-email" placeholder="Enter your email" required>
+          <button class="btn btn-primary" onclick="sendOTP()">Send OTP</button>
+        </div>
+
+        <div id="step-2" class="hidden" style="margin-top: 10px;">
+          <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" required>
+          <input type="password" id="new-password" placeholder="New Password" required>
+          <input type="password" id="confirm-password" placeholder="Confirm New Password" required>
+          <button class="btn btn-primary" onclick="resetPassword()">Update Password</button>
+        </div>
+
+        <div id="otp-feedback"></div>
+
+        <p class="muted" style="margin-top: 0px;padding: 0 16px;">
+          <button type="button" class="link-btn" onclick="toggleView('login')">Back to Login</button>
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  {{#if error}}
+  <div class="alert alert-danger" style="color: red; padding: 10px; text-align: center;">
+    {{error}}
+  </div>
+  {{/if}}
+
+  <script src="/js/css.js"></script>
+  <script src="/js/email.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/script.js"></script>
+  <script src="/js/toggle.js"></script>
+
+  <script>
+    // 1. Toggle between Login and Forgot Password views
+    function toggleView(view) {
+      const loginBox = document.getElementById('login-box');
+      const forgotBox = document.getElementById('forgot-box');
+      const feedback = document.getElementById('otp-feedback');
+
+      // Clear old messages when switching views
+      if (feedback) feedback.innerHTML = '';
+
+      if (view === 'forgot') {
+        loginBox.classList.add('hidden');
+        forgotBox.classList.remove('hidden');
+      } else {
+        loginBox.classList.remove('hidden');
+        forgotBox.classList.add('hidden');
+      }
+    }
+
+    // 2. REAL Logic to Send OTP
+    async function sendOTP() {
+      const email = document.getElementById('reset-email').value;
+      const feedback = document.getElementById('otp-feedback');
+
+      if (!email) {
+        feedback.innerHTML = '<span class="text-error">Please enter your email.</span>';
+        return;
+      }
+
+      feedback.innerHTML = '<span style="color:blue">Sending...</span>';
+
+      try {
+        const response = await fetch('/api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          feedback.innerHTML = '<span class="text-success">OTP sent! Please check your email.</span>';
+          document.getElementById('step-1').classList.add('hidden');
+          document.getElementById('step-2').classList.remove('hidden');
+        } else {
+          feedback.innerHTML = `<span class="text-error">${data.error || 'Error sending OTP'}</span>`;
+        }
+
+      } catch (error) {
+        console.error(error);
+        feedback.innerHTML = '<span class="text-error">Server connection failed.</span>';
+      }
+    }
+
+    // 3. REAL Logic to Verify OTP and Update Password
+    async function resetPassword() {
+      const email = document.getElementById('reset-email').value;
+      const otp = document.getElementById('otp-input').value;
+      const newPass = document.getElementById('new-password').value;
+      const confirmPass = document.getElementById('confirm-password').value;
+      const feedback = document.getElementById('otp-feedback');
+
+      // --- NEW VALIDATION START ---
+      // Check for length, numbers, and letters
+      if (newPass.length < 8 || !/\d/.test(newPass) || !/[a-zA-Z]/.test(newPass)) {
+        feedback.innerHTML = '<span class="text-error">Password must be at least 8 characters long and contain both numbers and letters.</span>';
+        return; // Stop here, do not send to server
+      }
+      // --- NEW VALIDATION END ---
+      if (/(012|123|234|345|456|567|678|789)/.test(newPass)) {
+        feedback.innerHTML = '<span class="text-error">Password cannot contain number sequences like "123" or "456".</span>';
+        return;
+      }
+      if (newPass !== confirmPass) {
+        feedback.innerHTML = '<span class="text-error">Passwords do not match.</span>';
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email,
+            otp: otp,
+            newPassword: newPass
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          feedback.innerHTML = '<span class="text-success">Password updated! Redirecting to login...</span>';
+
+          setTimeout(() => {
+            toggleView('login');
+            // Reset the forgot password form state
+            document.getElementById('step-1').classList.remove('hidden');
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('reset-email').value = '';
+            document.getElementById('otp-input').value = '';
+            document.getElementById('new-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            feedback.innerHTML = '';
+          }, 3000);
+        } else {
+          feedback.innerHTML = `<span class="text-error">${data.error || 'Invalid OTP'}</span>`;
+        }
+
+      } catch (error) {
+        console.error(error);
+        feedback.innerHTML = '<span class="text-error">Server connection failed.</span>';
+      }
+    }
+  </script>
+</body>
+
+</html>

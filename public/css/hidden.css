@@ -1,0 +1,57 @@
+.hidden1 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(100%);
+  transition: all 1s;
+}
+.show1 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* hidden0 */
+.hidden {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(35%);
+  transition: all 1s;
+  transform: scale(1.4);
+}
+.show {
+  opacity: 1;
+  filter: blur(0);
+  width: 100%;
+  transform: translateX(0);
+  transform: scale(1);
+}
+
+/* hidden2 */
+.hidden2 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(-35%);
+  transition: all 1s;
+  transform: scale(1.1);
+}
+.show2 {
+  opacity: 1;
+  filter: blur(0);
+
+  transform: translateX(0);
+  transform: scale(1);
+}
+
+/* hidden3 */
+
+.hidden3 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(20%);
+  transition: all 1s;
+}
+.show3 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
+}

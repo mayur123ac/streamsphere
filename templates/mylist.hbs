@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My List - StreamSphere</title>
+    <link rel="stylesheet" href="/css/homepage.css">
+    <link rel="stylesheet" href="/css/mylist.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <div id="page-loader">
+        <div class="loader-spinner"></div>
+    </div>
+    <div class="navbar" id="header">
+        <div class="logo hidden1">
+            <img src="/assets/hand1.png" alt="Streamsphere.png" />
+        </div>
+
+        <div class="menu-toggle" id="menu-toggle"><span></span><span></span><span></span></div>
+
+        <ul class="hidden1 nav-links">
+            <a href="/homepage">
+                <li>Movies</li>
+            </a>
+            <a href="/searchpg">
+                <li>Search</li>
+            </a>
+            <a href="/mylist">
+                <li>My List</li>
+            </a>
+
+            {{#if isAdmin}}
+
+            <li class="admin-trigger" onclick="openAnalytics()">Analytics</li>
+            {{/if}}
+
+            <a href="/series">
+                <li>TV Shows</li>
+            </a>
+        </ul>
+
+        <div class="profile-container">
+            <div class="profile-icon">
+                <img src="https://net51.cc/pv/assets/prime-user.png" alt="Profile">
+                <span class="caret">▼</span>
+            </div>
+            <div class="profile-dropdown hidden2">
+                <div class="profile-header">
+                    <img src="https://net51.cc/pv/assets/prime-user.png" alt="Avatar">
+                    <div class="profile-text">
+                        <span class="profile-name">{{name}}</span>
+                        <span class="profile-email">{{email}}</span>
+                    </div>
+                </div>
+                <hr>
+                <a href="/account" class="dropdown-item">Account</a>
+                <a href="/contactus" class="dropdown-item">SphereBot</a>
+                <hr>
+                <a href="/logout" class="dropdown-item sign-out">Sign out</a>
+            </div>
+        </div>
+    </div>
+
+
+    <h1>My List</h1>
+
+    <div class="grid-container">
+        {{#if movies.length}}
+        {{#each movies}}
+        <div class="carde" data-title="{{this.title}}"> <img src="{{this.image}}" alt="{{this.title}}">
+
+            <div class="info-right">
+                <h3>{{this.title}}</h3>
+                <p class="genre">{{this.genre}}</p>
+                <p class="description">{{this.description}}</p>
+
+                <div class="btn-group">
+                    <a href="{{this.link}}">
+                        <button class="play-btn">▶ Play</button>
+                    </a>
+
+                    <button class="remove-btn" onclick="removeFromList(this)" title="Remove from list">✕</button>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <div style="width: 100%; text-align: center; margin-top: 50px;">
+            <p style="color: gray; font-size: 1.2rem;">You haven't added any movies to your list yet.</p>
+            <a href="/homepage" style="color: white; text-decoration: underline;">Browse Movies</a>
+        </div>
+        {{/if}}
+    </div>
+
+
+    <script>
+        // --- REMOVE FUNCTION ---
+        async function removeFromList(btn) {
+            // Prevent card click event
+            event.stopPropagation();
+            event.preventDefault();
+
+            const card = btn.closest('.carde');
+            const title = card.getAttribute('data-title');
+
+            if (!confirm(`Remove "${title}" from your list?`)) return;
+
+            try {
+                const response = await fetch('/api/remove-from-list', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: title })
+                });
+
+                if (response.ok) {
+                    // Animation to remove card from screen
+                    card.style.transform = "scale(0)";
+                    setTimeout(() => {
+                        card.remove();
+                        // If list is empty, reload to show "empty" message
+                        if (document.querySelectorAll('.carde').length === 0) location.reload();
+                    }, 300);
+                } else {
+                    alert("Failed to remove movie.");
+                }
+            } catch (err) {
+                console.error(err);
+                alert("Server error.");
+            }
+        }
+
+        // --- CARD EXPANSION LOGIC ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const cards = document.querySelectorAll(".carde");
+            const EXPANDED_WIDTH_DESKTOP = "420px";
+            const EXPANDED_WIDTH_MOBILE = "300px";
+
+            function closeAllCards() {
+                cards.forEach(c => {
+                    const info = c.querySelector(".info-right");
+                    if (info) {
+                        c.style.width = "";
+                        info.style.opacity = "0";
+                        info.style.transform = "translateX(-20px)";
+                        c.classList.remove("active");
+                    }
+                });
+            }
+
+            cards.forEach(card => {
+                const info = card.querySelector(".info-right");
+                if (!info) return;
+
+                card.addEventListener("click", (e) => {
+                    // Ignore button clicks
+                    if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('a')) {
+                        return;
+                    }
+
+                    const isOpen = card.classList.contains("active");
+                    closeAllCards();
+
+                    if (!isOpen) {
+                        const isMobile = window.innerWidth < 768;
+                        card.style.width = isMobile ? EXPANDED_WIDTH_MOBILE : EXPANDED_WIDTH_DESKTOP;
+                        info.style.opacity = "1";
+                        info.style.transform = "translateX(0)";
+                        card.classList.add("active");
+                    }
+                });
+            });
+
+            document.addEventListener("click", (e) => {
+                if (![...cards].some(card => card.contains(e.target))) {
+                    closeAllCards();
+                }
+            });
+        });
+    </script>
+    <script src="/js/profile.js"></script>
+    <script src="/js/button.js"></script>
+    <script src="/js/homepagescript.js"></script>
+    <script src="/js/css.js"></script>
+    <script src="/js/mobilescript.js"></script>
+    <script src="/js/pageloader.js"></script>
+</body>
+
+</html>

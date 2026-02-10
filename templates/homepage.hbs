@@ -1,0 +1,1975 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StreamSphere</title>
+
+  <link rel="stylesheet" href="/css/homepage.css" />
+
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+
+<body>
+  <div id="page-loader">
+    <div class="loader-spinner"></div>
+  </div>
+  <div class="navbar" id="header">
+    <div class="logo hidden1">
+      <img src="/assets/hand1.png" alt="Streamsphere.png" />
+    </div>
+
+    <div class="menu-toggle" id="menu-toggle"><span></span><span></span><span></span></div>
+
+    <ul class="hidden1 nav-links">
+      <a href="/homepage">
+        <li>Movies</li>
+      </a>
+      <a href="/searchpg">
+        <li>Search</li>
+      </a>
+      <a href="/mylist">
+        <li>My List</li>
+      </a>
+
+      {{#if isAdmin}}
+      <li class="admin-trigger" onclick="toggleModal('movieModal')">Add Movie</li>
+      <li class="admin-trigger" onclick="openAnalytics()">Analytics</li>
+      {{/if}}
+
+      <a href="/series">
+        <li>TV Shows</li>
+      </a>
+    </ul>
+
+    <div class="profile-container">
+      <div class="profile-icon">
+        <img src="https://net51.cc/pv/assets/prime-user.png" alt="Profile">
+        <span class="caret">▼</span>
+      </div>
+      <div class="profile-dropdown hidden2">
+        <div class="profile-header">
+          <img src="https://net51.cc/pv/assets/prime-user.png" alt="Avatar">
+          <div class="profile-text">
+            <span class="profile-name">{{name}}</span>
+            <span class="profile-email">{{email}}</span>
+          </div>
+        </div>
+        <hr>
+        <a href="/account" class="dropdown-item">Account</a>
+        <a href="/contactus" class="dropdown-item">SphereBot</a>
+        <hr>
+        <a href="/logout" class="dropdown-item sign-out">Sign out</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero" id="banner">
+    <div class="hero-media">
+      <img id="heroImg" src="/assets/f1hero.jpg" alt="Hero Background" />
+      <video id="heroVideo" src="https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/hero.mp4" loop autoplay muted playsinline></video>
+      <button id="unmuteBtn">
+        <img src="/assets/unmute.png" alt="" />
+      </button>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+      <h2>Welcome {{name}}</h2>
+      <div class="logo1">
+        <img src="/assets/hand1.png" alt="Streamsphere.png" />
+      </div>
+      <span class="originals-tag">Originals</span>
+      <h1 class="wednesday-font">F1</h1>
+      <p class="tagline">Trending Now</p>
+      <p class="lang">English</p>
+      <p class="desc">
+        A high-octane sports drama exploring the return of retired F1 driver
+        Sonny Hayes to the racetrack. Through mentorship, rivalry, and
+        redemption, F1 captures the raw speed and emotional stakes both on and
+        off the circuit.
+      </p>
+
+      <div class="buttons">
+        <a href="/f1movie">
+          <button class="btn btn-play" id="ty">► Play</button>
+        </a>
+        <a href="/f1">
+          <button class="btn btn-info">ℹ More Info</button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  {{!-- Today's Top Picks for You --}}
+  <div class="row">
+    <h2 class="hidden1">Today's Top Picks for You</h2>
+
+    <button class="scroll-btn prev">&#10094;</button>
+
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMWU0YTc0OWYtOWJjNy00ZDYzLWFlMTItMGZkNzM4YjQ5OWQzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="My Oxford Year" />
+        <div class="info-right">
+          <h3>My Oxford Year (2025)</h3>
+          <p class="genre">Romance • Drama</p>
+          <p class="description">An ambitious young woman’s life takes an unexpected turn when she studies at Oxford
+            University and falls into a deeply emotional romance.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1307078?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/8f7cd92b0bb7ce2b0eae88ee539a52f23199c67131a8c15f0ecbc0d4e7194062.jpg"
+          alt="High Tide" />
+        <div class="info-right">
+          <h3>Interstellar</h3>
+          <p class="genre">Sci Fi • Thriller • Cosmic</p>
+          <p class="description"> A cerebral sci-fi epic directed by Christopher Nolan, following astronaut Cooper
+            (Matthew McConaughey) as he leads a mission through a wormhole near Saturn to find a habitable planet for
+            humanity.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1307078?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://blogger.googleusercontent.com/img/a/AVvXsEiMnE54ALi9RaK6Mp5tdcL2zh9LOSB8Ha0LPCUriSObCxR5W__rNk3_Ogo36RR0n63SXwTOreUVcwmm7fn7UelaAFeaU20ZiLpSb-YlVnzyT7RpBIBDjXHdEVIZ_kKKp2x0t3ursCVkHJNmUAA7EEbmb23ml2TdlxAAVZU9yPXL_LUfScAZF5aL1R762HI"
+          alt="Havoc" />
+        <div class="info-right">
+          <h3>Havoc (2025)</h3>
+          <p class="genre">Action • Thriller • Crime</p>
+          <p class="description">After a drug deal goes wrong, a detective fights through a brutal criminal underworld
+            to rescue a politician’s son.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/668489">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 3 --}}
+      <div class="carde">
+        <img
+          src="https://img.resized.co/letstalk-movies/eyJkYXRhIjoie1widXJsXCI6XCJodHRwczpcXFwvXFxcL3N0b3JhZ2UubGV0c3RhbGttb3ZpZXMuY29tXFxcL3Byb2RcXFwvdXBsb2Fkc1xcXC9NVjVCWmpKak1qUmlOemd0TmpGaVpDMDBPV001TFRrMk9HRXRNMlpoTldJNE56UmpaV1kwWGtFeVhrRnFjR2NALl9WMV9GTWpwZ19VWDEwMDBfLmpwZ1wiLFwid2lkdGhcIjo0MDAsXCJoZWlnaHRcIjo1NjIsXCJkZWZhdWx0XCI6XCJodHRwczpcXFwvXFxcL3N0b3JhZ2UubGV0c3RhbGttb3ZpZXMuY29tXFxcL3Byb2RcXFwvdXBsb2Fkc1xcXC9sb2dvLWxldHN0bGFrLnBuZ1wiLFwib3B0aW9uc1wiOntcIm91dHB1dFwiOlwid2VicFwifX0iLCJoYXNoIjoiNGYxYTA5Zjc5NWIwOTM5OWEyODA1YzQwMmUxM2FlMzNmZjdiNmU1MSJ9/eden-official-trailer-ana-de-armas-sydney-sweeney.jpg"
+          alt="Eden" />
+        <div class="info-right">
+          <h3>Eden (2025)</h3>
+          <p class="genre">Thriller • Drama • Survival</p>
+          <p class="description">Driven by a desire for change, a group of Europeans flee to the uninhabited Galápagos
+            Islands to build a utopia, only to discover that paradise comes at a deadly cost.</p>
+          <div class="btn-group">
+            <a href="/edenmovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 4 --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BOGQ3YWUzYjEtMTJiYy00ZjQ0LWI0YjktYjhiNGVhNGExYTM3XkEyXkFqcGc@._V1_.jpg"
+          alt="Demon Slayer: Infinity Castle" />
+        <div class="info-right">
+          <h3>Demon Slayer: Infinity Castle (2025)</h3>
+          <p class="genre">Anime • Action • Dark Fantasy</p>
+          <p class="description">The Demon Slayer Corps plunges into the shifting Infinity Castle to face Muzan
+            Kibutsuji and the Upper Rank demons.</p>
+          <div class="btn-group">
+            <a href="/demonslayer">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 5 --}}
+      <div class="carde">
+        <img src="https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg"
+          alt="Spider-Man: Homecoming" />
+        <div class="info-right">
+          <h3>Spider-Man: Homecoming (2017)</h3>
+          <p class="genre">Action • Adventure • Sci-Fi</p>
+          <p class="description"> Under the watchful eye of mentor Tony
+            Stark, he attempts to balance his ordinary high
+            school life with fighting a new villain.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/315635">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 6 --}}
+      <div class="carde">
+        <img src="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p22503994_v_v10_aa.jpg"
+          alt="Incantation" />
+        <div class="info-right">
+          <h3>Incantation (2022)</h3>
+          <p class="genre">Horror • Found Footage • Supernatural</p>
+          <p class="description">Six years after breaking a religious taboo, a woman must fight to protect her daughter
+            from the deadly curse that has come back to haunt them.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/864370">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 7 --}}
+      <div class="carde">
+        <img src="https://upload.wikimedia.org/wikipedia/en/6/66/A_Minecraft_Movie_poster.jpg"
+          alt="A Minecraft Movie" />
+        <div class="info-right">
+          <h3>A Minecraft Movie (2025)</h3>
+          <p class="genre">Adventure • Fantasy • Comedy</p>
+          <p class="description">Four misfits are pulled through a mysterious portal into the Overworld, a bizarre cubic
+            wonderland. To get back home, they must master this world and protect it </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/950387?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 8 --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/2be98bed028f1d53e01a860b6bb91c362dc32611c45effbcf2aa2645d590b22a.jpg"
+          alt="Hereditary" />
+        <div class="info-right">
+          <h3>Hereditary (2018)</h3>
+          <p class="genre">Horror • Drama • Mystery</p>
+          <p class="description">After the family matriarch passes away, a grieving family is haunted by tragic and
+            disturbing occurrences and begins to unravel dark secrets about their ancestry.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/493922">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 9 --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMTUyNzkwMzAxOF5BMl5BanBnXkFtZTgwMzc1OTk1NjE@._V1_FMjpg_UX1000_.jpg"
+          alt="The Witch" />
+        <div class="info-right">
+          <h3>The Witch (2015)</h3>
+          <p class="genre">Horror • Mystery • Drama</p>
+          <p class="description">In 1630s New England, a panic-stricken family banished to the edge of a forbidding
+            forest is torn apart by forces of witchcraft, black magic, and possession.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1352445?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 10 --}}
+      <div class="carde">
+        <img src="https://upload.wikimedia.org/wikipedia/en/3/34/InsidiousTheLastKey.jpg"
+          alt="Insidious: The Last Key" />
+        <div class="info-right">
+          <h3>Insidious: The Last Key (2018)</h3>
+          <p class="genre">Horror • Mystery • Thriller</p>
+          <p class="description">Parapsychologist Dr. Elise Rainier faces her most fearsome and personal haunting yet: a
+            terror that dwells deep inside her own childhood family home.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/insidious-the-last-key?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+
+  {{!-- Exclusive on StreamSphere --}}
+  <div class="row">
+    <h2 class="hidden1" id="Popular">Exclusive on StreamSphere</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img id="f1" src="https://upload.wikimedia.org/wikipedia/en/3/38/F1_%282025_film%29.png" alt="F1" />
+        <div class="info-right">
+          <h3>F1 (2025)</h3>
+          <p class="genre">Action • Sports • Drama</p>
+          <p class="description">A former Formula One driver returns to the grid to mentor a young prodigy, facing
+            intense rivalries and high-speed battles.</p>
+          <div class="btn-group">
+            <a href="/f1movie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://blogger.googleusercontent.com/img/a/AVvXsEg_7S0-ky3-uioV53xBJIc-nEipSZAXtUx9L_WDen07e13FXmyjWsMUhA966UnIphV-QjwdUzADUay4Qs5FkOSmA_ZbMQgQPvlQwmRQAoPkROhFai81BDMu613UvEK6fTNRUmEEAic9SjcAr3NCwrSpI17DfywNdCr5hbRziApRUyR7zLiLWaFUSsdZBXA"
+          alt="Materialists" />
+        <div class="info-right">
+          <h3>Materialists (2024)</h3>
+          <p class="genre">Romance • Drama • Comedy</p>
+          <p class="description">A modern romantic drama that explores love, ambition, and the cost of material success
+            in today’s fast-paced world.</p>
+          <div class="btn-group">
+            <a href="/materialistsmovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BOGQ3YWUzYjEtMTJiYy00ZjQ0LWI0YjktYjhiNGVhNGExYTM3XkEyXkFqcGc@._V1_.jpg"
+          alt="Demon Slayer: Infinity Castle" />
+        <div class="info-right">
+          <h3>Demon Slayer: Infinity Castle (2025)</h3>
+          <p class="genre">Anime • Action • Dark Fantasy</p>
+          <p class="description">The Demon Slayer Corps plunges into the shifting Infinity Castle to face Muzan
+            Kibutsuji and the Upper Rank demons.</p>
+          <div class="btn-group">
+            <a href="/demonslayer">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNGE0YTVjNzUtNzJjOS00NGNlLTgxMzctZTY4YTE1Y2Y1ZTU4XkEyXkFqcGc@._V1_.jpg"
+          alt="The Avengers" />
+        <div class="info-right">
+          <h3>The Avengers (2012)</h3>
+          <p class="genre">Action • Adventure • Sci-Fi</p>
+          <p class="description">Earth’s mightiest heroes must come together to stop Loki and an alien invasion that
+            threatens the future of humanity.</p>
+          <div class="btn-group">
+            <a href="/theavengermovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNzdhZmY2OTQtYWI4OC00ZThkLTlhZjAtNzE2YzRjM2Q5YjJlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Ballerina" />
+        <div class="info-right">
+          <h3>Ballerina (2024)</h3>
+          <p class="genre">Action • Thriller • Crime</p>
+          <p class="description">A deadly assassin trained in the traditions of the Ruska Roma seeks revenge against
+            those who destroyed her family.</p>
+          <div class="btn-group">
+            <a href="/ballerinamovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://blogger.googleusercontent.com/img/a/AVvXsEhrtfy5-njtZdc_TexzhB_t-_Nloe1hkJWRgn8ac8E_6vjuKurgPIrgoCZvqV5RDlJLtQLm8xs-kbm6aDWastEDPO7BAma8SuB_5imAyDjOsJjZ-uSQozX-y56rNNlonrwo0Hi0dSZmqYDWmAkgBZsCn2ChvlhCu4wFKafUa1-fz4fVw2feFjPrhPKdy80"
+          alt="Final Destination" />
+        <div class="info-right">
+          <h3>Final Destination (2025)</h3>
+          <p class="genre">Horror • Thriller</p>
+          <p class="description">Death returns with a new design as survivors attempt to escape a terrifying chain of
+            inevitable accidents.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/574475">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://blogger.googleusercontent.com/img/a/AVvXsEgjOqeGnI5gA9oQKXB1IoIJD96rY-uWhrBZK-yz-Aasmhiao8CqDdkciu5eeGc7NGd9V4dF_9X_pSUDSMMGwL_ePV6BfjIl5MEUwtW14AeAxBgp4ZKg3v5Fcmu_PGM6XBFxCb49bmEvpiavucVyUPByvQHh-fXM4sy7UayjRSv7Apl2pQDdHrDbt3-7d5k"
+          alt="Fantastic Four" />
+        <div class="info-right">
+          <h3>Fantastic Four (2025)</h3>
+          <p class="genre">Action • Superhero • Sci-Fi</p>
+          <p class="description">Four astronauts gain extraordinary powers after a space mission goes wrong and must
+            unite to protect Earth from cosmic threats.</p>
+          <div class="btn-group">
+            <a href="/fantasticfourmovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://images.fandango.com/ImageRenderer/820/0/redesign/static/img/default_poster.png/0/images/masterrepository/fandango/240149/eden.jpg"
+          alt="Eden" />
+        <div class="info-right">
+          <h3>Eden (2025)</h3>
+          <p class="genre">Thriller • Survival • Drama</p>
+          <p class="description">A group of people abandon society to forge a new life in the remote Galapagos, only to
+            discover that paradise comes at a terrifying price.</p>
+          <div class="btn-group">
+            <a href="/edenmovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNWI0Y2NkOWEtMmM2OC00MjQ3LWI1YzItZGQxYzQ3NzI4NWZmXkEyXkFqcGc@._V1_.jpg"
+          alt="Avatar: The Way of Water" />
+        <div class="info-right">
+          <h3>Avatar: The Way of Water (2022)</h3>
+          <p class="genre">Sci-Fi • Adventure • Action • Fantasy</p>
+          <p class="description">Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. Once a
+            familiar threat returns to finish what was previously started..</p>
+          <div class="btn-group">
+            <a href="/Avatarmovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BODA5Y2M0NjctNWQzMy00ODRhLWE0MzUtYmE1YTAzZjYyYmQyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="How to Train Your Dragon (2025)" />
+        <div class="info-right">
+          <h3>How to Train Your Dragon (2025)</h3>
+          <p class="genre">Action • Adventure • Fantasy • Family</p>
+          <p class="description">
+            A live-action reimagining of the animated classic. Hiccup, a young Viking who aspires to hunt dragons,
+            becomes the unlikely friend of a young dragon.
+          </p>
+          <div class="btn-group">
+            <a href="/howtotraindragonmovie">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+
+
+  {{!-- Recently Played --}}
+  <div class="row" id="recently-played-row" style="display: none;">
+    <h2 class="hidden1">Recently Played</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider" id="recently-played-slider">
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+
+  {{!-- Trending Now --}}
+  <div class="container">
+    <h2 class="hidden1" style="font-size: 32px;">Trending Now</h2>
+    <div class="trending-container" style="position: relative;">
+
+      <button class="scroll-btn prev">&#10094;</button>
+
+      <div class="trending slider" id="trending-slider4">
+        <div class="movie">
+          <h1>1</h1>
+          <a href="/f1">
+            <img
+              src="https://media.formula1.com/image/upload/f_auto/q_auto/v1741890645/fom-website/2025/F1%20movie/f1_movie_poster16x9%20(1).jpg"
+              alt="Movie 1" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>2</h1>
+          <a href="https://player.videasy.net/movie/1417941">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BZmFkNzExNTQtNjY4Ny00NmVjLWIwYjYtOWY5YzkwNmU4YWI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+              alt="Movie 2" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>3</h1>
+          <a href="/Saiyara">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BMTk2ZmFhYjctYWZiYy00N2IxLWEzMWItZGRiMDY4ZDQwZWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+              alt="Movie 3" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>4</h1>
+          <a href="/demonslayer">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BOGQ3YWUzYjEtMTJiYy00ZjQ0LWI0YjktYjhiNGVhNGExYTM3XkEyXkFqcGc@._V1_.jpg"
+              alt="Movie 9" />
+          </a>
+        </div>
+
+        <div class="movie">
+          <h1>5</h1>
+          <a href="/finaldestination">
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEhrtfy5-njtZdc_TexzhB_t-_Nloe1hkJWRgn8ac8E_6vjuKurgPIrgoCZvqV5RDlJLtQLm8xs-kbm6aDWastEDPO7BAma8SuB_5imAyDjOsJjZ-uSQozX-y56rNNlonrwo0Hi0dSZmqYDWmAkgBZsCn2ChvlhCu4wFKafUa1-fz4fVw2feFjPrhPKdy80"
+              alt="Movie 5" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>6</h1>
+          <a href="https://player.videasy.net/movie/1142921">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BMGM4MmE2YTMtOWQ1ZS00M2NkLWE2OGItNTAzMWYyNDdiYWE5XkEyXkFqcGc@._V1_.jpg"
+              alt="Movie 6" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>7</h1>
+          <a href="https://player.videasy.net/movie/1163194">
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BZTkxMjg1MWEtZjI4Mi00MzBmLTlhZjMtY2EwNzhkZWMyNzc5XkEyXkFqcGc@._V1_.jpg"
+              alt="Movie 7" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>8</h1>
+          <a href="/civilwar">
+            <img
+              src="https://m.media-amazon.com/images/S/pv-target-images/bf7f2a22e80d133d2c596e1e1eaf0933fb0b338bd096f43073376b0d5ffed938.jpg"
+              alt="Movie 8" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>9</h1>
+          <a href="/havoc">
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEiMnE54ALi9RaK6Mp5tdcL2zh9LOSB8Ha0LPCUriSObCxR5W__rNk3_Ogo36RR0n63SXwTOreUVcwmm7fn7UelaAFeaU20ZiLpSb-YlVnzyT7RpBIBDjXHdEVIZ_kKKp2x0t3ursCVkHJNmUAA7EEbmb23ml2TdlxAAVZU9yPXL_LUfScAZF5aL1R762HI"
+              alt="Movie 4" />
+          </a>
+        </div>
+        <div class="movie">
+          <h1>10</h1>
+          <a href="https://vidlink.pro/movie/1391013?primaryColor&secondaryColor&iconColor=2ed573">
+            <img src="https://upload.wikimedia.org/wikipedia/en/0/08/Aap_Jaisa_Koi_%282025_film%29.jpg"
+              alt="Movie 10" />
+          </a>
+        </div>
+
+      </div>
+      <button class="scroll-btn next">&#10095;</button>
+    </div>
+  </div>
+
+
+  {{!-- Hindi movies --}}
+  <div class="row">
+    <h2 class="hidden1" id="Popular">Hindi Movies</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BN2I1MmI2NTUtOGU3NC00YjMzLTg0YWMtNzg3YzJiMjgxMmYzXkEyXkFqcGc@._V1_.jpg"
+          alt="Tehran" />
+        <div class="info-right">
+          <h3>Tehran (2025)</h3>
+          <p class="genre">Thriller • Action • Suspense</p>
+          <p class="description">A bombing in Delhi pulls a cop into an espionage web that stretches to Iran and Israel,
+            echoing real events.</p>
+          <div class="btn-group">
+            <a href="/tehraan">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMTk2ZmFhYjctYWZiYy00N2IxLWEzMWItZGRiMDY4ZDQwZWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Saiyaara" />
+        <div class="info-right">
+          <h3>Saiyaara (2025)</h3>
+          <p class="genre">Drama • Musical • Romantic</p>
+          <p class="description">An intense love story filled with soulful music that will break your heart and heal it
+            at the same time.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/1241634">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://substackcdn.com/image/fetch/$s_!R1hV!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F017e30a1-299c-4d46-840f-0fd871c59db0_1440x1801.jpeg"
+          alt="Kantara: Chapter 1" />
+        <div class="info-right">
+          <h3>Kantara: Chapter 1 (2025) Kannada</h3>
+          <p class="genre">Action • Fantasy • Thriller</p>
+          <p class="description">Set during the reign of the Kadambas of Banavasi, this prequel explores the origins of
+            the Panjurli Daiva and the intense conflict between nature, humanity, and the divine.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1083637?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img src="https://upload.wikimedia.org/wikipedia/en/0/08/Aap_Jaisa_Koi_%282025_film%29.jpg"
+          alt="Aap Jaisa Koi" />
+        <div class="info-right">
+          <h3>Aap Jaisa Koi (2025)</h3>
+          <p class="genre">Romance • Drama</p>
+          <p class="description">A heartwarming tale of love and self-discovery as a lonely teacher finds an unexpected
+            connection.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1391013?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b2/Article_370_film_poster.jpeg/250px-Article_370_film_poster.jpeg"
+          alt="Article 370" />
+        <div class="info-right">
+          <h3>Article 370</h3>
+          <p class="genre">Political • Action • Drama</p>
+          <p class="description">An intense political drama that evokes a sense of nationalism while exploring the
+            events behind the historic decision.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/1233531">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BODQ1NmJlNjEtODdmZi00YzY0LTgyNTctZTUwNjVkYjY0MWI1XkEyXkFqcGc@._V1_.jpg"
+          alt="Metro In Dino" />
+        <div class="info-right">
+          <h3>Metro In Dino (2025)</h3>
+          <p class="genre">Drama • Romance</p>
+          <p class="description">An anthology exploring bittersweet relationships and the various moods of love in a
+            contemporary metropolis.</p>
+          <div class="btn-group">
+            <a href="/metroindino">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://resizing.flixster.com/oZPIEy3VKdzTXnAbdGGLK8AlTUE=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p28269158_v_v13_aa.jpg"
+          alt="Sector 36" />
+        <div class="info-right">
+          <h3>Sector 36</h3>
+          <p class="genre">Crime • Thriller</p>
+          <p class="description">Based on true events, this harrowing thriller exposes the dark underbelly of a city and
+            a corrupt system.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/1245700">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNDc4ODRjZTMtMGUyMS00ODcwLWFhNzgtZDdkMTNiN2EwZDc3XkEyXkFqcGc@._V1_.jpg"
+          alt="CTRL" />
+        <div class="info-right">
+          <h3>CTRL (2024)</h3>
+          <p class="genre">Thriller • Sci-Fi</p>
+          <p class="description">An influencer couple’s perfect life unravels when they turn to an AI app to fix their
+            problems, but it takes control.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1146577?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/ee71cb518fab57e757bd611ffbe51e222596191cbe0bcd416c7c98d16e8bbe1d.jpg"
+          alt="Housefull 5" />
+        <div class="info-right">
+          <h3>Housefull 5 (2025)</h3>
+          <p class="genre">Comedy • Thriller</p>
+          <p class="description">India’s biggest comedy franchise returns with 5x the madness, chaos, and confusion set
+            entirely on a cruise ship.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1146210?primaryColor&secondaryColor&iconColor=2ed573">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+  {{!-- recently added --}}
+  <div class="row">
+    <h2 class="hidden1" id="Popular">Recently Added</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMzFiNTVkZjYtM2I3Yi00MGNjLWEyYTAtMGViNGExZmMzMGMzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Dhurandhar" />
+        <div class="info-right">
+          <h3>Dhurandhar</h3>
+          <p class="genre">Action • Thriller</p>
+          <p class="description">A mysterious traveller slips into the underworld to tear apart a deadly nexus from
+            within.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/1291608">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+  {{!-- Coming Soon --}}
+
+  <div class="row">
+    <h2 class="hidden1" id="Popular">Coming Soon</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMDZiNzAwZTQtYWIwMC00ODA0LWJiOGMtZTgzZGYzYzMxMDNiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Toxic" />
+        <div class="info-right">
+          <h3>Toxic (2026)</h3>
+          <p class="genre">Action • Thriller</p>
+          <p class="description">A Fairy Tale for Grown-ups. A gripping tale of crime and deception set in the drug
+            cartel world of 1980s Goa.</p>
+          <div class="btn-group">
+            <a href="/toxic">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://assets-in.bmscdn.com/discovery-catalog/events/tr:w-400,h-600,bg-CCCCCC/et00450610-wfnsbmylsb-portrait.jpg"
+          alt="Chatha Pacha: The Ring of Rowdies" />
+        <div class="info-right">
+          <h3>Chatha Pacha: The Ring of Rowdies (2026)</h3>
+          <p class="genre">Action • Comedy • Sports</p>
+          <p class="description">
+            "The Ring of Rowdies." In the vibrant streets of Fort Kochi, a ragtag
+            group of locals gets drawn into a WWE-inspired wrestling tournament.
+            Starring Arjun Ashokan, Roshan Mathew, and Mammootty.
+          </p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BZjc4MzAzMzItYjU3Yy00YmZlLTg2NmUtMzJjZGU4YWM2YTM4XkEyXkFqcGc@._V1_.jpg"
+          alt="Varanasi (2027)" />
+        <div class="info-right">
+          <h3>Varanasi (2027)</h3>
+          <p class="genre">Action • Adventure • Fantasy</p>
+          <p class="description">
+            S.S. Rajamouli's global epic. Mahesh Babu stars as Rudhra in a time-spanning
+            mythological adventure that bridges ancient Kashi with the modern world.
+            Co-starring Priyanka Chopra and Prithviraj Sukumaran.
+          </p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYTc1NjE1ZGItM2U2ZS00YzIxLTk1MDItODk3ZDhkMWRhZmRlXkEyXkFqcGc@._V1_QL75_UY281_CR18,0,190,281_.jpg"
+          alt="Naagzilla" />
+        <div class="info-right">
+          <h3>Naagzilla (2026)</h3>
+          <p class="genre">Fantasy • Comedy</p>
+          <p class="description">A shape-shifting serpent takes on the modern world in this high-fantasy comedy
+            blockbuster.</p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BZWFlOWQ1OTctYjQ5NC00NDQ2LWFmNmQtMDNlOWFjNzExY2VkXkEyXkFqcGc@._V1_.jpg"
+          alt="Tu Meri Main Tera" />
+        <div class="info-right">
+          <h3>Tu Meri Main Tera...</h3>
+          <p class="genre">Romance • Comedy</p>
+          <p class="description">A vibrant romantic comedy exploring the chaos of modern relationships and love.</p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://assets-in.bmscdn.com/iedb/movies/images/mobile/thumbnail/xlarge/ikkis-et00388415-1765283297.jpg"
+          alt="Ikkis" />
+        <div class="info-right">
+          <h3>Ikkis (2026)</h3>
+          <p class="genre">Biographical • Patriotic</p>
+          <p class="description">A war drama based on the life of Second Lieutenant Arun Khetarpal, the youngest Param
+            Vir Chakra recipient.</p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMzljMTFkYTktMjQ0MC00NjFhLWFmOTEtOTMyZmVhNTBmYTMzXkEyXkFqcGc@._V1_.jpg"
+          alt="Ramayana" />
+        <div class="info-right">
+          <h3>Ramayana: Part 1</h3>
+          <p class="genre">Mythological • Drama</p>
+          <p class="description">A grand retelling of the epic Ramayana, capturing the timeless battle between good and
+            evil.</p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde" id="isLastCard">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMWJlYjQ0NWYtYmYwNS00ZDBiLTllYTMtMzE5MTk5YTQ4NDAyXkEyXkFqcGc@._V1_.jpg"
+          alt="Mahaavtar" />
+        <div class="info-right">
+          <h3>Mahaavtar (2025)</h3>
+          <p class="genre">Mythological • Action • Animation</p>
+          <p class="description">When Faith is Challenged, He Appears. A visually stunning story of Lord Vishnu's
+            avatars.</p>
+          <div class="btn-group">
+            <a href="#">
+              <button class="play-btn">ℹ Info</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+
+
+  {{!-- Anime Movies --}}
+  <div class="row">
+    <h2 class="hidden1" id="Popular">Anime Movies</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMTQ1ODIzOGQtOGFkZC00MWViLTgyYmUtNWJkNmIxZjYxMTdmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="I Want to Eat Your Pancreas" />
+        <div class="info-right">
+          <h3>I Want to Eat Your Pancreas</h3>
+          <p class="genre">Drama • Romance • Slice of Life</p>
+          <p class="description">
+            An aloof high schooler discovers a diary belonging to his popular classmate, Sakura, revealing her secret
+            terminal illness.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/504253">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/e198ebb129458b00b4729d8140aaf3873b92cec322d59e9b589a080fbc8f76cd.jpg"
+          alt="5 Centimeters Per Second" />
+        <div class="info-right">
+          <h3>5 Centimeters Per Second</h3>
+          <p class="genre">Drama • Romance • Slice of Life</p>
+          <p class="description">
+            Told in three interconnected segments, a young man named Takaki navigates life as cruel winters, technology,
+            and adulthood test his distance from a childhood love.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/38142">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/3b33b787082c712fa4a108355be493ebb42fcd4cd75ccfeb6ec3fae8d19ebf39.jpg"
+          alt="Your Name" />
+        <div class="info-right">
+          <h3>Your Name</h3>
+          <p class="genre">Romance • Fantasy • Drama</p>
+          <p class="description">
+            Two high schoolers engage in a mysterious body-swapping connection that draws them together to save a town
+            from an impending disaster.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/372058">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNTEyNmEwOWUtYzkyOC00ZTQ4LTllZmUtMjk0Y2YwOGUzYjRiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Spirited Away" />
+        <div class="info-right">
+          <h3>Spirited Away</h3>
+          <p class="genre">Fantasy • Adventure • Animation</p>
+          <p class="description">
+            A young girl wanders into a world of spirits ruled by a sorceress and must work in a magical bathhouse to
+            free her parents and return to the human world.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/129">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYzQ2YTM2NmYtZjEzMS00M2NiLWI3NjQtNjIyMDEzMmQ1ZDkxXkEyXkFqcGc@._V1_.jpg"
+          alt="A Silent Voice" />
+        <div class="info-right">
+          <h3>A Silent Voice</h3>
+          <p class="genre">Drama • Romance • Slice of Life</p>
+          <p class="description">
+            A former bully attempts to make amends with the deaf girl he tormented in elementary school, seeking
+            redemption and self-forgiveness.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/378064">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img src="https://m.media-amazon.com/images/I/81jSJRqb9IL._AC_UF1000,1000_QL80_.jpg" alt="Princess Mononoke" />
+        <div class="info-right">
+          <h3>Princess Mononoke</h3>
+          <p class="genre">Action • Adventure • Fantasy</p>
+          <p class="description">
+            Afflicted by a deadly curse, a young warrior travels west and becomes entangled in a war between a mining
+            colony and the gods of the forest.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/128">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMmJiYWI4ZjktMzgyZS00MjBiLThmOTYtZWJmOTUzOTFkMTFiXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Weathering with You" />
+        <div class="info-right">
+          <h3>Weathering with You</h3>
+          <p class="genre">Romance • Fantasy • Drama</p>
+          <p class="description">
+            A runaway high school student in a constantly raining Tokyo befriends an orphan girl who has the mysterious
+            ability to manipulate the weather.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/568160">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://www.tallengestore.com/cdn/shop/files/HowlsMovingCastle-HayaoMiyazaki-StudioGhibli-JapaneseAnimatedMoviePoster_83eddb39-7e66-4b17-b98e-5939f18918cd.jpg?v=1733296877"
+          alt="Howl's Moving Castle" />
+        <div class="info-right">
+          <h3>Howl's Moving Castle</h3>
+          <p class="genre">Fantasy • Adventure • Romance</p>
+          <p class="description">
+            When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking
+            the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking
+            castle.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/4935">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img src="https://upload.wikimedia.org/wikipedia/en/5/5d/AKIRA_%281988_poster%29.jpg" alt="Akira" />
+        <div class="info-right">
+          <h3>Akira</h3>
+          <p class="genre">Sci-Fi • Action • Cyberpunk</p>
+          <p class="description">
+            In a future Neo-Tokyo, a biker gang member acquires telekinetic powers that threaten to destroy the city,
+            forcing his childhood friend to fight him to save the world.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/149">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/02ef2b75bf6c39dec48c636c8dc9d0e4252601800eec9e15c8a266fc46150b00.jpg"
+          alt="My Neighbor Totoro" />
+        <div class="info-right">
+          <h3>My Neighbor Totoro</h3>
+          <p class="genre">Fantasy • Family • Adventure</p>
+          <p class="description">
+            Two sisters move to the countryside to be near their ailing mother and discover a world of magical forest
+            spirits, including the lovable giant, Totoro.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/8392">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/S/pv-target-images/3f74168c4f6e862e05ca570b0b4711e09ebabef300c8a6e6aec727e7c196054d.jpg"
+          alt="Demon Slayer: Mugen Train" />
+        <div class="info-right">
+          <h3>Demon Slayer: Mugen Train</h3>
+          <p class="genre">Action • Dark Fantasy • Supernatural</p>
+          <p class="description">
+            Tanjiro and his friends join the Flame Hashira Kyojuro Rengoku on a train to hunt down a demon that has
+            killed many demon slayers and trapped the passengers in nightmares.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/635302">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNTY5MmE2OGMtN2IxNC00MDY4LTkwMGEtZDUzOTYyNWE0ZTNjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Grave of the Fireflies" />
+        <div class="info-right">
+          <h3>Grave of the Fireflies</h3>
+          <p class="genre">War • Drama • Tragedy</p>
+          <p class="description">
+            A devastating story of two siblings, Seita and Setsuko, struggling to survive on their own in Japan during
+            the final months of the Second World War.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/12477">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+
+      </div>
+      <button class="scroll-btn next">&#10095;</button>
+    </div>
+
+  </div>
+
+  {{!-- Award winning --}}
+
+  {{!-- Award Winning Movies --}}
+  <div class="row">
+    <h2 class="hidden1" id="Popular">Award Winning Movies</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Oppenheimer" />
+        <div class="info-right">
+          <h3>Oppenheimer (2023)</h3>
+          <p class="genre">Biography • Drama • History</p>
+          <p class="description">
+            The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.
+            Winner of 7 Academy Awards including Best Picture.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/872585">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYTZhZmI0NzItZTM2Ny00YTJlLWEyZDctYTdkZjBiOTQxZjBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Parasite" />
+        <div class="info-right">
+          <h3>Parasite (2019)</h3>
+          <p class="genre">Thriller • Drama • Comedy</p>
+          <p class="description">
+            Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park
+            family and the destitute Kim clan. Best Picture Winner.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/872585">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BODQ4ZjdhNTYtYTQ3Mi00Mjk1LWFjYTgtMjY4ZWU4YmVkMjkyXkEyXkFqcGc@._V1_.jpg"
+          alt="Everything Everywhere All At Once" />
+        <div class="info-right">
+          <h3>Everything Everywhere All At Once</h3>
+          <p class="genre">Action • Adventure • Sci-Fi</p>
+          <p class="description">
+            A middle-aged Chinese immigrant is swept into an insane adventure in which she alone can save the world by
+            exploring other universes. Best Picture Winner.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/545611">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNGEwYjgwOGQtYjg5ZS00Njc1LTk2ZGEtM2QwZWQ2NjdhZTE5XkEyXkFqcGc@._V1_.jpg"
+          alt="The Godfather" />
+        <div class="info-right">
+          <h3>The Godfather (1972)</h3>
+          <p class="genre">Crime • Drama</p>
+          <p class="description">
+            The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his
+            reluctant son. A cinematic masterpiece.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/238">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_FMjpg_UX1000_.jpg"
+          alt="La La Land" />
+        <div class="info-right">
+          <h3>La La Land</h3>
+          <p class="genre">Comedy • Drama • Music</p>
+          <p class="description">
+            While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to
+            reconcile their aspirations for the future.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/313369">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNzY3OWQ5NDktNWQ2OC00ZjdlLThkMmItMDhhNDk3NTFiZGU4XkEyXkFqcGc@._V1_.jpg"
+          alt="Joker" />
+        <div class="info-right">
+          <h3>Joker (2019)</h3>
+          <p class="genre">Crime • Drama • Thriller</p>
+          <p class="description">
+            In Gotham City, mentally troubled comedian Arthur Fleck is disregarded and mistreated by society. He then
+            embarks on a downward spiral of revolution and bloody crime.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/475557">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img src="https://m.media-amazon.com/images/M/MV5BMjMwNDkxMTgzOF5BMl5BanBnXkFtZTgwNTkwNTQ3NjM@._V1_.jpg"
+          alt="Spider-Man: Into the Spider-Verse" />
+        <div class="info-right">
+          <h3>Spider-Man: Into the Spider-Verse</h3>
+          <p class="genre">Animation • Action • Adventure</p>
+          <p class="description">
+            Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered
+            individuals from other dimensions to stop a threat for all realities.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/324857">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMTJjMmM4M2ItYmFiMC00MjgyLThiOWEtMzUyYTJiMWNhZDg5XkEyXkFqcGc@._V1_.jpg"
+          alt="1917" />
+        <div class="info-right">
+          <h3>1917 (2019)</h3>
+          <p class="genre">Drama • War</p>
+          <p class="description">
+            April 6th, 1917. As a regiment assembles to wage war deep in enemy territory, two soldiers are assigned to
+            race against time and deliver a message that will stop 1,600 men from walking straight into a deadly trap.
+          </p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/530915">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMDE5OTkxM2EtMDM1ZC00MDRlLWI5MTgtNjNkMzdlYzY0NzQ2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Ted Lasso" />
+        <div class="info-right">
+          <h3>Ted Lasso</h3>
+          <p class="genre">Comedy • Drama • Sports</p>
+          <p class="description">
+            American college football coach Ted Lasso heads to London to manage AFC Richmond, a struggling English
+            Premier League football team. Winner of back-to-back Emmys for Best Comedy.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/97546?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNGEwOGI0NWEtNTljNi00OWEyLThjMWMtOTJkOTk5YTM4MDNhXkEyXkFqcGc@._V1_.jpg"
+          alt="The Crown" />
+        <div class="info-right">
+          <h3>The Crown</h3>
+          <p class="genre">Biography • Drama • History</p>
+          <p class="description">
+            Follows the political rivalries and romance of Queen Elizabeth II's reign and the events that shaped the
+            second half of the twentieth century. Winner of 21 Emmy Awards.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/65494?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMmRlNjQxNWQtMjk1OS00N2QxLTk0YWQtMzRhYjY5YTFhNjMxXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="The Queen's Gambit" />
+        <div class="info-right">
+          <h3>The Queen's Gambit</h3>
+          <p class="genre">Drama • Sport</p>
+          <p class="description">
+            Orphaned at the tender age of nine, prodigious introvert Beth Harmon discovers and masters the game of chess
+            in 1960s USA. Winner of 11 Primetime Emmys.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/87739?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYzgxYzg0NmEtNzdhMy00NjFiLTg1MTQtM2EzMDRiOGEwZjI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Beef" />
+        <div class="info-right">
+          <h3>Beef (2023)</h3>
+          <p class="genre">Comedy • Drama</p>
+          <p class="description">
+            Two strangers get into a road rage incident that brings chaos into their lives. A critically acclaimed
+            limited series that swept the Golden Globes and Emmys.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/154385?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BM2QzMGVkNjUtN2Y4Yi00ODMwLTg3YzktYzUxYjJlNjFjNDY1XkEyXkFqcGc@._V1_.jpg"
+          alt="House of the Dragon" />
+        <div class="info-right">
+          <h3>House of the Dragon</h3>
+          <p class="genre">Action • Adventure • Drama</p>
+          <p class="description">
+            An internal succession war within House Targaryen at the height of its power, 172 years before the birth of
+            Daenerys Targaryen. Golden Globe Winner for Best Drama.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/94997?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BZWY3NjJjMWMtZjFiOC00MmNjLWE0NjAtODdlNzk1ZGQ0Yjg2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Severance" />
+        <div class="info-right">
+          <h3>Severance</h3>
+          <p class="genre">Drama • Mystery • Sci-Fi</p>
+          <p class="description">
+            Mark leads a team of office workers whose memories have been surgically divided between their work and
+            personal lives. A mind-bending thriller.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/95396?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYjU5YTdlZTItNWM5Yi00OGM1LTk1NGItNjY5MGU3Y2JkOWIwXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Abbott Elementary" />
+        <div class="info-right">
+          <h3>Abbott Elementary</h3>
+          <p class="genre">Comedy</p>
+          <p class="description">
+            A mockumentary following a group of dedicated, passionate teachers — and a slightly tone-deaf principal —as
+            they navigate the Philadelphia public school system.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/125949?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMzc2ZWJjZTgtZTU2Mi00ZTA1LTkwNzctODQ5MWFjNDVhZjRlXkEyXkFqcGc@._V1_.jpg"
+          alt="The Handmaid's Tale" />
+        <div class="info-right">
+          <h3>The Handmaid's Tale</h3>
+          <p class="genre">Drama • Sci-Fi • Thriller</p>
+          <p class="description">
+            Set in a dystopian future, a woman is forced to live as a concubine under a fundamentalist theocratic
+            dictatorship. Winner of 15 Emmy Awards.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/tv/69478?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+  {{!-- Korean Movies Collection (15 Items) --}}
+  <div class="row">
+    <h2 class="hidden1" id="Korean-Movies">Korean Masterpieces</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      {{!-- 1. Parasite --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BOTM3ZGI3MzMtYjFhYi00MTY5LTliMmMtNWZlZjI3ZDY5MjZmXkEyXkFqcGc@._V1_.jpg"
+          alt="Parasite" />
+        <div class="info-right">
+          <h3>Parasite (2019)</h3>
+          <p class="genre">Thriller • Black Comedy</p>
+          <p class="description">Greed and class discrimination threaten the newly formed symbiotic relationship between
+            the wealthy Park family and the destitute Kim clan.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/496243?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 2. Train to Busan --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMTkwOTQ4OTg0OV5BMl5BanBnXkFtZTgwMzQyOTM0OTE@._V1_FMjpg_UX1000_.jpg"
+          alt="Train to Busan" />
+        <div class="info-right">
+          <h3>Train to Busan (2016)</h3>
+          <p class="genre">Horror • Action</p>
+          <p class="description">While a zombie virus breaks out in South Korea, passengers struggle to survive on the
+            train from Seoul to Busan.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/396535">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 3. Oldboy --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMjk1NGQyYTEtNjhhMy00NGI3LTliMWYtYWU1OGRmYTEyNjVlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Oldboy" />
+        <div class="info-right">
+          <h3>Oldboy (2003)</h3>
+          <p class="genre">Action • Mystery</p>
+          <p class="description">After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to
+            find that he must find his captor in five days.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/670">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 4. The Handmaiden --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYTA1YmI4OTItYTQyYS00YjVlLTlhNjUtNWFhNWExNjY1MGQ5XkEyXkFqcGc@._V1_.jpg"
+          alt="The Handmaiden" />
+        <div class="info-right">
+          <h3>The Handmaiden (2016)</h3>
+          <p class="genre">Thriller • Romance</p>
+          <p class="description">A woman is hired as a handmaiden to a Japanese heiress, but secretly she is involved in
+            a plot to defraud her.</p>
+          <div class="btn-group">
+            <a href="'https://player.videasy.net/movie/290098">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 5. Memories of Murder --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYmRjOWE5NmMtYTdkYS00ODFlLWJiMTMtYzE2NDZlZjlkZDQ0XkEyXkFqcGc@._V1_.jpg"
+          alt="Memories of Murder" />
+        <div class="info-right">
+          <h3>Memories of Murder (2003)</h3>
+          <p class="genre">Crime • Drama</p>
+          <p class="description">In a small Korean province in 1986, two detectives struggle with the case of multiple
+            young women being found raped and murdered.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/11423">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 6. I Saw the Devil --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BM2Q1ZGZiNTYtMWNjOC00NmU2LTg1MDQtZGZkNmY0Y2RlOTBmXkEyXkFqcGc@._V1_.jpg"
+          alt="I Saw the Devil" />
+        <div class="info-right">
+          <h3>I Saw the Devil (2010)</h3>
+          <p class="genre">Thriller • Action</p>
+          <p class="description">A secret agent exacts revenge on a serial killer through a series of captures and
+            releases.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/49797">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 7. The Wailing --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BODkwMTgxNjA2NF5BMl5BanBnXkFtZTgwMDc0OTcwOTE@._V1_FMjpg_UX1000_.jpg"
+          alt="The Wailing" />
+        <div class="info-right">
+          <h3>The Wailing (2016)</h3>
+          <p class="genre">Horror • Mystery</p>
+          <p class="description">A stranger arrives in a little village and soon after a mysterious sickness starts
+            spreading.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/293670">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 8. Exhuma --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BOTA1OTY1NTYtNDEzZS00OTgyLWI1NWEtNDI5NjBhOTIwNzIyXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Exhuma" />
+        <div class="info-right">
+          <h3>Exhuma (2024)</h3>
+          <p class="genre">Horror • Thriller</p>
+          <p class="description">A wealthy family contacts a shaman duo to save their newborn, leading them to a
+            mysterious grave in South Korea.</p>
+          <div class="btn-group">
+            <a href="https://player.videasy.net/movie/838209">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 9. Burning --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BZWU3YzgzMTgtOTIwYi00MmNkLWExYWEtZTEyOTAzYzEwM2Q2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Burning" />
+        <div class="info-right">
+          <h3>Burning (2018)</h3>
+          <p class="genre">Mystery • Drama</p>
+          <p class="description">Jong-su bumps into a girl who used to live in the same neighborhood, who asks him to
+            look after her cat while she's on a trip.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/491584?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 10. A Taxi Driver --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNjliN2VmMmQtM2FlMS00MmY2LWJlYzAtZDIzNjE1Y2I1N2I4XkEyXkFqcGc@._V1_.jpg"
+          alt="A Taxi Driver" />
+        <div class="info-right">
+          <h3>A Taxi Driver (2017)</h3>
+          <p class="genre">Action • History</p>
+          <p class="description">A taxi driver from Seoul helps a German reporter cover the Gwangju Uprising in 1980.
+          </p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/437068?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 11. The Host --}}
+      <div class="carde">
+        <img src="https://m.media-amazon.com/images/M/MV5BMTQyNzkxMDcwMV5BMl5BanBnXkFtZTcwMzQyNzYzMQ@@._V1_.jpg"
+          alt="The Host" />
+        <div class="info-right">
+          <h3>The Host (2006)</h3>
+          <p class="genre">Sci-Fi • Horror</p>
+          <p class="description">A monster emerges from Seoul's Han River and attacks people. One victim's loving family
+            does what it can to rescue her.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/1255?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 12. Decision to Leave --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYmE3MWE1MDYtYmE1NS00YzZmLTg1NTUtZGQ1NTBmOTlkNzAxXkEyXkFqcGc@._V1_.jpg"
+          alt="Decision to Leave" />
+        <div class="info-right">
+          <h3>Decision to Leave (2022)</h3>
+          <p class="genre">Mystery • Romance</p>
+          <p class="description">A detective investigating a man's death in the mountains meets the dead man's
+            mysterious wife in the course of his dogged sleuthing.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/705996?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 13. Concrete Utopia --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BZjEwOTcwMTgtODVjYi00NWI1LWFmNGItMTEzZWE5YTAzOGJkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Concrete Utopia" />
+        <div class="info-right">
+          <h3>Concrete Utopia (2023)</h3>
+          <p class="genre">Thriller • Sci-Fi</p>
+          <p class="description">Survivors gather at the only apartment building remaining in Seoul after a massive
+            earthquake.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/912078?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 14. Forgotten --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYWU5YzhiNTEtMDg5ZC00ZWRiLTkyNmItYzRkNGNmMzY5NmRmXkEyXkFqcGc@._V1_.jpg"
+          alt="Forgotten" />
+        <div class="info-right">
+          <h3>Forgotten (2017)</h3>
+          <p class="genre">Mystery • Thriller</p>
+          <p class="description">Jin-seok's brother returns after being kidnapped for 19 days with no memory of what
+            happened.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/473033?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      {{!-- 15. The Roundup --}}
+      <div class="carde">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYTlkZDk1NzUtMWFmZC00NjMzLWExNzEtZTA5N2M2ZDg5MzI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="The Roundup" />
+        <div class="info-right">
+          <h3>The Roundup (2022)</h3>
+          <p class="genre">Action • Crime</p>
+          <p class="description">Follows Ma Seok-do, who heads to a foreign country to extradite a suspect, but
+            discovers additional murder cases.</p>
+          <div class="btn-group">
+            <a href="https://vidlink.pro/movie/880348?primaryColor=63b8ff&secondaryColor=ffffff&iconColor=eeeeee">
+              <button class="play-btn">▶ Play</button>
+            </a>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+
+  {{!-- TV Series with Pop-up --}}
+  <div class="row" id="tv-series-row">
+    <h2 class="hidden1">Popular TV Series</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde series-card" data-id="squid-game">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNDNmNzUzMjEtNGVkYi00N2RjLWEwN2EtYjg3NzA4MGFkMjFkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Squid Game" />
+        <div class="info-right">
+          <h3>Squid Game</h3>
+          <p class="genre">Thriller • Drama</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="stranger-things">
+        <img src="https://images.justwatch.com/poster/301444843/s718/stranger-things.jpg" alt="Stranger Things" />
+        <div class="info-right">
+          <h3>Stranger Things</h3>
+          <p class="genre">Sci-Fi • Horror</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="alice-borderland">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMzlmNmRkOTEtOTYxOC00MTJjLTg1MTgtZGE0Yjk2YjM2ZjUyXkEyXkFqcGc@._V1_.jpg"
+          alt="Alice in Borderland" />
+        <div class="info-right">
+          <h3>Alice in Borderland</h3>
+          <p class="genre">Sci-Fi • Thriller</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="all-of-us-dead">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNTcyZjZjNjMtMzFhZC00ZDMyLTkyY2QtYzZlM2JjOGJhNzQyXkEyXkFqcGc@._V1_.jpg"
+          alt="All of Us Are Dead" />
+        <div class="info-right">
+          <h3>All of Us Are Dead</h3>
+          <p class="genre">Horror • Zombie</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="last-of-us">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYWI3ODJlMzktY2U5NC00ZjdlLWE1MGItNWQxZDk3NWNjN2RhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="The Last of Us" />
+        <div class="info-right">
+          <h3>The Last of Us</h3>
+          <p class="genre">Drama • Horror</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+
+  {{!-- epsiondes and seasons
+  --}}
+  <div id="seriesModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+
+      <div class="modal-hero">
+        <img id="modal-hero-img" src="" alt="Series Banner">
+        <div class="modal-hero-text">
+          <h1 id="modal-title">Title</h1>
+          <div class="modal-meta">
+            <span class="match">98% Match</span>
+            <span id="modal-year">2024</span>
+            <span class="age">18+</span>
+            <span id="modal-seasons">1 Season</span>
+          </div>
+          <p id="modal-desc">Description goes here...</p>
+        </div>
+      </div>
+
+      <div class="modal-episodes-container">
+        <div class="episodes-header">
+          <h3>Episodes</h3>
+          <select id="season-select" class="season-select">
+          </select>
+        </div>
+        <div class="episodes-list" id="episodes-list">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{!-- Scripts --}}
+  <script src="/js/profile.js"></script>
+  <script src="/js/episodes.js"></script>
+  <script src="/js/scrolllogic.js"></script>
+  <script src="/js/pageloader.js"></script>
+  <script src="/js/recentlyplayed.js"></script>
+  <script src="/js/button.js"></script>
+  <script src="/js/homepagescript.js"></script>
+  <script src="/js/css.js"></script>
+  <script src="/js/mobilescript.js"></script>
+</body>
+
+</html>

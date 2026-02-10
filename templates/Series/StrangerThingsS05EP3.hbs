@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stranger Things S05 Ep3 - StreamSphere</title>
+  <link rel="stylesheet" href="/css/playmovie.css" />
+</head>
+<style>
+  /* --- Existing Styles Preserved --- */
+  .next-episode {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .next-episode.show {
+    opacity: 1;
+  }
+
+  #nxtEpisodeBtn {
+    display: none;
+    position: absolute;
+    right: 30px;
+    bottom: 200px;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  #audioSelect {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  #volumeControl {
+    width: 80px;
+    accent-color: #ffffff;
+    cursor: pointer;
+    margin: 0 5px;
+  }
+
+  .volume-control-group {
+    display: flex;
+    align-items: center;
+  }
+
+  video::cue {
+    background: none;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 600;
+    text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.7);
+    line-height: 0.5;
+    font-style: italic;
+  }
+
+  /* --- NEW STYLES FOR LOADER & BUTTONS --- */
+  
+  /* Loader Spinner */
+  .loader {
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    display: none; /* Hidden by default */
+  }
+
+  @keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Skip Buttons styling to match existing .btn class */
+  .skip-btn {
+    font-size: 1.2rem; /* Slightly smaller than Play */
+    cursor: pointer;
+    margin: 0 10px;
+    user-select: none;
+    transition: transform 0.1s;
+  }
+  
+  .skip-btn:active {
+    transform: scale(0.9);
+  }
+
+  /* Improve Progress Bar cursor */
+  .progress-bar {
+    cursor: pointer;
+  }
+</style>
+
+<body>
+  <div class="player-container">
+
+    <div id="loader" class="loader"></div>
+
+    <div class="top-overlay" id="topOverlay">
+      <div class="rating">| <h1></h1></div>
+      <div class="title">Stranger Things S05 Ep3: The Turnbow Trap</div>
+      <div class="desc hidden1">Sci-Fi • Horror • Drama • 4K HDR</div>
+      
+      <a href="/Series/StrangerThingsS05EP4"><button id="Nxtepisode" class="hidden1" style="position: absolute;
+    right: 5%;
+    top: 35%;
+    width: auto;
+    height: auto;
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    cursor:pointer"> ▶ Next Episode</button></a>
+    </div>
+
+    <video id="moviePlayer" preload="metadata" playsinline crossorigin="anonymous">
+      <track id="engSubs" label="English" kind="subtitles" srclang="en"
+        src="https://amznseries.s3.ap-south-1.amazonaws.com/HLS_Output_Final/eng_subs.vtt" default />
+    </video>
+    
+    <div class="controls bottom-overlay hidden1" id="controls">
+      
+      <span class="skip-btn" id="rewindBtn" title="Rewind 10s">◀◀</span>
+      
+      <span class="btn" id="playPause">▶</span>
+      
+      <span class="skip-btn" id="forwardBtn" title="Forward 10s">▶▶</span>
+
+      <div class="time" id="time">0:00 / 0:00</div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="volume-control-group">
+        <span class="btn" id="volumeIcon">🔊</span>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+      </div>
+
+      <span class="btn" id="fullscreen">⛶</span>
+
+      <div class="language-select hidden1" style="top:5%;right:10%;color:white;z-index:10;" id="SeleCo">
+        <label for="audioSelect">🎧 Audio:</label>
+        <select id="audioSelect"
+          style="background:#000;color:#fff;border:1px solid #fff;padding:5px;border-radius:4px;">
+          <option value="English" selected>English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Tamil">Tamil</option>
+          <option value="Telugu">Telugu</option>
+          <option value="Korean">Korean</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const movie = document.getElementById("moviePlayer");
+    const playPause = document.getElementById("playPause");
+    const volumeIcon = document.getElementById("volumeIcon");
+    const volumeControl = document.getElementById("volumeControl");
+    const fullscreen = document.getElementById("fullscreen");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const timeLabel = document.getElementById("time");
+    const topOverlay = document.getElementById("topOverlay");
+    const controls = document.getElementById("controls");
+    const audioSelect = document.getElementById("audioSelect");
+    const nextBtn = document.getElementById("nextEpisodeBtn");
+    
+    // NEW Elements
+    const loader = document.getElementById("loader");
+    const rewindBtn = document.getElementById("rewindBtn");
+    const forwardBtn = document.getElementById("forwardBtn");
+
+    let audioHideTimeout;
+    let hideControlsTimeout;
+    let hls;
+    
+    // Flag for smooth dragging
+    let isDragging = false; 
+
+    const formatTime = (sec) => {
+      if (!sec) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, "0")}`;
+    };
+
+    const masterUrl = "https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/STRANGERTHINGS/STRANGER_THINGS_S05/HLS_STRANGERTHING_S05_EP3/master.m3u8";
+
+    if (Hls.isSupported()) {
+      const hlsConfig = {
+        enableWorker: true,
+        maxBufferLength: 30,
+        maxMaxBufferLength: 60,
+        startLevel: -1
+      };
+
+      hls = new Hls(hlsConfig);
+      hls.loadSource(masterUrl);
+      hls.attachMedia(movie);
+      
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        movie.volume = 1.0;
+        volumeControl.value = 1.0;
+        movie.play().catch(() => {});
+      });
+
+      hls.on(Hls.Events.ERROR, function (event, data) {
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              hls.recoverMediaError();
+              break;
+            default:
+              hls.destroy();
+              break;
+          }
+        }
+      });
+
+    } else if (movie.canPlayType("application/vnd.apple.mpegurl")) {
+      movie.src = masterUrl;
+      movie.addEventListener("loadedmetadata", () => {
+        movie.volume = 1.0;
+        volumeControl.value = 1.0;
+        movie.play();
+      });
+    }
+
+    // --- LOADER LOGIC ---
+    movie.addEventListener('waiting', () => { loader.style.display = 'block'; });
+    movie.addEventListener('playing', () => { loader.style.display = 'none'; });
+    movie.addEventListener('canplay', () => { loader.style.display = 'none'; });
+
+    // --- PROGRESS & DRAG LOGIC ---
+    movie.ontimeupdate = () => {
+      // Only update if user is NOT dragging
+      if (!isDragging) {
+        const current = movie.currentTime || 0;
+        const duration = movie.duration || 0;
+        const percent = (current / duration) * 100;
+        progress.style.width = percent + "%";
+        timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+      }
+    };
+
+    // Helper to update visual bar during drag
+    const updateProgressBarVisuals = (clientX) => {
+        const rect = progressBar.getBoundingClientRect();
+        let percent = (clientX - rect.left) / rect.width;
+        percent = Math.max(0, Math.min(1, percent)); // Clamp between 0 and 1
+        progress.style.width = (percent * 100) + "%";
+        return percent;
+    };
+
+    // Mouse Down: Start Dragging
+    progressBar.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        updateProgressBarVisuals(e.clientX);
+    });
+
+    // Mouse Move (on Document): Update Visuals smoothly
+    document.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            updateProgressBarVisuals(e.clientX);
+        }
+    });
+
+    // Mouse Up (on Document): Commit the seek
+    document.addEventListener('mouseup', (e) => {
+        if (isDragging) {
+            isDragging = false;
+            const percent = updateProgressBarVisuals(e.clientX);
+            if(movie.duration) {
+                movie.currentTime = percent * movie.duration;
+            }
+        }
+    });
+
+    // --- PLAY/PAUSE ---
+    playPause.onclick = () => {
+      if (movie.paused) {
+        movie.play();
+        playPause.textContent = "⏸";
+      } else {
+        movie.pause();
+        playPause.textContent = "▶";
+      }
+    };
+
+    // --- SKIP BUTTONS ---
+    rewindBtn.onclick = () => {
+      movie.currentTime = Math.max(0, movie.currentTime - 10);
+    };
+
+    forwardBtn.onclick = () => {
+      movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
+    };
+
+    // --- VOLUME ---
+    volumeControl.oninput = (e) => {
+      movie.volume = parseFloat(e.target.value);
+      movie.muted = false;
+      if (movie.volume === 0) {
+        volumeIcon.textContent = "🔇";
+      } else if (movie.volume < 0.5) {
+        volumeIcon.textContent = "🔈";
+      } else {
+        volumeIcon.textContent = "🔊";
+      }
+    };
+
+    volumeIcon.onclick = () => {
+      if (!movie.muted) {
+        movie._lastVolume = movie.volume;
+        movie.volume = 0;
+        volumeControl.value = 0;
+        volumeIcon.textContent = "🔇";
+        movie.muted = true;
+      } else {
+        const restoreVolume = movie._lastVolume || 0.5;
+        movie.volume = restoreVolume;
+        volumeControl.value = restoreVolume;
+        volumeIcon.textContent = (restoreVolume < 0.5) ? "🔈" : "🔊";
+        movie.muted = false;
+      }
+    };
+
+    // --- FULLSCREEN LOGIC ---
+    fullscreen.onclick = () => {
+        const container = document.querySelector('.player-container'); // Use container for custom controls
+        
+        if (!document.fullscreenElement) {
+            if (container.requestFullscreen) {
+                container.requestFullscreen();
+            } else if (container.mozRequestFullScreen) { /* Firefox */
+                container.mozRequestFullScreen();
+            } else if (container.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+                container.webkitRequestFullscreen();
+            } else if (container.msRequestFullscreen) { /* IE/Edge */
+                container.msRequestFullscreen();
+            }
+            fullscreen.textContent = "⛶"; // Change icon if needed
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { 
+                document.webkitExitFullscreen(); 
+            }
+            fullscreen.textContent = "⛶";
+        }
+    };
+
+    // --- CONTROLS VISIBILITY ---
+    const showControls = () => {
+      controls.style.opacity = 1;
+      topOverlay.style.opacity = 1;
+      clearTimeout(hideControlsTimeout);
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+    const hideControls = () => {
+        // Don't hide if audio selector is open or we are dragging
+        if(audioSelect.style.opacity === "1" || isDragging) return;
+        controls.style.opacity = 0;
+        topOverlay.style.opacity = 0;
+    };
+    document.addEventListener("mousemove", showControls);
+    document.addEventListener("click", showControls); // Show on click too
+
+    // Audio Selector Logic
+    function showAudioSelector() {
+      audioSelect.style.opacity = "1";
+      audioSelect.style.pointerEvents = "auto";
+      clearTimeout(audioHideTimeout);
+      audioHideTimeout = setTimeout(() => {
+        audioSelect.style.opacity = "0";
+        audioSelect.style.pointerEvents = "none";
+      }, 3000);
+    }
+    document.addEventListener("mousemove", showAudioSelector);
+
+    audioSelect.addEventListener("change", (e) => {
+      const lang = e.target.value;
+      if (hls && hls.audioTracks) {
+        const targetTrack = hls.audioTracks.find(
+          (t) => t.name && t.name.toLowerCase() === lang.toLowerCase()
+        );
+        if (targetTrack) {
+          if (hls.audioTrack !== targetTrack.id) {
+            console.log(`Switching audio to: ${targetTrack.name}`);
+            hls.audioTrack = targetTrack.id;
+          }
+        }
+      }
+    });
+
+    window.onload = () => {
+      for (let i = 0; i < movie.textTracks.length; i++) {
+        movie.textTracks[i].mode = "showing";
+      }
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+
+    movie.addEventListener("timeupdate", () => {
+      if (movie.duration) {
+        const lastSixMin = movie.duration - 360; 
+        if (movie.currentTime >= lastSixMin) {
+          if(nextBtn) nextBtn.style.display = "block";
+        } else {
+          if(nextBtn) nextBtn.style.display = "none";
+        }
+      }
+    });
+  </script>
+
+  <script src="/js/css.js"></script>
+</body>
+
+</html>

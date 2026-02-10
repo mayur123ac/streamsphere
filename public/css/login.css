@@ -1,0 +1,567 @@
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  font-family: sans-serif;
+}
+body {
+  background: #000;
+  background-image:
+    linear-gradient(rgba(0, 0.8, 0, 0.8), rgba(0.1, 0, 0, 0.8)),
+    url("../assets/maincont.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  max-width: 100%;
+  height: 100%;
+}
+header {
+  height: 10vh;
+  margin: 10px;
+}
+.logo img {
+  width: 17rem;
+  margin: 10px 0;
+}
+.login-container {
+  width: 1000px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.login-box {
+  backdrop-filter: blur(15px);
+  padding: 20px;
+  border: 1px solid #999;
+  border-radius: 20px;
+  height: 530px;
+  width: 600px;
+}
+
+input {
+  width: 90%;
+  padding: 18px;
+  margin: 5px 0;
+  background: #000;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  /* height: 1rem; */
+
+  font-size: 14px;
+}
+
+button {
+  padding: 15px;
+  font-size: 1rem;
+  margin: 10px 0;
+  border-radius: 5px;
+  color: white;
+  background: linear-gradient(45deg, blue, purple, blue);
+  background-size: 200% 200%; /* Allows movement/stretch */
+  background-position: 0% 50%;
+  border: none;
+  cursor: pointer;
+  width: 90%;
+  transition: background-position 0.5s ease;
+}
+
+a {
+  display: block;
+
+  color: #999;
+  text-align: left;
+  padding: 5px 33px;
+  font-size: 0.9em;
+}
+
+#title {
+  text-align: left;
+  padding: 10px 32px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 550;
+  background-image: linear-gradient(344deg, #00fff1, #c700dc);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-decoration: none;
+}
+
+p {
+  text-align: left;
+  padding: 5px 33px;
+  margin: 5px 0px;
+  font-weight: 500;
+  /* background-image: linear-gradient(344deg, #00fff1, #c700dc);
+        background-clip: text;
+        -webkit-text-fill-color: transparent; */
+  color: #fff;
+}
+p.muted {
+  padding-bottom: 0;
+}
+#logincon {
+  margin-top: 20px;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  font-family: sans-serif;
+}
+
+body {
+  background: #000;
+  background-image:
+    linear-gradient(rgba(0, 0.8, 0, 0.8), rgba(0.1, 0, 0, 0.8)),
+    url("../assets/maincont.jpg");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  max-width: 100%;
+  height: 100%;
+}
+
+/* hidden1 */
+.hidden1 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(100%);
+  transition: all 1s;
+}
+.show1 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* hidden0 */
+.hidden {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(35%);
+  transition: all 1s;
+  transform: scale(1.4);
+}
+.show {
+  opacity: 1;
+  filter: blur(0);
+  width: 100%;
+  transform: translateX(0);
+  transform: scale(1);
+}
+
+/* hidden2 */
+.hidden2 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(-35%);
+  transition: all 1s;
+  transform: scale(1.1);
+}
+.show2 {
+  opacity: 1;
+  filter: blur(0);
+  width: 100%;
+  transform: translateX(0);
+  transform: scale(1);
+}
+
+/* hidden3 */
+
+.hidden3 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(20%);
+  transition: all 1s;
+}
+.show3 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
+}
+
+/* For mobile screens (max-width: 480px) */
+@media (max-width: 480px) {
+  .logo {
+    width: 8rem;
+    margin-bottom: 0;
+  }
+  header {
+    height: 10vh;
+    margin: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  body {
+    background-size: cover;
+    background-position: top;
+  }
+  .logo img {
+    width: 10rem;
+  }
+  .login-container {
+    width: 92%;
+    padding: 15px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 550;
+    background-image: linear-gradient(344deg, #00fff1, #c700dc);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 2px;
+    color: transparent;
+    text-decoration: none;
+  }
+  .login-box {
+    width: 90%;
+    height: auto;
+    padding: 15px 15px 25px 15px;
+  }
+
+  #logincon {
+    margin-top: 0px;
+  }
+  #title {
+    padding: 15px 15px 0px;
+  }
+}
+/* For small tablets (max-width: 720px) */
+@media (max-width: 720px) {
+  body {
+    background-size: cover;
+    background-position: center;
+  }
+  header {
+    height: 10vh;
+    margin: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .logo {
+    width: 8rem;
+    margin-bottom: 0;
+  }
+  input {
+    width: 90%;
+    padding: 15px;
+    margin: 10px 0 10px;
+    background: #000;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    /* height: 1rem; */
+    font-size: 14px;
+    width: 92%;
+  }
+  .logo img {
+    width: 12rem;
+  }
+  .login-container {
+    width: 92%;
+    padding: 15px;
+  }
+  .login-box {
+    width: 90%;
+    height: auto;
+    transform: translateY(5%);
+  }
+
+  a {
+    padding: 5px 20px;
+    color: #999;
+  }
+}
+ #page-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #141414;
+    /* Dark background to match theme */
+    z-index: 9999;
+    /* Must be higher than navbar and modal */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, visibility 0.5s;
+  }
+
+  /* The Spinner Animation */
+  .loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.2);
+    border-top: 5px solid blueviolet;
+   
+    /* Red accent color */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  /* Animation Keyframes */
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Class to hide the loader */
+  .loader-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    /* Ensures you can click through it once hidden */
+  }
+
+  .modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    z-index: 2000;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Black w/ opacity */
+    backdrop-filter: blur(5px);
+  }
+
+  .modal-content {
+    background-color: #181818;
+    margin: 5% auto;
+    /* 5% from top and centered */
+    width: 90%;
+    max-width: 850px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    color: white;
+    animation: modalFadeIn 0.4s;
+  }
+
+  @keyframes modalFadeIn {
+    from {
+      transform: translateY(50px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .close-modal {
+    color: #fff;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+  }
+
+  .close-modal:hover {
+    background: #fff;
+    color: #000;
+  }
+
+  /* Modal Hero */
+  .modal-hero {
+    position: relative;
+    height: 400px;
+  }
+
+  .modal-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
+  }
+
+  .modal-hero-text {
+    position: absolute;
+    bottom: 20px;
+    left: 40px;
+    width: 60%;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+  }
+
+  .modal-hero-text h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+  }
+
+  .modal-meta {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+  }
+
+  .modal-meta .match {
+    color: #46d369;
+  }
+
+  .modal-meta .age {
+    border: 1px solid #aaa;
+    padding: 0 5px;
+    font-size: 0.8rem;
+  }
+
+  /* Episodes List */
+  .modal-episodes-container {
+    padding: 20px 40px;
+  }
+
+  .episodes-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #404040;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .episode-row {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #404040;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .episode-row:hover {
+    background-color: #333;
+  }
+
+  .ep-num {
+    font-size: 1.5rem;
+    color: #d2d2d2;
+    margin-right: 20px;
+    min-width: 30px;
+  }
+
+  .ep-thumb {
+    width: 120px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 20px;
+  }
+
+  .ep-info {
+    flex-grow: 1;
+  }
+
+  .ep-title {
+    font-weight: bold;
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .ep-desc {
+    font-size: 0.85rem;
+    color: #aaa;
+  }
+
+  .ep-duration {
+    font-size: 0.9rem;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* Season Dropdown Styling */
+  .season-select {
+    background-color: #333;
+    color: white;
+    border: 1px solid #555;
+    padding: 5px 15px;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  .season-select:hover {
+    background-color: #444;
+  }
+
+  /* Mobile Adjustments */
+  @media (max-width: 768px) {
+    .modal-hero {
+      height: 250px;
+    }
+
+    .modal-meta .match {
+      color: #46d369;
+      font-size: 12px;
+    }
+
+    .modal-hero-text h1 {
+      font-size: 20px;
+    }
+
+    .modal-episodes-container {
+      padding: 10px 15px;
+    }
+
+    .ep-thumb {
+      width: 90px;
+      height: 55px;
+    }
+
+    .ep-desc {
+      display: none;
+    }
+
+    #modal-desc {
+      font-size: 12px;
+    }
+
+    .ep-title {
+      font-weight: bold;
+      font-size: 12px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    /* Hide description on small screens */
+  }

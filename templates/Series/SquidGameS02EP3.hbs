@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Squid Game S02 Ep3 - StreamSphere</title>
+  <link rel="stylesheet" href="/css/playmovie.css" />
+</head>
+
+<style>
+  .next-episode {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+
+  .next-episode.show {
+    opacity: 1;
+  }
+
+  #audioSelect {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  /* 🎧 New style for the volume control slider */
+  #volumeControl {
+    width: 80px;
+    /* Reduced width for better fit in controls bar */
+    accent-color: #ffffff;
+    cursor: pointer;
+    margin: 0 5px;
+    /* Added margin for spacing */
+  }
+
+  .volume-control-group {
+    display: flex;
+    align-items: center;
+    /* Ensure this group aligns correctly with other controls */
+    /* If you need more specific alignment, you'll need to update playmovie.css */
+  }
+  @media screen {
+    
+  }
+</style>
+
+<body>
+  <div class="player-container">
+
+    <div class="top-overlay" id="topOverlay">
+      <div class="rating">| <h1></h1>
+      </div>
+      <div class="title">Squid Game S02 Ep3</div>
+      <div class="desc hidden1">Action • Thriller • Mystery • 4K HDR</div>
+      <a href="SquidGameS02EP4"><button id="Nxtepisode" class="hidden1" style="position: absolute;
+    right: 5%;
+    top: 35%;
+    width: auto;
+    height: auto;
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-weight: 700;
+    cursor:pointer"> ▶ Next Episode</button></a>
+
+    </div>
+
+
+    <video id="moviePlayer" preload="metadata" playsinline crossorigin="anonymous">
+      <track id="engSubs" label="English" kind="subtitles" srclang="en"
+        src="https://amznseries.s3.ap-south-1.amazonaws.com/HLS_Output_Ep3_Final/SquidGame_S02E03_English.vtt"
+        default />
+    </video>
+
+
+
+
+  <div class="controls bottom-overlay hidden1" id="controls">
+    <span class="btn" id="playPause">▶</span>
+    <div class="time" id="time">0:00 / 0:00</div>
+    <div class="progress-bar" id="progressBar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="volume-control-group">
+      <span class="btn" id="volumeIcon">🔊</span>
+      <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+    </div>
+
+    <span class="btn" id="fullscreen">⛶</span>
+
+    <div class="language-select hidden1" style="top:5%;right:10%;color:white;z-index:10;" id="SeleCo">
+      <label for="audioSelect">🎧 Audio:</label>
+      <select id="audioSelect" style="background:#000;color:#fff;border:1px solid #fff;padding:5px;border-radius:4px;">
+      </select>
+    </div>
+  </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const movie = document.getElementById("moviePlayer");
+    const playPause = document.getElementById("playPause");
+    // const mute = document.getElementById("mute"); // REMOVED
+    const volumeIcon = document.getElementById("volumeIcon"); // NEW
+    const volumeControl = document.getElementById("volumeControl"); // NEW
+    const fullscreen = document.getElementById("fullscreen");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const timeLabel = document.getElementById("time");
+    const topOverlay = document.getElementById("topOverlay");
+    const controls = document.getElementById("controls");
+    const audioSelect = document.getElementById("audioSelect");
+    const nextBtn = document.getElementById("nextEpisodeBtn");
+
+    let audioHideTimeout;
+    let hideControlsTimeout;
+    let hls;
+
+    const formatTime = (sec) => {
+      if (!sec) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, "0")}`;
+    };
+
+    const masterUrl = "https://amznseries.s3.ap-south-1.amazonaws.com/HLS_Output_Ep3_Final/master.m3u8";
+
+    if (Hls.isSupported()) {
+      hls = new Hls({ enableWorker: true, capLevelToPlayerSize: true });
+      hls.loadSource(masterUrl);
+      hls.attachMedia(movie);
+
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        // Set initial volume
+        movie.volume = 1.0;
+        volumeControl.value = 1.0;
+        movie.play().catch(() => { });
+      });
+
+      // 🔹 Populate audio dropdown dynamically from manifest
+      hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_, data) => {
+        audioSelect.innerHTML = "";
+        data.audioTracks.forEach((track, i) => {
+          const opt = document.createElement("option");
+          opt.value = i;
+          opt.textContent = track.name || track.lang || `Track ${i + 1}`;
+          if (track.default) opt.selected = true;
+          audioSelect.appendChild(opt);
+        });
+      });
+
+      // 🔹 Switch audio when selected
+      audioSelect.addEventListener("change", (e) => {
+        const trackId = parseInt(e.target.value);
+        hls.audioTrack = trackId;
+        console.log("Switched to:", hls.audioTracks[trackId].name);
+      });
+    } else if (movie.canPlayType("application/vnd.apple.mpegurl")) {
+      movie.src = masterUrl;
+      movie.addEventListener("loadedmetadata", () => {
+        movie.volume = 1.0;
+        volumeControl.value = 1.0;
+        movie.play()
+      });
+    }
+
+    // 🎬 Player controls
+    movie.ontimeupdate = () => {
+      const current = movie.currentTime || 0;
+      const duration = movie.duration || 0;
+      progress.style.width = (current / duration) * 100 + "%";
+      timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+    };
+
+    playPause.onclick = () => {
+      if (movie.paused) {
+        movie.play();
+        playPause.textContent = "⏸";
+      } else {
+        movie.pause();
+        playPause.textContent = "▶";
+      }
+    };
+
+    // 🎚 Volume Slider Handler (Replaces mute.onclick)
+    volumeControl.oninput = (e) => {
+      movie.volume = parseFloat(e.target.value);
+      // Change icon based on volume level
+      if (movie.volume === 0) {
+        volumeIcon.textContent = "🔇";
+      } else if (movie.volume < 0.5) {
+        volumeIcon.textContent = "🔈";
+      } else {
+        volumeIcon.textContent = "🔊";
+      }
+      movie.muted = false; // Ensure it's unmuted when volume is adjusted
+    };
+
+    // Mute/Unmute by clicking the icon (optional, but good UX)
+    volumeIcon.onclick = () => {
+      if (movie.volume > 0 || movie.muted) { // If audio is up, or if it's currently muted
+        if (!movie.muted) {
+          movie._lastVolume = movie.volume; // Store current volume
+          movie.volume = 0;
+          volumeControl.value = 0;
+          volumeIcon.textContent = "🔇";
+          movie.muted = true;
+        } else {
+          // Restore volume
+          const restoreVolume = movie._lastVolume || 0.5;
+          movie.volume = restoreVolume;
+          volumeControl.value = restoreVolume;
+          volumeIcon.textContent = (restoreVolume < 0.5) ? "🔈" : "🔊";
+          movie.muted = false;
+        }
+      }
+    };
+
+
+    fullscreen.onclick = () => {
+      if (movie.parentElement.requestFullscreen) movie.parentElement.requestFullscreen();
+      else if (movie.parentElement.webkitRequestFullscreen) movie.parentElement.webkitRequestFullscreen();
+    };
+
+    progressBar.onclick = (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const percent = (e.clientX - rect.left) / rect.width;
+      movie.currentTime = percent * movie.duration;
+    };
+
+    // 🎬 Auto-hide controls
+    const showControls = () => {
+      controls.style.opacity = 1;
+      topOverlay.style.opacity = 1;
+      clearTimeout(hideControlsTimeout);
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+
+    
+
+    document.addEventListener("mousemove", showControls);
+
+    // 🎧 Show/hide audio selector on mouse movement
+    function showAudioSelector() {
+      audioSelect.style.opacity = "1";
+      audioSelect.style.pointerEvents = "auto";
+      clearTimeout(audioHideTimeout);
+      audioHideTimeout = setTimeout(() => {
+        audioSelect.style.opacity = "0";
+        audioSelect.style.pointerEvents = "none";
+      }, 3000);
+    }
+    document.addEventListener("mousemove", showAudioSelector);
+
+    // 🎬 Show subtitles by default
+    window.onload = () => {
+      for (let i = 0; i < movie.textTracks.length; i++) {
+        movie.textTracks[i].mode = "showing";
+      }
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+
+    // 🎬 Show "Next Episode" button 6 minutes before video ends
+    movie.addEventListener("timeupdate", () => {
+      if (movie.duration && movie.currentTime >= movie.duration - 360) {
+        nextBtn.style.display = "block";
+        nextBtn.classList.add("show");
+      }
+    });
+  </script>
+
+  <script src="/js/css.js"></script>
+</body>
+
+</html>

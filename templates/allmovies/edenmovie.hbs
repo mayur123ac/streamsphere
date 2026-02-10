@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Eden (2025) - Full Movie</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <link rel="stylesheet" href="/css/movie.css">
+    <link rel="stylesheet" href="/css/playmovie.css">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        .player-container {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .zoomed {
+            object-fit: cover !important;
+            transform: scale(1.12);
+        }
+
+        .start-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .big-play-btn {
+            font-size: 5rem;
+            color: white;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .te {
+            color: purple;
+        }
+
+        /* 🔹 Audio Dropdown Styling */
+        .audio-dropdown {
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-right: 15px;
+            outline: none;
+            height: 30px;
+        }
+
+        .audio-dropdown option {
+            background: #222;
+            color: white;
+        }
+
+        /* 🔹 Volume Control Group */
+        .volume-control-group {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            width: 80px; 
+            background: transparent; 
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        
+        input[type=range]:focus { outline: none; }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #555;
+            border-radius: 2px;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px; 
+        }
+
+        /* Toast Notification */
+        .audio-toast {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 30;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .audio-toast.show {
+            opacity: 1;
+        }
+
+        /* --- NEW STYLES: Loader & Skip Buttons --- */
+        .loader {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid #fff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 25;
+            display: none; 
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .skip-btn {
+            font-size: 16px; 
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            margin: 0 15px;
+            user-select: none;
+            font-family: sans-serif;
+            transition: transform 0.1s;
+        }
+        
+        .skip-btn:active {
+            transform: scale(0.9);
+        }
+
+        /* Smooth Drag Cursor */
+        .progress-bar { cursor: pointer; }
+    </style>
+</head>
+
+<body>
+
+    <div class="player-container" id="playerContainer">
+
+        <div id="loader" class="loader"></div>
+
+        <div class="top-overlay" id="topOverlay">
+            <h1 class="te"> | </h1>
+            <div class="title">Eden (2025)</div>
+            <div class="desc">Thriller • Survival • 16+ • 4K HDR</div>
+        </div>
+
+        <div class="start-overlay" id="startOverlay">
+            <div class="big-play-btn">▶</div>
+        </div>
+
+        <div id="audioToast" class="audio-toast">Audio Changed</div>
+
+        <video id="moviePlayer" preload="metadata" playsinline crossorigin="anonymous">
+        </video>
+
+        <div class="controls bottom-overlay" id="controls">
+            
+            <span class="skip-btn" id="rewindBtn">-10s</span>
+
+            <span class="btn" id="playPause">▶</span>
+
+            <span class="skip-btn" id="forwardBtn">+10s</span>
+
+            <div class="time" id="time">0:00 / 0:00</div>
+
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <select id="audioSelect" class="audio-dropdown">
+                <option value="0" selected>Hindi</option>
+                <option value="1">English</option>
+            </select>
+
+            <div class="volume-control-group">
+                <span class="btn" id="volumeIcon">🔊</span>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+            </div>
+
+            <span class="btn" id="zoom">🔍</span>
+            <span class="btn" id="fullscreen">⛶</span>
+        </div>
+
+    </div>
+
+    <script>
+        /* ===================== ELEMENTS ===================== */
+        const movie = document.getElementById("moviePlayer");
+        const container = document.getElementById("playerContainer");
+        const playPause = document.getElementById("playPause");
+        const volumeIcon = document.getElementById("volumeIcon");
+        const volumeControl = document.getElementById("volumeControl");
+        const fullscreen = document.getElementById("fullscreen");
+        const zoomBtn = document.getElementById("zoom");
+        const audioSelect = document.getElementById("audioSelect");
+        const progressBar = document.getElementById("progressBar");
+        const progress = document.getElementById("progress");
+        const timeLabel = document.getElementById("time");
+        const controls = document.getElementById("controls");
+        const topOverlay = document.getElementById("topOverlay");
+        const startOverlay = document.getElementById("startOverlay");
+        const audioToast = document.getElementById("audioToast");
+        
+        // New Elements
+        const loader = document.getElementById("loader");
+        const rewindBtn = document.getElementById("rewindBtn");
+        const forwardBtn = document.getElementById("forwardBtn");
+
+        // CONFIGURATION
+        const streamUrl = "https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/Eden+Movie/master.m3u8";
+        let hideTimeout;
+        let isZoomed = false;
+        let hls = null;
+        let lastVolume = 1.0;
+        let isDragging = false; // Smooth Drag Flag
+
+        /* ===================== HLS SETUP ===================== */
+        function initPlayer() {
+            if (Hls.isSupported()) {
+                const hlsConfig = {
+                    enableWorker: true,
+                    maxBufferLength: 30,
+                    maxMaxBufferLength: 60,
+                    startLevel: -1
+                };
+                hls = new Hls(hlsConfig);
+                hls.loadSource(streamUrl);
+                hls.attachMedia(movie);
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    // 🔹 Force Hindi (Track 0) on load
+                    hls.audioTrack = 0;
+                    audioSelect.value = "0"; 
+                    console.log("Default audio set to Hindi (Track 0)");
+                });
+
+                // HLS Error Handling
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.destroy();
+                                break;
+                        }
+                    }
+                });
+            }
+            else if (movie.canPlayType('application/vnd.apple.mpegurl')) {
+                movie.src = streamUrl;
+                // For Safari
+                movie.addEventListener('loadedmetadata', () => {
+                   if(movie.audioTracks && movie.audioTracks.length > 0) {
+                       for(let i=0; i<movie.audioTracks.length; i++) {
+                           movie.audioTracks[i].enabled = (i === 0);
+                       }
+                       audioSelect.value = "0";
+                   }
+                });
+            }
+        }
+
+        // Initialize immediately
+        initPlayer();
+
+        /* ===================== LOADER LOGIC ===================== */
+        movie.addEventListener('waiting', () => { loader.style.display = 'block'; });
+        movie.addEventListener('playing', () => { loader.style.display = 'none'; });
+        movie.addEventListener('canplay', () => { loader.style.display = 'none'; });
+
+        /* ===================== DROPDOWN LOGIC ===================== */
+        audioSelect.onchange = function () {
+            let selectedId = parseInt(this.value);
+            let selectedText = this.options[this.selectedIndex].text;
+
+            if (hls) {
+                if (selectedId < hls.audioTracks.length) {
+                    hls.audioTrack = selectedId;
+                    showAudioToast("Switched to " + selectedText);
+                } else {
+                    showAudioToast("Track unavailable");
+                }
+            } else if (movie.audioTracks) {
+                for (let i = 0; i < movie.audioTracks.length; i++) {
+                    movie.audioTracks[i].enabled = (i === selectedId);
+                }
+                showAudioToast("Switched to " + selectedText);
+            } else {
+                showAudioToast("Audio switching not supported");
+            }
+            this.blur();
+        };
+
+        function showAudioToast(text) {
+            audioToast.textContent = text;
+            audioToast.classList.add("show");
+            setTimeout(() => {
+                audioToast.classList.remove("show");
+            }, 2000);
+        }
+
+        /* ===================== SKIP BUTTONS ===================== */
+        rewindBtn.onclick = (e) => {
+            e.stopPropagation();
+            movie.currentTime = Math.max(0, movie.currentTime - 10);
+        };
+
+        forwardBtn.onclick = (e) => {
+            e.stopPropagation();
+            movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
+        };
+
+        /* ===================== VOLUME LOGIC ===================== */
+        volumeControl.addEventListener('input', (e) => {
+            movie.volume = e.target.value;
+            movie.muted = false;
+            updateVolumeIcon();
+        });
+
+        volumeIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (movie.muted || movie.volume === 0) {
+                movie.muted = false;
+                movie.volume = lastVolume || 0.5;
+                volumeControl.value = movie.volume;
+            } else {
+                lastVolume = movie.volume;
+                movie.muted = true;
+                movie.volume = 0;
+                volumeControl.value = 0;
+            }
+            updateVolumeIcon();
+        });
+
+        function updateVolumeIcon() {
+            if (movie.muted || movie.volume === 0) {
+                volumeIcon.textContent = "🔇";
+            } else if (movie.volume < 0.5) {
+                volumeIcon.textContent = "🔉";
+            } else {
+                volumeIcon.textContent = "🔊";
+            }
+        }
+
+        /* ===================== STANDARD PLAYER LOGIC ===================== */
+        const formatTime = (sec = 0) => {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s.toString().padStart(2, "0")}`;
+        };
+
+        /* ===================== PROGRESS & SMOOTH DRAG ===================== */
+        movie.ontimeupdate = () => {
+            if (!isDragging && movie.duration) {
+                progress.style.width = (movie.currentTime / movie.duration) * 100 + "%";
+                timeLabel.textContent = `${formatTime(movie.currentTime)} / ${formatTime(movie.duration)}`;
+            }
+        };
+
+        const updateProgressBarVisuals = (clientX) => {
+            const rect = progressBar.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.max(0, Math.min(1, percent));
+            progress.style.width = (percent * 100) + "%";
+            return percent;
+        };
+
+        // Mouse Events
+        progressBar.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            isDragging = true;
+            updateProgressBarVisuals(e.clientX);
+        });
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) { updateProgressBarVisuals(e.clientX); }
+        });
+        document.addEventListener('mouseup', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                const percent = updateProgressBarVisuals(e.clientX);
+                if(movie.duration) { movie.currentTime = percent * movie.duration; }
+            }
+        });
+
+        // Touch Events (Mobile)
+        progressBar.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+            isDragging = true;
+            updateProgressBarVisuals(e.touches[0].clientX);
+        });
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) { updateProgressBarVisuals(e.touches[0].clientX); }
+        });
+        document.addEventListener('touchend', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                // Note: Standard click/seek logic usually handles the final jump
+                // or we rely on the last touchmove position
+            }
+        });
+
+        /* ===================== FULLSCREEN & ROTATION ===================== */
+        async function enterImmersiveMode() {
+            try {
+                if (!document.fullscreenElement) {
+                    if (container.requestFullscreen) await container.requestFullscreen();
+                    else if (container.webkitRequestFullscreen) await container.webkitRequestFullscreen();
+                    else if (movie.webkitEnterFullscreen) movie.webkitEnterFullscreen();
+                }
+                if (screen.orientation && screen.orientation.lock) {
+                    setTimeout(() => {
+                        screen.orientation.lock("landscape").catch(e => console.warn(e));
+                    }, 100);
+                }
+            } catch (err) { console.log(err); }
+        }
+
+        startOverlay.addEventListener("click", async () => {
+            startOverlay.classList.add("hidden");
+            try { await movie.play(); } catch (err) { console.error(err); }
+            if (window.innerWidth <= 768) await enterImmersiveMode();
+        });
+
+        playPause.onclick = (e) => { e.stopPropagation(); togglePlay(); };
+        function togglePlay() {
+            if (movie.paused) { movie.play(); startOverlay.classList.add("hidden"); }
+            else { movie.pause(); }
+        }
+        movie.onplay = () => (playPause.textContent = "⏸");
+        movie.onpause = () => (playPause.textContent = "▶");
+
+        fullscreen.onclick = async (e) => {
+            e.stopPropagation();
+            if (!document.fullscreenElement) { await enterImmersiveMode(); }
+            else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+            }
+        };
+
+        zoomBtn.onclick = (e) => {
+            e.stopPropagation();
+            isZoomed = !isZoomed;
+            movie.classList.toggle("zoomed", isZoomed);
+            zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
+        };
+
+        /* ===================== AUTO-HIDE CONTROLS ===================== */
+        container.addEventListener("click", (e) => {
+            if (e.target.closest(".controls") || e.target === startOverlay) return;
+            showControls();
+        });
+
+        function showControls() {
+            controls.style.opacity = 1;
+            topOverlay.style.opacity = 1;
+            container.style.cursor = "default";
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(hideControls, 3000);
+        }
+
+        function hideControls() {
+            if (movie.paused || isDragging) return; // Don't hide if paused or dragging
+            controls.style.opacity = 0;
+            topOverlay.style.opacity = 0;
+            container.style.cursor = "none";
+        }
+
+        container.addEventListener("mousemove", showControls);
+        container.addEventListener("touchstart", showControls);
+        showControls();
+    </script>
+
+    <script src="/js/css.js"></script>
+</body>
+
+</html>

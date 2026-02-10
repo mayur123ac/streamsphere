@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Captain America: Civil War - Full Movie</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <link rel="stylesheet" href="/css/movie.css">
+    <link rel="stylesheet" href="/css/playmovie.css">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        .player-container {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .zoomed {
+            object-fit: cover !important;
+            transform: scale(1.12);
+        }
+
+        .start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .big-play-btn {
+            font-size: 5rem;
+            color: white;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .te {
+            color: purple;
+            /* Marvel Red */
+        }
+
+        /* 🔹 Audio Dropdown Styling */
+        .audio-dropdown {
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-right: 10px;
+            outline: none;
+            height: 30px;
+            max-width: 100px;
+        }
+
+        .audio-dropdown option {
+            background: #222;
+            color: white;
+        }
+
+        /* 🔹 Volume Control Group */
+        .volume-control-group {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 70px;
+            background: transparent;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #555;
+            border-radius: 2px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+        }
+
+        /* 🔹 CC Button Active State */
+        .cc-active {
+            color: #d63031 !important;
+            /* Red when on */
+            font-weight: bold;
+            border-bottom: 2px solid #d63031;
+        }
+
+        /* Toast Notification */
+        .audio-toast {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 30;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .audio-toast.show {
+            opacity: 1;
+        }
+
+        video::cue {
+            background: none;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 600;
+            text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.7);
+            line-height: 0.5;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="player-container" id="playerContainer">
+
+        <div class="top-overlay" id="topOverlay">
+            <h1 class="te"> | </h1>
+            <div class="title">Captain America: Civil War</div>
+            <div class="desc">Action • Sci-Fi • Superhero • 4K HDR</div>
+        </div>
+
+        <div class="start-overlay" id="startOverlay">
+            <div class="big-play-btn">▶</div>
+        </div>
+
+        <div id="audioToast" class="audio-toast">Status</div>
+
+        <video id="moviePlayer" preload="metadata" playsinline crossorigin="anonymous">
+            <track label="English" kind="subtitles" srclang="en"
+                src="https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/CivilWar_HLS/subs_en.vtt">
+            <track label="Hindi" kind="subtitles" srclang="hi"
+                src="https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/CivilWar_HLS/subs_hi.vtt">
+        </video>
+
+        <div class="controls bottom-overlay" id="controls">
+            <span class="btn" id="playPause">▶</span>
+            <div class="time" id="time">0:00 / 0:00</div>
+
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <select id="audioSelect" class="audio-dropdown">
+                <option value="-1">Audio...</option>
+            </select>
+
+            <span class="btn" id="ccBtn" title="Toggle Subtitles">CC</span>
+
+            <div class="volume-control-group">
+                <span class="btn" id="volumeIcon">🔊</span>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+            </div>
+
+            <span class="btn" id="zoom">🔍</span>
+            <span class="btn" id="fullscreen">⛶</span>
+        </div>
+
+    </div>
+
+    <script>
+        /* ===================== CONFIGURATION ===================== */
+        const streamUrl = "https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/CivilWar_HLS/master.m3u8";
+
+        /* ===================== ELEMENTS ===================== */
+        const movie = document.getElementById("moviePlayer");
+        const container = document.getElementById("playerContainer");
+        const playPause = document.getElementById("playPause");
+        const volumeIcon = document.getElementById("volumeIcon");
+        const volumeControl = document.getElementById("volumeControl");
+        const fullscreen = document.getElementById("fullscreen");
+        const zoomBtn = document.getElementById("zoom");
+        const audioSelect = document.getElementById("audioSelect");
+        const ccBtn = document.getElementById("ccBtn");
+        const progressBar = document.getElementById("progressBar");
+        const progress = document.getElementById("progress");
+        const timeLabel = document.getElementById("time");
+        const controls = document.getElementById("controls");
+        const topOverlay = document.getElementById("topOverlay");
+        const startOverlay = document.getElementById("startOverlay");
+        const audioToast = document.getElementById("audioToast");
+
+        let hideTimeout;
+        let isZoomed = false;
+        let hls = null;
+        let lastVolume = 1.0;
+        let currentSubTrack = -1; // -1 means off
+
+        /* ===================== HLS SETUP & AUDIO LOGIC ===================== */
+        function initPlayer() {
+            if (Hls.isSupported()) {
+                hls = new Hls();
+                hls.loadSource(streamUrl);
+                hls.attachMedia(movie);
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    // Check if audio tracks were found
+                    if (hls.audioTracks.length > 0) {
+                        generateAudioOptions(hls.audioTracks);
+                    } else {
+                        // Retry slightly later if tracks aren't parsed instantly
+                        setTimeout(() => {
+                            if (hls.audioTracks.length > 0) generateAudioOptions(hls.audioTracks);
+                        }, 1000);
+                    }
+                });
+            }
+            else if (movie.canPlayType('application/vnd.apple.mpegurl')) {
+                movie.src = streamUrl;
+                movie.addEventListener('loadedmetadata', () => {
+                    if (movie.audioTracks) generateAudioOptions(movie.audioTracks);
+                });
+            }
+        }
+
+        // Helper: Create Dropdown Options based on actual file tracks
+        function generateAudioOptions(tracks) {
+            audioSelect.innerHTML = ""; // Clear existing
+            let preferredIndex = -1;    // Store the index we want to switch to
+
+            if (!tracks || tracks.length === 0) {
+                let opt = document.createElement("option");
+                opt.text = "Default";
+                audioSelect.add(opt);
+                return;
+            }
+
+            tracks.forEach((track, index) => {
+                let option = document.createElement("option");
+                option.value = index;
+                // Get name or fallback
+                let label = track.name || track.lang || `Audio ${index + 1}`;
+                option.text = label;
+                audioSelect.appendChild(option);
+
+                // Look for "Hindi" but DON'T switch yet
+                if (label.toLowerCase().includes("hindi")) {
+                    preferredIndex = index;
+                }
+            });
+
+            // NOW apply the switch strictly
+            if (preferredIndex !== -1) {
+                audioSelect.value = preferredIndex; // Update UI
+                if (hls) {
+                    hls.audioTrack = preferredIndex; // Update Internal Player
+                    console.log(`Force switched to ${preferredIndex} (Hindi)`);
+                }
+            } else {
+                // If Hindi isn't found, make sure UI matches the default track (usually 0)
+                if (hls) audioSelect.value = hls.audioTrack;
+            }
+
+            console.log("Audio tracks loaded:", tracks.length);
+        }
+
+        initPlayer();
+
+        /* ===================== DROPDOWN CHANGE ===================== */
+        audioSelect.onchange = function () {
+            let selectedId = parseInt(this.value);
+            let selectedText = this.options[this.selectedIndex].text;
+
+            if (hls) {
+                hls.audioTrack = selectedId;
+                showToast("Audio: " + selectedText);
+            }
+            else if (movie.audioTracks) {
+                for (let i = 0; i < movie.audioTracks.length; i++) {
+                    movie.audioTracks[i].enabled = (i === selectedId);
+                }
+                showToast("Audio: " + selectedText);
+            }
+            this.blur();
+        };
+
+        /* ===================== SUBTITLE (CC) LOGIC ===================== */
+        ccBtn.onclick = (e) => {
+            e.stopPropagation();
+            toggleSubtitles();
+        };
+
+        function toggleSubtitles() {
+            // Get all available text tracks (from <track> tags)
+            const tracks = movie.textTracks;
+            if (!tracks || tracks.length === 0) {
+                showToast("No Subtitles Found");
+                return;
+            }
+
+            // Cycle: Off (-1) -> Track 0 -> Track 1 -> ... -> Off
+            currentSubTrack++;
+
+            if (currentSubTrack >= tracks.length) {
+                currentSubTrack = -1; // Reset to Off
+            }
+
+            // Apply changes
+            for (let i = 0; i < tracks.length; i++) {
+                tracks[i].mode = (i === currentSubTrack) ? 'showing' : 'hidden';
+            }
+
+            // Update UI
+            if (currentSubTrack === -1) {
+                ccBtn.classList.remove("cc-active");
+                showToast("Subtitles: Off");
+            } else {
+                ccBtn.classList.add("cc-active");
+                let label = tracks[currentSubTrack].label || `Track ${currentSubTrack + 1}`;
+                showToast("Subtitles: " + label);
+            }
+        }
+
+        function showToast(text) {
+            audioToast.textContent = text;
+            audioToast.classList.add("show");
+            setTimeout(() => {
+                audioToast.classList.remove("show");
+            }, 2000);
+        }
+
+        /* ===================== VOLUME LOGIC ===================== */
+        volumeControl.addEventListener('input', (e) => {
+            movie.volume = e.target.value;
+            movie.muted = false;
+            updateVolumeIcon();
+        });
+
+        volumeIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (movie.muted || movie.volume === 0) {
+                movie.muted = false;
+                movie.volume = lastVolume || 1.0;
+                volumeControl.value = movie.volume;
+            } else {
+                lastVolume = movie.volume;
+                movie.muted = true;
+                movie.volume = 0;
+                volumeControl.value = 0;
+            }
+            updateVolumeIcon();
+        });
+
+        function updateVolumeIcon() {
+            if (movie.muted || movie.volume === 0) volumeIcon.textContent = "🔇";
+            else if (movie.volume < 0.5) volumeIcon.textContent = "🔉";
+            else volumeIcon.textContent = "🔊";
+        }
+
+        /* ===================== UI & CONTROLS ===================== */
+        const formatTime = (sec = 0) => {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s.toString().padStart(2, "0")}`;
+        };
+
+        async function enterImmersiveMode() {
+            try {
+                if (!document.fullscreenElement) {
+                    if (container.requestFullscreen) await container.requestFullscreen();
+                    else if (container.webkitRequestFullscreen) await container.webkitRequestFullscreen();
+                    else if (movie.webkitEnterFullscreen) movie.webkitEnterFullscreen();
+                }
+                if (screen.orientation && screen.orientation.lock) {
+                    setTimeout(() => {
+                        screen.orientation.lock("landscape").catch(e => console.warn(e));
+                    }, 100);
+                }
+            } catch (err) { console.log(err); }
+        }
+
+        startOverlay.addEventListener("click", async () => {
+            startOverlay.classList.add("hidden");
+            try { await movie.play(); } catch (err) { console.error(err); }
+            if (window.innerWidth <= 768) await enterImmersiveMode();
+        });
+
+        playPause.onclick = (e) => { e.stopPropagation(); togglePlay(); };
+        function togglePlay() {
+            if (movie.paused) { movie.play(); startOverlay.classList.add("hidden"); }
+            else { movie.pause(); }
+        }
+        movie.onplay = () => (playPause.textContent = "⏸");
+        movie.onpause = () => (playPause.textContent = "▶");
+
+        container.addEventListener("click", (e) => {
+            if (e.target.closest(".controls") || e.target === startOverlay) return;
+            showControls();
+        });
+
+        movie.ontimeupdate = () => {
+            if (!movie.duration) return;
+            progress.style.width = (movie.currentTime / movie.duration) * 100 + "%";
+            timeLabel.textContent = `${formatTime(movie.currentTime)} / ${formatTime(movie.duration)}`;
+        };
+
+        progressBar.onclick = (e) => {
+            e.stopPropagation();
+            const rect = progressBar.getBoundingClientRect();
+            movie.currentTime = ((e.clientX - rect.left) / rect.width) * movie.duration;
+        };
+
+        fullscreen.onclick = async (e) => {
+            e.stopPropagation();
+            if (!document.fullscreenElement) await enterImmersiveMode();
+            else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+            }
+        };
+
+        zoomBtn.onclick = (e) => {
+            e.stopPropagation();
+            isZoomed = !isZoomed;
+            movie.classList.toggle("zoomed", isZoomed);
+            zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
+        };
+
+        function showControls() {
+            controls.style.opacity = 1;
+            topOverlay.style.opacity = 1;
+            container.style.cursor = "default";
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(hideControls, 3000);
+        }
+
+        function hideControls() {
+            if (movie.paused) return;
+            controls.style.opacity = 0;
+            topOverlay.style.opacity = 0;
+            container.style.cursor = "none";
+        }
+
+        container.addEventListener("mousemove", showControls);
+        container.addEventListener("touchstart", showControls);
+        showControls();
+    </script>
+    <script src="/js/css.js"></script>
+</body>
+
+</html>

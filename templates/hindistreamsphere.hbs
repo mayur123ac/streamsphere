@@ -1,0 +1,341 @@
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>स्ट्रीमस्फ़ियर (StreamSphere)</title>
+    <link rel="stylesheet" href="/css/styles.css">
+  </head>
+  <body>
+    <div class="bg-blur"></div>
+    <nav>
+      <div class="logo hidden3">
+        <img src="../assets/newlogo.png" alt="नेटफ्लिक्स लोगो" />
+      </div>
+      <div class="header">
+        <div class="select-wrapper">
+          <select onchange="location.href=this.value" class="language-select">
+            <option value="/Streamsphere">English</option>
+            <option value="hindistreamsphere.html" selected>हिन्दी</option>
+          </select>
+        </div>
+        <div class="s hidden">
+          <button id="Signup"><a class="btn1" href="/signup">साइन अप करें</a></button>
+        </div>
+      </div>
+    </nav>
+    <div class="hero">
+      <div class="overlay"></div>
+      <div class="content">
+        <h1 class="hidden">असीमित फिल्में, टीवी शो और बहुत कुछ</h1>
+        <p class="hidden1">₹149 से शुरू। कभी भी कैंसिल करें।</p>
+        <p id="para2" class="hidden2">
+          देखने के लिए तैयार हैं? अपनी मेंबरशिप बनाने या रीस्टार्ट करने के लिए अपना ईमेल दर्ज करें।
+        </p>
+
+        <div class="subsc hidden1">
+          <form class="inline-form" action="/login" method="get">
+            <input
+              type="email"
+              name="email"
+              placeholder="ईमेल पता"
+              required
+            />
+            <button class="btn btn-primary" type="submit">शुरू करें</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2 class="hidden3">अभी ट्रेंडिंग में</h2>
+      <div class="trending-container">
+        <div class="trending" id="trending-slider">
+          <button class="slide-btn prev" onclick="scrollContainerLeft()">
+            &#10094;
+          </button>
+          <div class="movie">
+            <h1>1</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEh5DBxAyA7RQxi8PLlI2dWOOenBee8TYrVsU5VCcOTg_4mRU7VeES1ohGW2nsfGb1ZNI3TX-Ld8tXscJE56agSMk2gPBhUZM5BfTZQIesQlK73lM7-kecv7-hNdnKc305_pNuTIGHw6uIjt5zMALhFP8foNc06lCOQHKOr_R3VBp0TBc1Tm-MrukdeG-zs"
+              alt="फ़िल्म 1"
+            />
+          </div>
+          <div class="movie">
+            <h1>2</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEgjOqeGnI5gA9oQKXB1IoIJD96rY-uWhrBZK-yz-Aasmhiao8CqDdkciu5eeGc7NGd9V4dF_9X_pSUDSMMGwL_ePV6BfjIl5MEUwtW14AeAxBgp4ZKg3v5Fcmu_PGM6XBFxCb49bmEvpiavucVyUPByvQHh-fXM4sy7UayjRSv7Apl2pQDdHrDbt3-7d5k"
+              alt="फ़िल्म 2"
+            />
+          </div>
+          <div class="movie">
+            <h1>3</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEgruq6MKM8LzQSLOH3wjJ3cbFjO4C_SL5EDiQYxfhPZry-Rd0MLUHUK-XoGSiJPvaNF72BvzfC9VVk-PlTDJk67mFhp88MBCE3Gvg9jDc_BfO-smX6ZnP-d_sAxCJrzvLeBGHHZ6SbhlW2G1m5Ueq3MuHzfkx4nFbxejtw4MWw2T1yIEhpQIr9u5GdkOdk"
+              alt="फ़िल्म 3"
+            />
+          </div>
+          <div class="movie">
+            <h1>4</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEiMnE54ALi9RaK6Mp5tdcL2zh9LOSB8Ha0LPCUriSObCxR5W__rNk3_Ogo36RR0n63SXwTOreUVcwmm7fn7UelaAFeaU20ZiLpSb-YlVnzyT7RpBIBDjXHdEVIZ_kKKp2x0t3ursCVkHJNmUAA7EEbmb23ml2TdlxAAVZU9yPXL_LUfScAZF5aL1R762HI"
+              alt="फ़िल्म 4"
+            />
+          </div>
+          <div class="movie">
+            <h1>5</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEhrtfy5-njtZdc_TexzhB_t-_Nloe1hkJWRgn8ac8E_6vjuKurgPIrgoCZvqV5RDlJLtQLm8xs-kbm6aDWastEDPO7BAma8SuB_5imAyDjOsJjZ-uSQozX-y56rNNlonrwo0Hi0dSZmqYDWmAkgBZsCn2ChvlhCu4wFKafUa1-fz4fVw2feFjPrhPKdy80"
+              alt="फ़िल्म 5"
+            />
+          </div>
+          <div class="movie">
+            <h1>6</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEgXpJ6PJoaEiHQxAUYANIl8rnFu4c_pm7SLBAc20IwK29wzG57a2Oria0GB_dd9HUbZN0cfxjpKekgHAsEdC3JLL8-ASAnGf2VBGvjYy3I9xm9nb7Shq6bZW5x4F9hGW0b_SZds_5rolEe7Hl6yDYeFrdI0qHoGiw5fOwem2_DSt_Vy25IwnowDBRYbBEE"
+              alt="फ़िल्म 6"
+            />
+          </div>
+          <div class="movie">
+            <h1>7</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEjzoSVjtyYc__1Kh7SnrX12G6a7zHsRMr1w0D1gEMBMffyNnKjNOqACszWmLf6E5GEmlg2L7N137g8qWNzN-qO0-kHxvDCIQrf0dSL4-G59uYFAMXsCZCWjMLb19RY6gVp_VhXb11DskPaeT_3wWm8_Eyca1077BgHhdMEmNYpnf8Z6UmCkLMNIYkGFoxk"
+              alt="फ़िल्म 4"
+            />
+          </div>
+          <div class="movie">
+            <h1>8</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEhZwTpmwv69fysOch2nxIBO6docPMqiXLCw_Fh_MXSYNhwasmoB6fqJbtnLwidEeijj7MEpp1feo8UezSKoeDJ6k_2N9aOqNNgn8Lp2_XIHDTyqzkh6MMV8eV0PR3MBCDpv2nKBD_Vu7-5WLSG-e83YeREKfOSMnI9Zt67eJEhTdp8tDPe3Wp52b0jG3UI"
+              alt="फ़िल्म 5"
+            />
+          </div>
+          <div class="movie">
+            <h1>9</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEiZxAb7bmJvyIo61DdG3zO6RP5Lhv9qq22ESNVyfH001bGJa7aCWC3SThKW4R68g5mWtIzb0jUS2p-Cn_hzZUO91Nor9aDOjcVHTYoOqR9czAi8vpBxS8JGB_7Vh-52A0-I09IxKsMcAOPgYtAp4jJJZqXGIrJoLY8IEhGjA2oe8uZxndj377Z67rk6x6g"
+              alt="फ़िल्म 6"
+            />
+          </div>
+          <div class="movie">
+            <h1>10</h1>
+            <img
+              src="https://occ-0-2087-2186.1.nflxso.net/dnm/api/v6/-klpX4b1RECP-oGX3Uvz90PrgHE/AAAABfV7XTOSOhl6eCjB1DpCfZZ2LR94pPtH6N8UjdxPYinHcZnftde-ixgjkN6zPcdgTFO4LDLQWc2Ll2uLnbDea8tQnvi7J2_FK3ILf9-7UXvXsNL_N6EyPleNzLe9EIuVzAomHyLDdHZaJKlnQo8HYOF5skERiHK4m--eNSkDoUpGzLBT8dCWTm2F2NXznqSVxg2lQKSQSscauZRD.webp?r=5d5"
+              alt="फ़िल्म 6"
+            />
+          </div>
+        </div>
+        <button class="slide-btn next" onclick="scrollRight()">&#10095;</button>
+      </div>
+    </div>
+    <div class="container2">
+      <h1 class="hidden3">आपकी ज़रूरतों के हिसाब से प्लान</h1>
+      <div class="plans">
+        <div class="plan hidden1" id="basic">
+          <h2>मोबाइल</h2>
+          <p id="ght">480p</p>
+          <p>&#10003; संतोषजनक वीडियो क्वालिटी</p>
+          <p>&#10003; आपके फ़ोन या टैबलेट के लिए</p>
+          <p class="price1">&#8377;149 /माह</p>
+        </div>
+        <div class="plan hidden1" id="basic">
+          <h2>बेसिक</h2>
+          <p id="ght">720p</p>
+          <p>&#10003; अच्छी वीडियो क्वालिटी</p>
+          <p>&#10003; फ़ोन, टैबलेट, लैपटॉप और टीवी के लिए</p>
+          <p class="price1">&#8377;199 /माह</p>
+        </div>
+        <div class="plan hidden1" id="Standard">
+          <h2>स्टैंडर्ड</h2>
+          <p id="ght">1080p</p>
+          <p>&#10003; बेहतरीन वीडियो क्वालिटी</p>
+          <p>&#10003; फ़ोन, टैबलेट, लैपटॉप और टीवी के लिए</p>
+          <p class="price1">&#8377;499 /माह</p>
+        </div>
+        <div class="plan hidden1" id="Premium">
+          <h2>प्रीमियम</h2>
+          <p id="ght">4K + HDR</p>
+          <p>&#10003; सर्वश्रेष्ठ वीडियो क्वालिटी</p>
+          <p>&#10003; इमर्सिव साउंड (स्पेशियल ऑडियो)</p>
+          <p>&#10003; फ़ोन, टैबलेट, लैपटॉप और टीवी के लिए</p>
+          <p class="price">&#8377;649 /माह</p>
+        </div>
+      </div>
+      <div class="fea">
+        <h2 class="hidden3">जुड़ने के और भी कारण</h2>
+        <div class="features">
+          <div class="feature hidden1">
+            <h3>कभी भी कैंसिल करें या प्लान बदलें</h3>
+            <p>
+              बिना किसी परेशानी के, जब चाहें अपने प्लान में बदलाव करें।
+            </p>
+
+            <img src="../assets/hand1.png" class="hand" />
+          </div>
+          <div class="feature hidden1">
+            <h3>सिर्फ़ बच्चों के लिए सुरक्षित जगह</h3>
+            <p>
+              बच्चों को उनके पसंदीदा किरदारों के साथ रोमांच पर भेजें, एक ऐसी जगह जो
+              सिर्फ़ उनके लिए बनी है।
+            </p>
+            <img src="../assets/hand1.png" class="hand" />
+          </div>
+
+          <div class="feature hidden1">
+            <h3>अपने पसंदीदा डिवाइस पर देखें</h3>
+            <p>
+              अपने फ़ोन, टैबलेट, लैपटॉप और टीवी पर ढेर सारी फ़िल्में और शो
+              स्ट्रीम करें।
+            </p>
+            <img src="../assets/hand1.png" class="hand" />
+          </div>
+          <div class="feature hidden1">
+            <h3>आपकी पसंद की कहानियां</h3>
+            <p>
+              पर्सनलाइज़्ड रिकमेंडेशन के साथ, ऐसा मनोरंजन खोजें जो आपको तुरंत
+              पसंद आएगा।
+            </p>
+            <img src="../assets/hand1.png" class="hand" />
+          </div>
+        </div>
+      </div>
+      <h1 id="faques">अक्सर पूछे जाने वाले सवाल</h1>
+      <div class="faq-container">
+        <div class="faq-item hidden1">
+          <button class="faq-question">
+            StreamSphere क्या है?
+            <span class="toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            StreamSphere एक स्ट्रीमिंग सेवा है जो टीवी शो, फ़िल्में, एनीमे और बहुत कुछ
+            प्रदान करती है। आप मासिक शुल्क पर कई डिवाइस पर कभी भी देख सकते हैं।
+          </div>
+        </div>
+
+        <div class="faq-item hidden1">
+          <button class="faq-question">
+            StreamSphere की कीमत कितनी है?
+            <span class="toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            StreamSphere अलग-अलग कीमतों पर विभिन्न प्लान पेश करता है। ताज़ा कीमतों
+            के लिए StreamSphere की वेबसाइट देखें।
+          </div>
+        </div>
+
+        <div class="faq-item hidden1">
+          <button class="faq-question">
+            मैं कहाँ देख सकता हूँ?
+            <span class="toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div id="para1">
+              आप स्मार्टफ़ोन, टैबलेट, स्मार्ट टीवी और कंप्यूटर जैसे कई डिवाइस पर
+              StreamSphere देख सकते हैं।
+            </div>
+            कभी भी, कहीं भी देखें। अपने पर्सनल कंप्यूटर या इंटरनेट से जुड़े किसी भी
+            डिवाइस (जैसे स्मार्ट टीवी, स्मार्टफ़ोन, टैबलेट, स्ट्रीमिंग मीडिया प्लेयर और
+            गेम कंसोल) पर तुरंत देखने के लिए अपने StreamSphere अकाउंट से साइन इन करें।
+          </div>
+        </div>
+
+        <div class="faq-item hidden1">
+          <button class="faq-question">
+            मैं कैंसिल कैसे करूँ?
+            <span class="toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            StreamSphere लचीला है। कोई अजीब अनुबंध नहीं और कोई बंधन नहीं। आप दो क्लिक
+            में अपना अकाउंट ऑनलाइन आसानी से कैंसिल कर सकते हैं। कोई कैंसिलेशन फीस नहीं है -
+            अपना अकाउंट कभी भी शुरू या बंद करें।
+          </div>
+        </div>
+
+        <div class="faq-item hidden1">
+          <button class="faq-question">
+            मैं StreamSphere पर क्या देख सकता हूँ?
+            <span class="toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            StreamSphere के पास फीचर फिल्मों, डॉक्यूमेंट्री, टीवी शो, एनीमे, अवार्ड-विनिंग
+            StreamSphere ओरिजिनल्स और बहुत कुछ की एक विस्तृत लाइब्रेरी है। आप जितना चाहें,
+            जब चाहें देख सकते हैं।
+          </div>
+        </div>
+
+        <div class="faq-item hidden1">
+          <button class="faq-question">
+            क्या StreamSphere बच्चों के लिए अच्छा है?
+            <span class="toggle-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div id="para1">
+              StreamSphere का किड्स एक्सपीरियंस आपकी मेंबरशिप में शामिल है ताकि माता-पिता
+              को कंट्रोल मिले और बच्चे अपनी खुद की जगह में फैमिली-फ्रेंडली टीवी शो और
+              फिल्मों का आनंद ले सकें।
+            </div>
+            किड्स प्रोफाइल पिन-प्रोटेक्टेड पेरेंटल कंट्रोल के साथ आते हैं जो आपको उस कंटेंट
+            की मैच्योरिटी रेटिंग को प्रतिबंधित करने देते हैं जिसे बच्चे देख सकते हैं और
+            उन विशिष्ट शीर्षकों को ब्लॉक कर सकते हैं जिन्हें आप बच्चों को नहीं दिखाना चाहते।
+          </div>
+        </div>
+      </div>
+      <div class="newsubsc">
+        <p id="para2">
+          देखने के लिए तैयार हैं? अपनी मेंबरशिप बनाने या रीस्टार्ट करने के लिए अपना ईमेल दर्ज करें।
+        </p>
+
+        <div class="subsc hidden1">
+           <form class="inline-form" action="/login" method="get">
+            <input
+              type="email"
+              name="email"
+              placeholder="ईमेल पता"
+              required
+            />
+            <button class="btn btn-primary" type="submit">शुरू करें</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="footer-call">
+        सवाल हैं? कॉल करें
+        <a href="tel:000-800-919-1743">000-800-919-1743</a>
+      </div>
+      <div class="footer-links">
+        <div>
+          <a href="#">अक्सर पूछे जाने वाले सवाल</a>
+          <a href="#">इन्वेस्टर रिलेशन्स</a>
+          <a href="#">गोपनीयता</a>
+          <a href="#">स्पीड टेस्ट</a>
+        </div>
+        <div>
+          <a href="#">सहायता केंद्र</a>
+          <a href="#">नौकरियां</a>
+          <a href="#">कुकी प्रेफरेंसेस</a>
+          <a href="#">कानूनी सूचनाएं</a>
+        </div>
+        <div>
+          <a href="#">अकाउंट</a>
+          <a href="#">देखने के तरीके</a>
+          <a href="#">कॉर्पोरेट जानकारी</a>
+          <a href="#">सिर्फ़ StreamSphere पर</a>
+        </div>
+        <div>
+          <a href="#">मीडिया केंद्र</a>
+          <a href="#">उपयोग की शर्तें</a>
+          <a href="#">संपर्क करें</a>
+        </div>
+      </div>
+      <button class="footer-language">🌐 हिन्दी ▼</button>
+      <div class="footer-bottom">StreamSphere भारत</div>
+    </footer>
+
+    <script src="/js/css.js"></script>
+    <script src="/js/email.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/toggle.js"></script>
+  </body>
+</html>

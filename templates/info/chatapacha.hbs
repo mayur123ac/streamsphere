@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatha Pacha - StreamSphere</title>
+    <link rel="stylesheet" href="/css/trailer.css" />
+    <link rel="stylesheet" href="/css/hidden.css">
+  </head>
+  <body>
+    <header>
+      <div class="logo hidden1">
+        <img src="/assets/hand1.png" alt="StreamSphere Logo" />
+      </div>
+    </header>
+
+    <div class="maincont">
+      <h1 id="title" class="">Trailer - Chatha Pacha</h1>
+
+      <div id="video-container" class="">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/91DEU2N_dD8?si=tRFxyuTI53fQRhDk"
+          title="Chatha Pacha Trailer"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        >
+        </iframe>
+      </div>
+
+      <div class="card">
+        <div class="meta">
+          Chatha Pacha
+          <span class="badge">4k</span>
+          <span class="badge">U/A 13+</span>
+        </div>
+
+        <div class="advisory">Action, Comedy, Sports</div>
+
+        <div class="desc ">
+          "The Ring of Rowdies." In the vibrant streets of Fort Kochi, a ragtag 
+          group of locals gets drawn into a WWE-inspired wrestling tournament. 
+          Expect high-flying stunts, local rivalries, and non-stop chaotic fun 
+          in this adrenaline-pumping action entertainer.
+        </div>
+
+        <div class="side-info">
+          <span><strong>Cast:</strong> Arjun Ashokan, Roshan Mathew, Vishak Nair, Ishan Shoukath, Mammootty (Cameo)</span>
+          <span><strong>Genres:</strong> Action Comedy, Sports Drama, Regional</span>
+          <span><strong>This Show Is:</strong> Energetic, Humorous, Exciting</span>
+        </div>
+
+        {{!-- <button id="play" class="hidden3">
+          <a href="#" target="_blank">Play ▸</a>
+        </button> --}}
+      </div>
+
+      <div id="detail hidden1">
+        <h1>More Details</h1>
+      </div>
+
+      <div class="details">
+        <div class="detail1">
+          <p>
+            <strong>Genres:</strong> Sports Action, Slapstick Comedy, Mass Masala. <br />
+            <strong>Style:</strong> Fast-paced, Colorful, and Crowd-pleasing.
+          </p>
+        </div>
+
+        <div class="detail1">
+          <p>
+            <strong>Plot:</strong> Directed by Adhvaith Nayar, the film is a tribute to 
+            wrestling culture mixed with local gang dynamics. Music by Shankar-Ehsaan-Loy 
+            adds a rhythmic punch to the gritty yet humorous narrative set in Mattancherry.
+          </p>
+        </div>
+
+        <div class="detail1">
+          <p>
+            <strong>Cast:</strong> A youthful ensemble led by Arjun Ashokan and Roshan Mathew, 
+            featuring a special appearance by the legendary Mammootty as "Bullet" Walter Lopez.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/css.js"></script>
+  <script>
+      // Redirects to the movie player page
+      if(document.getElementById("play")) {
+        document.getElementById("play").onclick = function(){
+          window.location.href = "/chathapachamovie";
+        }
+      }
+  </script>
+</html>

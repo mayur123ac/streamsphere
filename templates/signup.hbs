@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StreamSphere - Sign Up</title>
+  <link rel="stylesheet" href="/css/login.css">
+
+  <style>
+    /* Reuse styles from Login for consistency */
+    p.muted {
+      padding: 15px 20px;
+      font-size: 2rem;
+    }
+
+    @media (max-width: 480px) {
+      p.muted {
+        margin-top: 20px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body class="page">
+  <main class="auth-card">
+    <header>
+      <div class="logo">
+        <img src="/assets/hand1.png" alt="StreamSphere" />
+      </div>
+    </header>
+
+    <div class="login-container">
+      <div class="login-box" style="height: 500px;;">
+
+        <div class="signup-header">
+          <h2 style="margin-top: 15px;">Sign Up</h2>
+          <p class="muted">Join StreamSphere today</p>
+        </div>
+
+        <form action="/signup" method="post" class="form">
+
+          <div class="input-group">
+            <input type="text" name="name" placeholder="Full Name" value="{{name}}" required />
+          </div>
+
+          <div class="input-group">
+            <input type="email" name="email" placeholder="Email Address" value="{{email}}" required />
+          </div>
+
+          <div class="input-group">
+            <input type="password" name="password" placeholder="Password (8+ chars, letters & numbers)" minlength="8"
+              required />
+          </div>
+
+          <button class="btn btn-primary" type="submit" style="width: 95%;">Create Account</button>
+        </form>
+
+        {{#if errorMessage}}
+        <div class="text-error">{{errorMessage}}</div>
+        {{/if}}
+
+        <div style="margin-top: 30px; color: #737373;">
+          Already have an account? <a href="/login" style="color: white; text-align: center">Sign in now.</a>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/css.js"></script>
+</body>
+
+</html>

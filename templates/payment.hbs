@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing Plans</title>
+<style>
+    html {
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+        font-family: sans-serif;
+    }
+    body,
+    html {
+        background: #000;
+        background-image: linear-gradient(rgba(0, 0.8, 0, 0.8), rgba(0.1, 0, 0, 0.8)),
+            url("../assets/maincont.jpg");
+        background-size: cover;
+        backdrop-filter: blur(10px);
+        background-position: center;
+        background-attachment: fixed;
+        background-repeat: no-repeat;
+        max-width: 100%;
+        height: 100%;
+    }
+    .logo img {
+        width: 15rem;
+       
+    }
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 20px;
+    }
+    h2 {
+        font-size: 28px;
+        font-weight: bold;
+        color: #ccc;
+        margin-bottom: 40px;
+    }
+    .plans {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .plan {
+        border: 1px solid #ccc;
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(20px);
+        color: #fff;
+       
+    }
+    #plan1{
+         background: linear-gradient(316deg, #180c1c, #243060, #20549c);
+        border: 1px solid rgb(90, 93, 102);
+        color: rgba(255, 255, 255, 0.7);
+    }
+    #plan3{
+        background: linear-gradient(316deg, #301c5c, #792a95);
+        border: 1px solid rgb(90, 93, 102);
+        color: rgba(255, 255, 255, 0.7);
+    }
+    #plan4{
+        background: linear-gradient(316deg, #000, #341c48, #982454);
+        border: 1px solid rgb(90, 93, 102);
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .plan:hover {
+        border-color: #e50914;
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgb(229 9 209 / 61%);
+    }
+    .plan-header {
+    /* background: linear-gradient(to right, #0056ff, #3b82f6); */
+        color: white;
+        padding: 14px 20px;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center;
+        text-align: left;
+        border-bottom: 1px solid #ccc;
+    }
+
+
+    .most-popular {
+        position: relative;
+    }
+    .most-popular::before {
+        content: "Most Popular";
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #6200ea;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+    }
+    .price {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 15px 0;
+    }
+    .feature {
+        margin: 8px 0;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #ddd;
+        margin: 10px 0;
+    }
+    p{
+        color: #ccc;
+        font-size: 12px;
+        text-align: center;
+        margin: 40px 20px;
+    }
+    /* hidden1 */
+    .hidden1 {
+        opacity: 0;
+        filter: blur(5px);
+        transform: translateY(100%);
+        transition: all 1s;
+    }
+    .show1 {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+
+    /* hidden0 */
+    .hidden {
+        opacity: 0;
+        filter: blur(5px);
+        transform: translateX(35%);
+        transition: all 1s;
+        transform: scale(1.4);
+    }
+    .show {
+        opacity: 1;
+        filter: blur(0);
+        width: 100%;
+        transform: translateX(0);
+        transform: scale(1);
+    }
+
+    /* hidden2 */
+    .hidden2 {
+        opacity: 0;
+        filter: blur(5px);
+        transform: translateX(-35%);
+        transition: all 1s;
+        transform: scale(1.1);
+    }
+    .show2 {
+        opacity: 1;
+        filter: blur(0);
+        width: 100%;
+        transform: translateX(0);
+        transform: scale(1);
+    }
+
+    /* hidden3 */
+
+    .hidden3 {
+        opacity: 0;
+        filter: blur(5px);
+        transform: translateX(20%);
+        transition: all 1s;
+    }
+    .show3 {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateX(0);
+    }
+    @media (max-width: 720px) {
+        .logo img {
+            width: 12rem;
+            height: auto;
+            margin: 10px 0;
+        }
+        
+        h2{
+            font-size: 18px;
+        }
+        .plan {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+            color: #fff;
+        }
+        .plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .plan.selected{
+            border-color: #e50914;
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgb(229 9 209 / 61%);
+        }
+    }
+</style>
+</head>
+<body>
+ <header>
+    <div class="logo hidden1">
+        <img src="/assets/hand1.png" />
+    </div>
+</header>
+<div class="container">
+    <h2 id="#ntime">Choose the plan that’s right for you{{email}}</h2>
+
+    <div class="plans" >
+     
+        <div class="plan " id="plan1">
+            <div class="plan-header ">Mobile<br><small>480p</small></div>
+            <div class="price ">₹149</div>
+            <div class="feature "><b>Video and sound quality</b><br>Fair</div>
+            <div class="feature "><b>Resolution</b><br>480p</div>
+            <div class="feature "><b>Supported devices</b><br>Mobile phone, tablet</div>
+            <hr>
+            <div class="feature"><b>Devices at same time</b><br>1</div>
+            <div class="feature "><b>Download devices</b><br>1</div>
+        </div>
+
+
+        <div class="plan most-popular" id="plan1">
+            <div class="plan-header">Basic<br><small>720p</small></div>
+            <div class="price">₹199</div>
+            <div class="feature"><b>Video and sound quality</b><br>Good</div>
+            <div class="feature"><b>Resolution</b><br>720p (HD)</div>
+            <div class="feature"><b>Supported devices</b><br>TV, computer, mobile phone, tablet</div>
+            <hr>
+            <div class="feature"><b>Devices at same time</b><br>1</div>
+            <div class="feature"><b>Download devices</b><br>1</div>
+        </div>
+
+        <div class="plan " id="plan3">
+            <div class="plan-header">Standard<br><small>1080p</small></div>
+            <div class="price">₹499</div>
+            <div class="feature"><b>Video and sound quality</b><br>Great</div>
+            <div class="feature"><b>Resolution</b><br>1080p (Full HD)</div>
+            <div class="feature"><b>Supported devices</b><br>TV, computer, mobile phone, tablet</div>
+            <hr>
+            <div class="feature"><b>Devices at same time</b><br>2</div>
+            <div class="feature"><b>Download devices</b><br>2</div>
+        </div>
+
+        <div class="plan" id="plan4">
+            <div class="plan-header" >
+                Premium<br><small>4K + HDR</small>
+            </div>
+            <div class="price">₹649</div>
+            <div class="feature"><b>Video and sound quality</b><br>Best</div>
+            <div class="feature"><b>Resolution</b><br>4K (Ultra HD) + HDR</div>
+            <div class="feature"><b>Spatial audio (immersive sound)</b><br>Included</div>
+            <div class="feature"><b>Supported devices</b><br>TV, computer, mobile phone, tablet</div>
+            <hr>
+            <div class="feature"><b>Devices at same time</b><br>4</div>
+            <div class="feature"><b>Download devices</b><br>6</div>
+        </div>
+    </div>
+    <p>HD (720p), Full HD (1080p), Ultra HD (4K) and HDR availability subject to your internet service and device capabilities. Not all content is available in all resolutions. See our Terms of Use for more details.
+    Only people who live with you may use your account. Watch on 4 different devices at the same time with Premium, 2 with Standard, and 1 with Basic and Mobile.
+    Live events are included with any StreamSphere plan and contain adverts.</p>
+   
+</div>
+
+<script>
+  
+</script>
+<script>
+</script>
+<script src="/js/css.js"></script>
+<script>
+    document.getElementById("plan1").onclick = function(){
+        window.location.href ="/homepage";
+    }
+
+
+</script>
+
+</body>
+</html>

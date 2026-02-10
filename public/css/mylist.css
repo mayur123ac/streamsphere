@@ -1,0 +1,366 @@
+
+
+/* Standard Scroll Buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  width: 40px;
+  height: 100%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  opacity: 0;
+}
+
+.row:hover .scroll-btn,
+.container:hover .scroll-btn {
+  opacity: 1;
+}
+
+.scroll-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: rgb(87, 0, 226);
+}
+
+.scroll-btn.prev {
+  left: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  height: 15vh;
+  margin-top: 20px;
+}
+
+.scroll-btn.next {
+  right: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  height: 15vh;
+  margin-top: 20px;
+}
+
+/* Play Button */
+.play-btn {
+  width: 80px;
+  height: 35px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.play-btn:hover {
+  background-color: rgb(101, 0, 233);
+  color: white;
+  transition: 0.2s ease-in;
+}
+
+/* Card Styling */
+.carde {
+  display: flex;
+  width: 200px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0c0c0c;
+  transition: width 0.4s ease;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  /* Added cursor pointer to indicate clickable */
+}
+
+a {
+  text-decoration: none;
+}
+
+.carde img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.info-right {
+  width: 220px;
+  padding: 14px;
+  color: white;
+  background: #111;
+  opacity: 0;
+  transform: translateX(10px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  white-space: normal;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-right h3 {
+  margin-top: 0;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.genre {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #ccc;
+}
+
+.movie {
+  flex-shrink: 0;
+  position: relative;
+}
+
+.bgts {
+  display: flex;
+  gap: 5px;
+}
+
+#info {
+  background-color: #3e3e3e;
+  color: #fff;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Space between Play and + */
+}
+
+.remove-btn {
+  /* width: 30px; */
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: #ffff;
+  border: 1px solid;
+  border-radius: 50%;
+  width: 30px;
+  margin-top: 10px;
+}
+
+.remove-btn:hover {
+  border-color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+  .carde,
+  .carde img {
+    width: 160px;
+    height: 240px;
+  }
+
+  .info-right {
+    width: 320px;
+  }
+
+  .play-btn {
+    width: 60px;
+    height: 30px;
+    margin-top: 0;
+    font-size: 10px;
+  }
+
+  .remove-btn {
+    margin-top: 0;
+  }
+
+  .scroll-btn {
+    width: 30px;
+    opacity: 0;
+  }
+
+  .genre {
+    font-size: 12px;
+    color: #aaa;
+    margin: 0px;
+  }
+
+  .description {
+    font-size: 10px;
+    line-height: 1.2;
+    color: #ccc;
+  }
+
+  .info-right h3 {
+    margin-top: 0;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .scroll-btn.next {
+    visibility: 0;
+    opacity: 0;
+    color: transparent;
+    z-index: -1000;
+    background-color: transparent;
+  }
+
+  .scroll-btn.prev {
+    opacity: 0;
+    z-index: -100;
+    color: transparent;
+  }
+
+  .movie {
+    height: 240px;
+    width: 170px;
+  }
+
+  .container {
+    margin-bottom: 20px;
+    padding: 0 10px;
+  }
+
+  .movie img {
+    height: 240px;
+    width: 145px;
+  }
+
+  .row-posters,
+  .trending {
+    display: flex;
+    gap: 14px;
+  }
+}
+
+/* Custom Grid for My List */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 40px 40px;
+  justify-content: flex-start;
+}
+
+h1 {
+  padding-left: 40px;
+  margin-top: 100px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.carde {
+  width: 200px;
+  transition: width 0.4s ease;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+/* Styles for the Button Group */
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* The Remove (X) Button Style */
+.remove-btn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid #aaa;
+  background: transparent;
+  color: #aaa;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.remove-btn:hover {
+  border-color: red;
+  color: red;
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    justify-content: center;
+    padding: 20px;
+  }
+
+  h1 {
+    padding-left: 20px;
+    margin-top: 80px;
+  }
+
+  .carde {
+    width: 160px;
+  }
+}
+
+#page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #141414;
+  /* Dark background to match theme */
+  z-index: 9999;
+  /* Must be higher than navbar and modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s;
+}
+
+/* The Spinner Animation */
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top: 5px solid blueviolet;
+
+  /* Red accent color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation Keyframes */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Class to hide the loader */
+.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Ensures you can click through it once hidden */
+}

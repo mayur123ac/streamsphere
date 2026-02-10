@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>The Fantastic Four: First Steps (2025) - Full Movie</title>
+
+  <link rel="stylesheet" href="/css/movie.css">
+  <link rel="stylesheet" href="/css/playmovie.css">
+
+  <style>
+    /* 🔹 FIX: Ensure container fills the actual mobile viewport */
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100%;
+      height: 100dvh; /* Dynamic viewport height for mobile browsers */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      user-select: none; /* Prevent text selection during drag */
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Netflix-style zoom */
+    .zoomed {
+      object-fit: cover !important;
+      transform: scale(1.12);
+    }
+
+    /* 🔹 FIX: Big Play Button Overlay for first interaction */
+    .start-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      z-index: 20;
+      cursor: pointer;
+    }
+    .big-play-btn {
+      font-size: 5rem;
+      color: white;
+      opacity: 0.8;
+      pointer-events: none; /* Let clicks pass to container */
+    }
+    .hidden {
+      display: none !important;
+    }
+    .te{
+      color: purple;
+    }
+
+    /* --- NEW ADDITIONS START --- */
+
+    /* 1. LOADER */
+    .loader {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      z-index: 15;
+      display: none; /* Hidden by default */
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* 2. AUDIO MENU */
+    .audio-menu {
+      position: absolute;
+      bottom: 70px; /* Above controls */
+      right: 60px; /* Aligned with audio button */
+      background: rgba(20, 20, 20, 0.9);
+      border-radius: 8px;
+      padding: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 30;
+      min-width: 120px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .audio-menu.show { display: flex; }
+    .audio-option {
+      color: #ccc;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: sans-serif;
+    }
+    .audio-option:hover { background: rgba(255,255,255,0.1); }
+    .audio-option.selected { color: #fff; font-weight: bold; background: rgba(128, 0, 128, 0.5); }
+
+    /* 3. SKIP BUTTONS (Text Based) */
+    .skip-btn {
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      margin: 0 15px;
+      user-select: none;
+      font-family: sans-serif;
+      transition: transform 0.1s;
+    }
+    .skip-btn:active { transform: scale(0.9); }
+
+    /* 4. SMOOTH DRAG CURSOR */
+    .progress-bar { cursor: pointer; }
+    
+    /* Volume Group */
+    .volume-control-group {
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+    }
+    #volumeControl {
+      width: 80px;
+      accent-color: #ffffff;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    /* --- NEW ADDITIONS END --- */
+  </style>
+</head>
+
+<body>
+
+<div class="player-container" id="playerContainer">
+
+  <div class="top-overlay" id="topOverlay">
+    <h1 class="te"> | </h1>
+    <div class="title">The Fantastic Four: First Steps</div>
+    <div class="desc">Action • Sci-Fi • Adventure • 4K HDR</div>
+  </div>
+
+  <div class="loader" id="loader"></div>
+
+  <div class="start-overlay" id="startOverlay">
+    <div class="big-play-btn">▶</div>
+  </div>
+
+  <video
+    id="moviePlayer"
+    preload="metadata"
+    playsinline
+  >
+    <source
+      src="https://my-movie-bucket01stremesphere.s3.eu-north-1.amazonaws.com/movies/The.Fantastic.Four.First.Steps.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-RDNYB.mkv"
+      type="video/mp4"
+    />
+    <track label="English" kind="subtitles" srclang="en" src="/subtitles/en.vtt" default>
+    <track label="Hindi" kind="subtitles" srclang="hi" src="/subtitles/hi.vtt">
+  </video>
+
+  <div class="audio-menu" id="audioMenu">
+    </div>
+
+  <div class="controls bottom-overlay" id="controls">
+    
+    <span class="skip-btn" id="rewindBtn">-10s</span>
+
+    <span class="btn" id="playPause">▶</span>
+
+    <span class="skip-btn" id="forwardBtn">+10s</span>
+
+    <div class="time" id="time">0:00 / 0:00</div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="volume-control-group">
+      <span class="btn" id="volumeIcon">🔊</span>
+      <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+    </div>
+
+    <span class="btn" id="audioBtn">💬</span>
+    
+    <span class="btn" id="zoom">🔍</span>
+    <span class="btn" id="fullscreen">⛶</span>
+  </div>
+
+</div>
+
+<script>
+/* ===================== ELEMENTS ===================== */
+const movie = document.getElementById("moviePlayer");
+const container = document.getElementById("playerContainer");
+const playPause = document.getElementById("playPause");
+const fullscreen = document.getElementById("fullscreen");
+const zoomBtn = document.getElementById("zoom");
+const audioBtn = document.getElementById("audioBtn");
+const audioMenu = document.getElementById("audioMenu");
+const progressBar = document.getElementById("progressBar");
+const progress = document.getElementById("progress");
+const timeLabel = document.getElementById("time");
+const controls = document.getElementById("controls");
+const topOverlay = document.getElementById("topOverlay");
+const startOverlay = document.getElementById("startOverlay");
+const loader = document.getElementById("loader");
+
+// New Controls
+const rewindBtn = document.getElementById("rewindBtn");
+const forwardBtn = document.getElementById("forwardBtn");
+const volumeIcon = document.getElementById("volumeIcon");
+const volumeControl = document.getElementById("volumeControl");
+
+let hideTimeout;
+let isZoomed = false;
+let isDragging = false; // For smooth seeking
+
+/* ===================== HELPERS ===================== */
+const formatTime = (sec = 0) => {
+  if (!sec || isNaN(sec)) return "0:00";
+  const m = Math.floor(sec / 60);
+  const s = Math.floor(sec % 60);
+  return `${m}:${s.toString().padStart(2, "0")}`;
+};
+
+/* ===================== LOADER LOGIC ===================== */
+// Show loader when waiting for data, hide when playing
+movie.addEventListener('waiting', () => loader.style.display = 'block');
+movie.addEventListener('seeking', () => loader.style.display = 'block');
+movie.addEventListener('playing', () => loader.style.display = 'none');
+movie.addEventListener('canplay', () => loader.style.display = 'none');
+
+/* ===================== MOBILE ROTATION & FULLSCREEN ===================== */
+async function enterImmersiveMode() {
+  try {
+    if (!document.fullscreenElement) {
+      if (container.requestFullscreen) await container.requestFullscreen();
+      else if (container.webkitRequestFullscreen) await container.webkitRequestFullscreen();
+      else if (movie.webkitEnterFullscreen) movie.webkitEnterFullscreen();
+    }
+    if (screen.orientation && screen.orientation.lock) {
+      setTimeout(() => {
+        screen.orientation.lock("landscape").catch(console.warn);
+      }, 100);
+    }
+  } catch (err) { console.log(err); }
+}
+
+/* ===================== START PLAYBACK ===================== */
+startOverlay.addEventListener("click", async () => {
+  startOverlay.classList.add("hidden");
+  try { await movie.play(); } catch (err) { console.error(err); }
+  if (window.innerWidth <= 768) await enterImmersiveMode();
+});
+
+/* ===================== PLAY / PAUSE ===================== */
+playPause.onclick = (e) => {
+  e.stopPropagation();
+  togglePlay();
+};
+
+function togglePlay() {
+  if (movie.paused) {
+    movie.play();
+    startOverlay.classList.add("hidden");
+  } else {
+    movie.pause();
+  }
+}
+
+movie.onplay = () => { playPause.textContent = "⏸"; loader.style.display = 'none'; };
+movie.onpause = () => (playPause.textContent = "▶");
+
+/* ===================== 10s SKIP LOGIC ===================== */
+rewindBtn.onclick = (e) => {
+  e.stopPropagation();
+  movie.currentTime = Math.max(0, movie.currentTime - 10);
+};
+
+forwardBtn.onclick = (e) => {
+  e.stopPropagation();
+  movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
+};
+
+/* ===================== SMOOTH DRAG & SEEK ===================== */
+const updateProgressBarVisuals = (clientX) => {
+  const rect = progressBar.getBoundingClientRect();
+  let percent = (clientX - rect.left) / rect.width;
+  percent = Math.max(0, Math.min(1, percent)); // Clamp
+  
+  progress.style.width = `${percent * 100}%`;
+  
+  // Update time label dynamically while dragging
+  if(movie.duration) {
+      const seekTime = percent * movie.duration;
+      timeLabel.textContent = `${formatTime(seekTime)} / ${formatTime(movie.duration)}`;
+  }
+  return percent;
+};
+
+// Mouse Events
+progressBar.addEventListener('mousedown', (e) => {
+  e.stopPropagation();
+  isDragging = true;
+  updateProgressBarVisuals(e.clientX);
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isDragging) updateProgressBarVisuals(e.clientX);
+});
+
+document.addEventListener('mouseup', (e) => {
+  if (isDragging) {
+    isDragging = false;
+    const percent = updateProgressBarVisuals(e.clientX);
+    if(movie.duration) movie.currentTime = percent * movie.duration;
+  }
+});
+
+// Touch Events
+progressBar.addEventListener('touchstart', (e) => {
+  e.stopPropagation();
+  isDragging = true;
+  updateProgressBarVisuals(e.touches[0].clientX);
+}, { passive: false });
+
+document.addEventListener('touchmove', (e) => {
+  if (isDragging) {
+    updateProgressBarVisuals(e.touches[0].clientX);
+  }
+}, { passive: false });
+
+document.addEventListener('touchend', (e) => {
+  if (isDragging) {
+    isDragging = false;
+    const percent = updateProgressBarVisuals(e.changedTouches[0].clientX);
+    if(movie.duration) movie.currentTime = percent * movie.duration;
+  }
+});
+
+/* ===================== TIME UPDATE ===================== */
+movie.ontimeupdate = () => {
+  if (!isDragging && movie.duration) {
+    progress.style.width = (movie.currentTime / movie.duration) * 100 + "%";
+    timeLabel.textContent = `${formatTime(movie.currentTime)} / ${formatTime(movie.duration)}`;
+  }
+};
+
+/* ===================== AUDIO TRACKS HANDLING ===================== */
+// Since this is a single MKV, standard browsers have poor support for switching tracks.
+// This logic attempts to read native tracks (works in Safari or some setups).
+function setupAudioTracks() {
+  audioMenu.innerHTML = '';
+  
+  const hasNativeSupport = movie.audioTracks && movie.audioTracks.length > 0;
+  
+  let tracks = [];
+  
+  if (hasNativeSupport) {
+    for (let i = 0; i < movie.audioTracks.length; i++) {
+      tracks.push({
+        id: i,
+        label: movie.audioTracks[i].label || movie.audioTracks[i].language || `Track ${i+1}`,
+        enabled: movie.audioTracks[i].enabled
+      });
+    }
+  } else {
+    // If browser doesn't report tracks for MKV (Common in Chrome/Firefox)
+    tracks = [
+      { id: 'default', label: 'Default (Combined)', enabled: true }
+    ];
+    // console.warn("Browser does not support native audio track switching for this format.");
+  }
+
+  tracks.forEach(track => {
+    const div = document.createElement("div");
+    div.className = `audio-option ${track.enabled ? 'selected' : ''}`;
+    div.textContent = track.label;
+    div.onclick = (e) => {
+      e.stopPropagation();
+      // UI Update
+      document.querySelectorAll('.audio-option').forEach(el => el.classList.remove('selected'));
+      div.classList.add('selected');
+      
+      // Logic
+      if (hasNativeSupport) {
+        for (let i = 0; i < movie.audioTracks.length; i++) {
+          movie.audioTracks[i].enabled = (i === track.id);
+        }
+      }
+      audioMenu.classList.remove('show');
+    };
+    audioMenu.appendChild(div);
+  });
+}
+
+// Toggle Audio Menu
+audioBtn.onclick = (e) => {
+  e.stopPropagation();
+  setupAudioTracks(); 
+  audioMenu.classList.toggle('show');
+};
+
+document.addEventListener('click', (e) => {
+  if (!audioMenu.contains(e.target) && e.target !== audioBtn) {
+    audioMenu.classList.remove('show');
+  }
+});
+
+/* ===================== VOLUME CONTROL ===================== */
+volumeControl.onclick = (e) => e.stopPropagation(); 
+volumeControl.oninput = (e) => {
+  movie.volume = parseFloat(e.target.value);
+  movie.muted = false;
+  updateVolumeIcon();
+};
+
+volumeIcon.onclick = (e) => {
+  e.stopPropagation();
+  if (!movie.muted) {
+    movie._lastVolume = movie.volume;
+    movie.volume = 0;
+    volumeControl.value = 0;
+    movie.muted = true;
+  } else {
+    const restore = movie._lastVolume || 0.5;
+    movie.volume = restore;
+    volumeControl.value = restore;
+    movie.muted = false;
+  }
+  updateVolumeIcon();
+};
+
+function updateVolumeIcon() {
+  if (movie.volume === 0 || movie.muted) {
+    volumeIcon.textContent = "🔇";
+  } else if (movie.volume < 0.5) {
+    volumeIcon.textContent = "🔈";
+  } else {
+    volumeIcon.textContent = "🔊";
+  }
+}
+
+/* ===================== FULLSCREEN ===================== */
+fullscreen.onclick = async (e) => {
+  e.stopPropagation();
+  if (!document.fullscreenElement) {
+    await enterImmersiveMode();
+  } else {
+    if (document.exitFullscreen) document.exitFullscreen();
+    if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+  }
+};
+
+/* ===================== ZOOM ===================== */
+zoomBtn.onclick = (e) => {
+  e.stopPropagation();
+  isZoomed = !isZoomed;
+  movie.classList.toggle("zoomed", isZoomed);
+  zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
+};
+
+/* ===================== CONTROLS AUTO-HIDE ===================== */
+function showControls() {
+  controls.style.opacity = 1;
+  topOverlay.style.opacity = 1;
+  container.style.cursor = "default";
+  
+  clearTimeout(hideTimeout);
+  hideTimeout = setTimeout(hideControls, 3000);
+}
+
+function hideControls() {
+  if (movie.paused || isDragging || audioMenu.classList.contains('show')) return; 
+  controls.style.opacity = 0;
+  topOverlay.style.opacity = 0;
+  container.style.cursor = "none";
+}
+
+container.addEventListener("mousemove", showControls);
+container.addEventListener("touchstart", showControls);
+container.addEventListener("click", (e) => {
+    if (e.target.closest(".controls") || e.target === startOverlay) return;
+    showControls();
+});
+
+showControls();
+
+</script>
+
+<script src="/js/css.js"></script>
+</body>
+</html>

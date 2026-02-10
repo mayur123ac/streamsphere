@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StreamSphere</title>
+
+  <link rel="stylesheet" href="/css/series.css">
+  <link rel="stylesheet" href="/css/homepage.css" />
+
+  <link rel="stylesheet" href="/css/hidden.css">
+</head>
+
+
+<body>
+  <div id="page-loader">
+    <div class="loader-spinner"></div>
+  </div>
+  <div class="navbar" id="header">
+    <div class="logo hidden1">
+      <img src="/assets/hand1.png" alt="Streamsphere.png" />
+    </div>
+
+    <div class="menu-toggle" id="menu-toggle"><span></span><span></span><span></span></div>
+
+    <ul class="hidden1 nav-links">
+      <a href="/homepage">
+        <li>Movies</li>
+      </a>
+      <a href="/searchpg">
+        <li>Search</li>
+      </a>
+      <a href="/mylist">
+        <li>My List</li>
+      </a>
+
+      {{#if isAdmin}}
+
+      <li class="admin-trigger" onclick="openAnalytics()">Analytics</li>
+      {{/if}}
+
+      <a href="/series">
+        <li>TV Shows</li>
+      </a>
+    </ul>
+
+    <div class="profile-container">
+      <div class="profile-icon">
+        <img src="https://net51.cc/pv/assets/prime-user.png" alt="Profile">
+        <span class="caret">▼</span>
+      </div>
+      <div class="profile-dropdown hidden2">
+        <div class="profile-header">
+          <img src="https://net51.cc/pv/assets/prime-user.png" alt="Avatar">
+          <div class="profile-text">
+            <span class="profile-name">{{name}}</span>
+            <span class="profile-email">{{email}}</span>
+          </div>
+        </div>
+        <hr>
+        <a href="/account" class="dropdown-item">Account</a>
+        <a href="/contactus" class="dropdown-item">SphereBot</a>
+        <hr>
+        <a href="/logout" class="dropdown-item sign-out">Sign out</a>
+      </div>
+    </div>
+  </div>
+  <!-- Hero Section -->
+  <div class="hero" id="banner">
+    <div class="hero-media">
+      <img id="heroImg" src="/assets/wednesday.jpg" alt="Hero Background" />
+      <video id="heroVideo" src="https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/wednesdaytrailer.mp4" loop autoplay muted playsinline></video>
+      <button id="unmuteBtn">
+        <img src="/assets/unmute.png" alt="">
+      </button>
+
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+
+      <div class="logo1 ">
+        <img src="/assets/hand1.png" alt="Streamsphere.png" />
+      </div>
+      <span class="originals-tag">TV Shows</span>
+      <h1 class="wednesday-font">Wednesday</h1>
+      <p class="tagline">Dark. Witty. Supernatural.</p>
+      <p class="lang">English</p>
+      <p class="desc">
+        Follow Wednesday Addams as she navigates life at Nevermore Academy, a school
+        for outcasts, where she uncovers a chilling mystery connected to her family’s
+        past. A blend of gothic humor, teenage rebellion, and supernatural intrigue.
+      </p>
+
+      <div class="buttons">
+        <a href="/wednesday">
+          <button class="btn btn-play">► Play</button>
+        </a>
+        <a href="/wednesday-info">
+          <button class="btn btn-info">ℹ More Info</button>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Movie Rows -->
+  <div class="row" id="tv-series-row">
+    <h2 class="hidden1">Popular TV Series</h2>
+    <button class="scroll-btn prev">&#10094;</button>
+    <div class="row-posters slider">
+
+      <div class="carde series-card" data-id="squid-game">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNDNmNzUzMjEtNGVkYi00N2RjLWEwN2EtYjg3NzA4MGFkMjFkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="Squid Game" />
+        <div class="info-right">
+          <h3>Squid Game</h3>
+          <p class="genre">Thriller • Drama</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="stranger-things">
+        <img src="https://images.justwatch.com/poster/301444843/s718/stranger-things.jpg" alt="Stranger Things" />
+        <div class="info-right">
+          <h3>Stranger Things</h3>
+          <p class="genre">Sci-Fi • Horror</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="alice-borderland">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BMzlmNmRkOTEtOTYxOC00MTJjLTg1MTgtZGE0Yjk2YjM2ZjUyXkEyXkFqcGc@._V1_.jpg"
+          alt="Alice in Borderland" />
+        <div class="info-right">
+          <h3>Alice in Borderland</h3>
+          <p class="genre">Sci-Fi • Thriller</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="all-of-us-dead">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNTcyZjZjNjMtMzFhZC00ZDMyLTkyY2QtYzZlM2JjOGJhNzQyXkEyXkFqcGc@._V1_.jpg"
+          alt="All of Us Are Dead" />
+        <div class="info-right">
+          <h3>All of Us Are Dead</h3>
+          <p class="genre">Horror • Zombie</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="carde series-card" data-id="last-of-us">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BYWI3ODJlMzktY2U5NC00ZjdlLWE1MGItNWQxZDk3NWNjN2RhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+          alt="The Last of Us" />
+        <div class="info-right">
+          <h3>The Last of Us</h3>
+          <p class="genre">Drama • Horror</p>
+          <div class="btn-group">
+            <button class="play-btn open-modal-btn">ℹ Episodes</button>
+            <button class="add-btn" onclick="addToMyList(this)">+</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <button class="scroll-btn next">&#10095;</button>
+  </div>
+  {{!-- epsiondes and seasons
+  --}}
+  <div id="seriesModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+
+      <div class="modal-hero">
+        <img id="modal-hero-img" src="" alt="Series Banner">
+        <div class="modal-hero-text">
+          <h1 id="modal-title">Title</h1>
+          <div class="modal-meta">
+            <span class="match">98% Match</span>
+            <span id="modal-year">2024</span>
+            <span class="age">18+</span>
+            <span id="modal-seasons">1 Season</span>
+          </div>
+          <p id="modal-desc">Description goes here...</p>
+        </div>
+      </div>
+
+      <div class="modal-episodes-container">
+        <div class="episodes-header">
+          <h3>Episodes</h3>
+          <select id="season-select" class="season-select">
+          </select>
+        </div>
+        <div class="episodes-list" id="episodes-list">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {{!-- Scripts --}}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const profileContainer = document.querySelector('.profile-container');
+
+      // 1. Toggle the menu when clicking the profile icon
+      profileContainer.addEventListener('click', (e) => {
+        e.stopPropagation(); // Stop click from bubbling to document
+        profileContainer.classList.toggle('active');
+      });
+
+      // 2. Close the menu if clicking anywhere else on the screen
+      document.addEventListener('click', () => {
+        if (profileContainer.classList.contains('active')) {
+          profileContainer.classList.remove('active');
+        }
+      });
+
+      // --- NEW CODE START: POPULATE PROFILE INFO ---
+      // --- NEW CODE END ---
+
+    });
+  </script>
+
+
+
+  <script src="/js/pageloader.js"></script>
+  <script src="/js/episodes.js"></script>
+  <script src="/js/scrolllogic.js"></script>
+  <script src="/js/recentlyplayed.js"></script>
+  <script src="/js/button.js"></script>
+  <script src="/js/homepagescript.js"></script>
+  <script src="/js/css.js"></script>
+  <script src="/js/mobilescript.js"></script>
+</body>
+
+</html>

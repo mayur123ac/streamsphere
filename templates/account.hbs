@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - StreamSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/homepage.css" />
+    <style>
+        :root {
+            --bg-color: #141414;
+            --text-color: #fff;
+            --sub-text: #b3b3b3;
+            --border-color: #333;
+            --netflix-red: #E50914;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 110px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .member-since {
+            float: right;
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+
+        .account-section {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .section-label {
+            color: #999;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        .section-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-cancel {
+            background: #e6e6e6;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            width: 200px;
+            cursor: pointer;
+        }
+
+        .plan-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .quality-tag {
+            border: 1px solid #777;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-left: 5px;
+        }
+
+        @media (max-width: 768px) {
+
+            .account-section {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .member-since {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar" id="header">
+        <div class="logo hidden1">
+            <img src="/assets/hand1.png" alt="Streamsphere.png" />
+        </div>
+
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <ul class="hidden1 nav-links">
+            <a href="/homepage">
+                <li>Movies</li>
+            </a>
+            <a href="/searchpg">
+                <li>Search</li>
+            </a>
+            <a href="/mylist">
+                <li>My List</li>
+            </a>
+            <a href="/series">
+                <li>TV Shows</li>
+            </a>
+        </ul>
+
+        <div class="profile-container">
+            <div class="profile-icon">
+                <img src="https://net51.cc/pv/assets/prime-user.png" alt="Profile">
+                <span class="caret">▼</span>
+            </div>
+
+            <div class="profile-dropdown hidden2">
+                <div class="profile-header">
+                    <img src="https://net51.cc/pv/assets/prime-user.png" alt="Avatar">
+                    <div class="profile-text">
+                        <span class="profile-name">{{name}}</span>
+                        <span class="profile-email">{{email}}</span>
+                    </div>
+                </div>
+                <hr>
+                <a href="/account" class="dropdown-item">Account</a>
+                <a href="/contactus" class="dropdown-item">SphereBot</a>
+                <hr>
+                <a href="/logout" class="dropdown-item sign-out">Sign out</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <h1>Account <span class="member-since">Member Since 2025</span></h1>
+
+        <div class="account-section">
+            <div class="section-label">MEMBERSHIP & BILLING</div>
+            <div class="section-content">
+                <div style="font-weight: bold;">{{email}}</div>
+                <div style="color:#aaa;">Password: ********</div>
+                <div
+                    style="background: rgba(229,9,20,0.1); border: 1px solid #E50914; padding: 15px; color: #ffcccc; font-size: 0.9rem;">
+                    <strong>StreamSphere Free Tier</strong><br>
+                    Enjoy 4K HDR & IMAX movies at no cost. <br>
+                    <small>We rely on your support to keep servers running!</small>
+                </div>
+                <button class="btn-cancel" onclick="alert('No need to cancel! It is free forever.')">Cancel
+                    Membership</button>
+            </div>
+        </div>
+
+        <div class="account-section">
+            <div class="section-label">PLAN DETAILS</div>
+            <div class="section-content">
+                <div class="plan-details">
+                    <div>StreamSphere Ultra <span class="quality-tag">4K HDR</span> <span
+                            class="quality-tag">IMAX</span></div>
+                    <a href="#" style="color:#0071eb; font-size:0.9rem; text-decoration:none;"
+                        onclick="alert('Cannot change plan at the moment.')">Change plan</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-section" style="border-bottom: none;">
+            <div class="section-label">PROFILE</div>
+            <div class="section-content">
+                <div style="display:flex; align-items:center; gap:10px; background:#222; padding:10px;">
+                    <img src="https://net51.cc/pv/assets/prime-user.png" width="40" style="border-radius:4px;">
+                    <div>
+                        <div style="font-weight:bold;">{{name}}</div>
+                        <div style="font-size:0.8rem; color:#aaa;">All Maturity Ratings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const profileContainer = document.querySelector('.profile-container');
+
+            // 1. Toggle the menu when clicking the profile icon
+            profileContainer.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop click from bubbling to document
+                profileContainer.classList.toggle('active');
+            });
+
+            // 2. Close the menu if clicking anywhere else on the screen
+            document.addEventListener('click', () => {
+                if (profileContainer.classList.contains('active')) {
+                    profileContainer.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+
+
+    <script src="/js/scrolllogic.js"></script>
+    <script src="/js/recentlyplayed.js"></script>
+    <script src="/js/button.js"></script>
+    <script src="/js/homepagescript.js"></script>
+    <script src="/js/css.js"></script>
+    <script src="/js/mobilescript.js"></script>
+</body>
+
+</html>

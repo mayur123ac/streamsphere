@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ballerina - Full Movie</title>
+  <link rel="stylesheet" href="/css/movie.css" />
+  <link rel="stylesheet" href="/css/playmovie.css" />
+
+  <style>
+    /* 🔹 FIX: Force player to fit mobile screen exactly */
+    .player-container {
+      height: 100dvh !important;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      background: black;
+      user-select: none;
+    }
+
+    /* 🔹 FIX: Lift controls up */
+    .controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      padding-left: 20px;
+      padding-right: 20px;
+      z-index: 2147483647;
+    }
+
+    .zoomed {
+      object-fit: cover !important;
+      transform: scale(1.12);
+    }
+
+    /* Loader */
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      z-index: 25;
+      display: none;
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Skip Buttons */
+    .skip-btn {
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      margin: 0 15px;
+      user-select: none;
+      transition: transform 0.1s;
+      font-family: sans-serif;
+    }
+    .skip-btn:active { transform: scale(0.9); }
+
+    .progress-bar { cursor: pointer; }
+  </style>
+
+  <script>
+    window['__onGCastApiAvailable'] = function(isAvailable) {
+      if (isAvailable) {
+        initializeCastApi();
+      }
+    };
+
+    function initializeCastApi() {
+      const castBtn = document.getElementById("castBtn");
+      
+      cast.framework.CastContext.getInstance().setOptions({
+        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+      });
+
+      // Show button if Cast is available
+      cast.framework.CastContext.getInstance().addEventListener(
+        cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+        function(event) {
+          if (event.castState !== cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+            if(castBtn) castBtn.style.display = "inline-block";
+          } else {
+            if(castBtn) castBtn.style.display = "none";
+          }
+        }
+      );
+    }
+  </script>
+</head>
+
+<body>
+  <div class="player-container">
+    
+    <div id="loader" class="loader"></div>
+
+    <div class="top-overlay" id="topOverlay">
+      <div class="rating">
+        | <h1></h1>
+      </div>
+      <div class="title">Ballerina</div>
+      <div class="desc hidden1">Action • Thriller • Revenge • 4K HDR</div>
+    </div>
+    
+    <video id="moviePlayer" preload="metadata" playsinline>
+      <source
+        src="https://my-movie-bucket01stremesphere.s3.eu-north-1.amazonaws.com/movies/Ballerina+-+From+the+World+of+John+Wick+(2025)+1080p+WEB-DL+10bit+HEVC+%5BHindi+DDP+5.1+%2B+English+DDP+5.1%5D+x265+(PSA-UHDMovies).mkv"
+        type="video/mp4" />
+      
+      <track label="English" kind="subtitles" srclang="en" src="/subtitles/en.vtt" default />
+      <track label="Hindi" kind="subtitles" srclang="hi" src="/subtitles/hi.vtt" />
+      Your browser does not support HTML5 video.
+    </video>
+
+    <div class="controls bottom-overlay hidden1" id="controls">
+      
+      <span class="skip-btn" id="rewindBtn">◀◀</span>
+      <span class="btn" id="playPause">▶</span>
+      <span class="skip-btn" id="forwardBtn">▶▶</span>
+
+      <div class="time" id="time">0:00 / 0:00</div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+      
+      <span class="btn" id="mute">🔊</span>
+
+      <span class="btn" id="castBtn" style="display: none;">📡</span>
+
+      <span class="btn" id="zoom">🔍</span>
+      <span class="btn" id="fullscreen">⛶</span>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+
+  <script>
+    const movie = document.getElementById("moviePlayer");
+    const playPause = document.getElementById("playPause");
+    const mute = document.getElementById("mute");
+    const fullscreen = document.getElementById("fullscreen");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const timeLabel = document.getElementById("time");
+    const topOverlay = document.getElementById("topOverlay");
+    const controls = document.getElementById("controls");
+    const zoomBtn = document.getElementById("zoom"); 
+    
+    const loader = document.getElementById("loader");
+    const rewindBtn = document.getElementById("rewindBtn");
+    const forwardBtn = document.getElementById("forwardBtn");
+    const castBtn = document.getElementById("castBtn");
+
+    let hideControlsTimeout;
+    let isZoomed = false; 
+    let isDragging = false; 
+
+    // Helper: format time
+    const formatTime = (sec) => {
+      if(!sec || isNaN(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, "0")}`;
+    };
+
+    /* ===================== CHROMECAST CLICK HANDLER ===================== */
+    castBtn.onclick = function(e) {
+        e.stopPropagation();
+        if (cast.framework.CastContext.getInstance().getCastState() === cast.framework.CastState.CONNECTED) {
+          cast.framework.CastContext.getInstance().requestSession();
+        } else {
+          cast.framework.CastContext.getInstance().requestSession().then(
+            function() { loadMediaOnCast(); },
+            function(err) { console.error('Cast Error:', err); }
+          );
+        }
+    };
+
+    // Listen for session state to auto-load media or change icon color
+    // We add this listener lazily or check if API is ready, 
+    // but usually it's safer to add it inside initializeCastApi above.
+    // For simplicity, we assume initialization happened.
+    
+    function loadMediaOnCast() {
+      const session = cast.framework.CastContext.getInstance().getCurrentSession();
+      if (!session) return;
+      
+      const videoSrc = movie.querySelector('source').src;
+      const mediaInfo = new chrome.cast.media.MediaInfo(videoSrc, 'video/mp4');
+      const request = new chrome.cast.media.LoadRequest(mediaInfo);
+      request.autoplay = true;
+      request.currentTime = movie.currentTime;
+
+      session.loadMedia(request).then(
+        function() { console.log('Cast load success'); },
+        function(err) { console.error('Cast load error:', err); }
+      );
+    }
+
+    /* ===================== LOADER LOGIC ===================== */
+    movie.addEventListener('waiting', () => loader.style.display = 'block');
+    movie.addEventListener('seeking', () => loader.style.display = 'block');
+    movie.addEventListener('playing', () => loader.style.display = 'none');
+    movie.addEventListener('canplay', () => loader.style.display = 'none');
+
+    /* ===================== SKIP BUTTONS ===================== */
+    rewindBtn.onclick = (e) => {
+      e.stopPropagation();
+      movie.currentTime = Math.max(0, movie.currentTime - 10);
+    };
+    forwardBtn.onclick = (e) => {
+      e.stopPropagation();
+      movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
+    };
+
+    /* ===================== SMOOTH DRAG LOGIC ===================== */
+    const updateProgress = (clientX) => {
+      const rect = progressBar.getBoundingClientRect();
+      let percent = (clientX - rect.left) / rect.width;
+      percent = Math.max(0, Math.min(1, percent));
+      progress.style.width = (percent * 100) + "%";
+      
+      if(movie.duration) {
+        const seekTime = percent * movie.duration;
+        timeLabel.textContent = `${formatTime(seekTime)} / ${formatTime(movie.duration)}`;
+      }
+      return percent;
+    };
+
+    progressBar.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      isDragging = true;
+      updateProgress(e.clientX);
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) updateProgress(e.clientX);
+    });
+    document.addEventListener('mouseup', (e) => {
+      if (isDragging) {
+        isDragging = false;
+        const percent = updateProgress(e.clientX);
+        if(movie.duration) movie.currentTime = percent * movie.duration;
+      }
+    });
+
+    // Touch Support
+    progressBar.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      isDragging = true;
+      updateProgress(e.touches[0].clientX);
+    }, { passive: false });
+    document.addEventListener('touchmove', (e) => {
+      if (isDragging) updateProgress(e.touches[0].clientX);
+    }, { passive: false });
+    document.addEventListener('touchend', (e) => {
+      if (isDragging) {
+        isDragging = false;
+        const percent = updateProgress(e.changedTouches[0].clientX);
+        if(movie.duration) movie.currentTime = percent * movie.duration;
+      }
+    });
+
+    /* ===================== EXISTING LOGIC ===================== */
+    movie.ontimeupdate = () => {
+      if (!isDragging && movie.duration) {
+        const current = movie.currentTime;
+        const duration = movie.duration;
+        progress.style.width = (current / duration) * 100 + "%";
+        timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+      }
+    };
+    playPause.onclick = (e) => {
+      e.stopPropagation();
+      if (movie.paused) {
+        movie.play();
+        playPause.textContent = "⏸";
+      } else {
+        movie.pause();
+        playPause.textContent = "▶";
+      }
+    };
+    mute.onclick = (e) => {
+      e.stopPropagation();
+      movie.muted = !movie.muted;
+      mute.textContent = movie.muted ? "🔇" : "🔊";
+    };
+    fullscreen.onclick = (e) => {
+      e.stopPropagation();
+      if (movie.parentElement.requestFullscreen) {
+        movie.parentElement.requestFullscreen();
+      } else if (movie.parentElement.webkitRequestFullscreen) {
+        movie.parentElement.webkitRequestFullscreen();
+      } else if (movie.parentElement.msRequestFullscreen) {
+        movie.parentElement.msRequestFullscreen();
+      }
+    };
+
+    const showControls = () => {
+      controls.style.opacity = 1;
+      topOverlay.style.opacity = 1;
+      clearTimeout(hideControlsTimeout);
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+    const hideControls = () => {
+      if(movie.paused || isDragging) return;
+      controls.style.opacity = 0;
+      topOverlay.style.opacity = 0;
+    };
+    document.addEventListener("mousemove", showControls);
+    document.addEventListener("touchstart", showControls);
+    document.addEventListener("click", (e) => {
+       if (e.target.closest(".controls")) return;
+       showControls();
+    });
+
+    window.onload = () => {
+      movie.play().catch(() => {});
+      if (movie.parentElement.requestFullscreen) {
+        movie.parentElement.requestFullscreen();
+      }
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+
+    zoomBtn.onclick = (e) => {
+      e.stopPropagation();
+      isZoomed = !isZoomed;
+      movie.classList.toggle("zoomed", isZoomed);
+      zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
+    };
+
+  </script>
+  <script src="/js/css.js"></script>
+
+</body>
+</html>

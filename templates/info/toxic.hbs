@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toxic - StreamSphere</title>
+    <link rel="stylesheet" href="/css/trailer.css" />
+    <link rel="stylesheet" href="/css/hidden.css">
+  </head>
+  <body>
+    <header>
+      <div class="logo hidden1">
+        <img src="/assets/hand1.png" alt="StreamSphere Logo" />
+      </div>
+    </header>
+
+    <div class="maincont">
+      <h1 id="title" class="">Trailer - Toxic</h1>
+
+      <div id="video-container" class="">
+        <iframe
+          width="100%"
+          height="100%"
+          src="https://www.youtube.com/embed/aF08WVSvCok?si=9kjZ_gyzkosmZJUD"
+          title="YouTube trailer"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        >
+        </iframe>
+      </div>
+
+      <div class="card">
+        <div class="meta">
+          Toxic
+          <span class="badge">4k</span>
+          <span class="badge">Subtitles</span>
+        </div>
+
+        <div class="advisory">Action, Crime, Drama</div>
+
+        <div class="desc ">
+          "A Fairy Tale for Grown-ups." Set against the backdrop of the drug mafia, 
+          this high-octane gangster drama explores a dark and gritty world where 
+          morality is blurred. Yash returns in a stylish, never-seen-before avatar.
+        </div>
+
+        <div class="side-info">
+          <span><strong>Cast:</strong> Yash, Kiara Advani, Nayanthara, Huma Qureshi</span>
+          <span><strong>Genres:</strong> Movies, Action, Gangster Drama, Thriller</span>
+          <span><strong>This Show Is:</strong> Dark, Stylish, Intense</span>
+        </div>
+
+        {{!-- <button id="play" class="hidden3">
+          <a href="#" target="_blank">Play ▸</a>
+        </button> --}}
+      </div>
+
+      <div id="detail hidden1">
+        <h1>More Details</h1>
+      </div>
+
+      <div class="details">
+        <div class="detail1">
+          <p>
+            <strong>Genres:</strong> Action Thriller, Crime Drama, Noir. <br />
+            <strong>Style:</strong> Atmospheric, Fast-paced, and Visually Stunning.
+          </p>
+        </div>
+
+        <div class="detail1">
+          <p>
+            <strong>Plot:</strong> Directed by Geetu Mohandas, the film is set in the 
+            underworld of the drug trade (rumored to be based in Goa). It promises a 
+            unique narrative distinct from the KGF universe, focusing on complex character dynamics.
+          </p>
+        </div>
+
+        <div class="detail1">
+          <p>
+            <strong>Cast:</strong> Featuring 'Rocking Star' Yash in the lead role, 
+            supported by a pan-Indian ensemble cast including Kiara Advani and Nayanthara.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/css.js"></script>
+  <script>
+      // Redirects to the movie player page
+      // Note: Ensure the button ID "play" is uncommented in HTML for this to work
+      if(document.getElementById("play")) {
+        document.getElementById("play").onclick = function(){
+          window.location.href = "/toxicmovie";
+        }
+      }
+  </script>
+</html>

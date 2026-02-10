@@ -1,0 +1,1290 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+/* 1. HERO TITLE - The "Netflix" Look */
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  background-color: #141414;
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+/* 2. ORIGINALS TAG / SERIES TAG */
+.originals-tag {
+  letter-spacing: 1.5px;
+  font-size: 1.5rem;
+
+  text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* 3. NAVBAR & BUTTONS - Clean UI */
+
+/* Update Nav weight */
+.navbar {
+  font-weight: 400;
+  font-size: 0.9rem; /* Netflix nav is usually quite small */
+}
+
+/* Update Description text */
+.hero-content .desc {
+  font-weight: 400;
+  line-height: 1.6;
+  font-size: 1.1rem;
+  color: #e5e5e5; /* Not pure white, easier on eyes */
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+/* Wednesday font */
+.wednesday-font {
+  font-family: "Cinzel Decorative", serif;
+  font-size: clamp(28px, 8vw, 70px);
+  font-weight: 700;
+  color: white;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* Navbar */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 15px;
+
+  /* CENTERING LOGIC */
+  position: fixed;
+  top: 0; /* Stick to top */
+  left: 0; /* Anchor left */
+  right: 0; /* Anchor right */
+  margin: 0; /* Auto margins on sides center the element */
+  width: 98%;
+
+  z-index: 1000;
+  backdrop-filter: blur(60px);
+  border-radius: 0 0 12px 12px;
+  box-shadow:
+    0 6px 8px 0 rgba(0, 0, 0, 0.45),
+    0 8px 12px 6px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+  margin: 0 auto;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.logo img {
+  width: clamp(120px, 25vw, 200px);
+}
+
+.logo1 img {
+  width: clamp(120px, 25vw, 200px);
+  left: -4%;
+  position: relative;
+}
+
+.navbar ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.navbar ul li {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.navbar ul li:hover {
+  color: blue;
+  /* Netflix red hover */
+}
+
+/* Mobile Menu */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Hero Section */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding-left: 5%;
+  color: #fff;
+  margin-top: 10vh;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.hero-media img,
+.hero-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-media iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: none;
+  /* lets you click buttons over it */
+}
+
+/* ✨ Dark cinematic gradient overlay */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      to right,
+      rgba(12, 12, 12, 0) 6%,
+      rgba(15, 27, 22, 0.2) 40%
+    ),
+    linear-gradient(to top, #141414 0%, rgba(12, 12, 12, 0.1) 15%);
+  z-index: 1;
+}
+/* 🧠 Text styling */
+#unmuteBtn {
+  position: absolute;
+  bottom: 18%;
+  /* place near bottom */
+  right: 10%;
+  /* right side */
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+}
+
+#unmuteBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+#unmuteBtn img {
+  width: 60px;
+  height: 60px;
+  top: -80%;
+  width: 60px;
+  height: 60px;
+  position: relative;
+  left: -91%;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  opacity: 1;
+  transition: 1.2s ease;
+  animation: fadeIn 1.2s ease-in;
+}
+
+.originals-tag {
+  display: inline-block;
+  margin-top: 12px;
+  /* padding: 6px 14px; */
+  /* border: 1px solid rgba(255, 255, 255, 0.4); */
+  /* border-radius: 20px; */
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: transparent;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hero-content h1 {
+  font-size: 5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.hero-content .tagline {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  margin-bottom: 5px;
+}
+
+.hero-content .lang {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 15px;
+}
+
+.hero-content .desc {
+  font-size: 1rem;
+  opacity: 0.85;
+  line-height: 1.5;
+  margin-bottom: 25px;
+}
+
+/* 🎬 Buttons */
+.buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.btn {
+  border: none;
+  border-radius: 30px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-play {
+  background: #fff;
+  color: #000;
+  font-weight: 600;
+}
+
+.btn-play:hover {
+  background: #e6e6e6;
+}
+
+.btn-info {
+  background: #fff3;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-info:hover {
+  background: rgba(109, 109, 110, 0.4);
+}
+
+/* 🌫️ Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Movie Row */
+.row {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+
+.row h2 {
+  margin-bottom: 15px;
+  font-size: clamp(18px, 4vw, 32px);
+}
+
+.row-posters,
+.trending {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+  /* ADD THIS LINE BELOW: */
+  padding-right: 10px;
+
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.row-posters::-webkit-scrollbar,
+.trending::-webkit-scrollbar {
+  display: none;
+}
+
+/* Standard Scroll Buttons */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  width: 40px;
+  height: 100%;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  opacity: 0;
+}
+.row:hover .scroll-btn,
+.container:hover .scroll-btn {
+  opacity: 1;
+}
+
+.scroll-btn:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: rgb(87, 0, 226);
+}
+
+.scroll-btn.prev {
+  left: 0;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  height: 15vh;
+  margin-top: 20px;
+}
+
+.scroll-btn.next {
+  right: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  height: 15vh;
+  margin-top: 20px;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  pointer-events: none;
+  /* so button clicks still work on top */
+}
+
+/* Play Button */
+.play-btn {
+  width: 80px;
+  height: 35px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background-color: white;
+  color: black;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.play-btn:hover {
+  background-color: rgb(101, 0, 233);
+  color: white;
+  transition: 0.2s ease-in;
+}
+
+/* Card Styling */
+.carde {
+  display: flex;
+  width: 200px;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #0c0c0c;
+  transition: width 0.4s ease;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+  /* Added cursor pointer to indicate clickable */
+}
+a {
+  text-decoration: none;
+}
+
+.carde img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.info-right {
+  width: 220px;
+  padding: 14px;
+  color: white;
+  background: #111;
+  opacity: 0;
+  transform: translateX(10px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  white-space: normal;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.info-right h3 {
+  margin-top: 0;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.top10-section {
+  padding: 20px;
+}
+
+.top10-section h2 {
+  margin-bottom: 20px;
+  font-weight: 600;
+  font-size: 24px;
+}
+
+.slider {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.series-box {
+  position: relative;
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 200px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.series-box:hover {
+  transform: scale(1.05);
+}
+
+.series-box img {
+  width: 100%;
+  border-radius: 12px;
+}
+
+.rank {
+  position: absolute;
+  top: -20px;
+  left: -10px;
+  font-size: 80px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.15);
+  z-index: 0;
+}
+
+.series-box p {
+  margin: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+.container {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 0 20px;
+}
+.trending-container {
+  position: relative;
+}
+.trending {
+  display: flex;
+  overflow-x: auto;
+  gap: 24px;
+  padding-bottom: 10px;
+  scrollbar-width: none; /* Hides scrollbar for Firefox */
+  scroll-behavior: smooth;
+}
+.trending::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for WebKit browsers */
+}
+
+.genre {
+  font-size: 12px;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #ccc;
+}
+.movie {
+  /* background: gray; */
+  border-radius: 20px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  width: 220px; /* Or matches your carde width */
+  height: 330px;
+}
+.movie h1 {
+  position: absolute;
+  background-color: transparent;
+  font-weight: 900;
+  color: rgba(0, 0, 0, 0.8);
+  -webkit-text-stroke: 0.125rem rgb(255, 255, 255);
+  text-shadow: 0 0 1.5rem rgba(0, 0, 0, 0.5);
+  font-size: 4.5rem;
+  left: -0.1rem;
+  z-index: 10;
+  margin: 10px 0;
+}
+.movie img {
+  width: 95%;
+  height: 100%;
+  border-radius: 20px;
+  position: absolute;
+  right: 0;
+  object-fit: cover;
+}
+
+.bgts {
+  display: flex;
+  gap: 5px;
+}
+#info {
+  background-color: #3e3e3e;
+  color: #fff;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Space between Play and + */
+}
+
+.add-btn {
+  /* width: 30px; */
+  font-size: 1.5rem;
+  background-color: transparent;
+  color: #ffff;
+  border: 1px solid;
+  border-radius: 50%;
+  width: 30px;
+  margin-top: 10px;
+}
+
+.add-btn:hover {
+  border-color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hero-content .desc {
+    font-size: 12px;
+    opacity: 0.85;
+    line-height: 1.2;
+    margin-bottom: 25px;
+    width: 80%;
+  }
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content {
+    width: 500px;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0px;
+
+    width: 97%;
+
+    /* CENTERING LOGIC */
+    position: fixed;
+    top: 0; /* Stick to top */
+    left: 0; /* Anchor left */
+    right: 0; /* Anchor right */
+    margin: 0 auto; /* Auto margins on sides center the element */
+
+    z-index: 1000;
+    backdrop-filter: blur(40px);
+    border-radius: 0 0 12px 12px;
+    box-shadow:
+      0 4px 4px 0 rgba(0, 0, 0, 0.3),
+      0 8px 12px 6px rgba(0, 0, 0, 0.15);
+    font-weight: 600;
+  }
+
+  .btn-info {
+    background: rgba(109, 109, 110, 0.7);
+    color: white;
+    margin-bottom: 45px;
+  }
+
+  .hero {
+    align-items: center;
+    text-align: left;
+    padding: 0 15px;
+    justify-content: center;
+    height: 90vh;
+    margin-top: 0;
+  }
+
+  .hero p {
+    font-size: 14px;
+    z-index: -11;
+  }
+
+  .hero .buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .carde,
+  .carde img {
+    width: 160px;
+    height: 240px;
+  }
+
+  .info-right {
+    width: 320px;
+  }
+
+  .play-btn {
+    width: 60px;
+    height: 30px;
+    margin-top: 0;
+    font-size: 10px;
+  }
+
+  .add-btn {
+    margin-top: 0;
+  }
+
+  .scroll-btn {
+    width: 30px;
+    opacity: 0;
+  }
+
+  .genre {
+    font-size: 12px;
+    color: #aaa;
+    margin: 0px;
+  }
+
+  .description {
+    font-size: 10px;
+    line-height: 1.2;
+    color: #ccc;
+  }
+
+  .info-right h3 {
+    margin-top: 0;
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+
+  .scroll-btn.next {
+    visibility: 0;
+    opacity: 0;
+    color: transparent;
+    z-index: -1000;
+    background-color: transparent;
+  }
+
+  .scroll-btn.prev {
+    opacity: 0;
+    z-index: -100;
+    color: transparent;
+  }
+
+  .movie {
+    height: 240px;
+    width: 170px;
+  }
+
+  .container {
+    margin-bottom: 20px;
+    padding: 0 10px;
+  }
+
+  .movie img {
+    height: 240px;
+    width: 145px;
+  }
+
+  .row-posters,
+  .trending {
+    display: flex;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar ul {
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.95);
+    position: absolute;
+    top: 38px;
+    right: -2px;
+    padding: 0px 20px 15px 20px;
+    width: 200px;
+    border-radius: 10px;
+    border-radius: 9px;
+    display: none;
+  }
+
+  .navbar ul.active {
+    display: flex;
+    animation: slideDown 0.4s ease forwards;
+    padding: 20px;
+    right: 20px;
+  }
+
+  /* Hamburger toggle */
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    margin-left: auto;
+    margin-right: 15px;
+  }
+
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  /* Animate to X when active */
+  .menu-toggle.active span:nth-child(1) {
+    transform: rotate(140deg) translate(11px, 2px);
+  }
+
+  .menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.active span:nth-child(3) {
+    transform: rotate(225deg) translate(14px, 0px);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/*css//
+      /* hidden1 */
+.hidden1 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateY(100%);
+  transition: all 1s;
+}
+
+.show1 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+/* hidden0 */
+.hidden {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(35%);
+  transition: all 1s;
+  transform: scale(1.4);
+}
+
+.show {
+  opacity: 1;
+  filter: blur(0);
+  width: 100%;
+  transform: translateX(0);
+  transform: scale(1);
+}
+
+/* hidden2 */
+.hidden2 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(-35%);
+  transition: all 1s;
+  transform: scale(1.1);
+}
+
+.show2 {
+  opacity: 1;
+  filter: blur(0);
+  width: 100%;
+  transform: translateX(0);
+  transform: scale(1);
+}
+
+/* hidden3 */
+
+.hidden3 {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(20%);
+  transition: all 1s;
+}
+
+.show3 {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateX(0);
+}
+
+/* profile */
+/* Ensure links stay in the center or left */
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin-right: auto;
+  /* Pushes profile to the far right */
+  margin-left: 20px;
+  gap: 20px;
+}
+
+/* --- Profile Container --- */
+.profile-container {
+  position: relative;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+.profile-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-icon img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.profile-icon .caret {
+  color: white;
+  font-size: 10px;
+  transition: transform 0.3s ease;
+}
+
+/* ROTATE CARET WHEN ACTIVE CLASS IS PRESENT */
+.profile-container.active .caret {
+  transform: rotate(180deg);
+}
+
+/* --- Dropdown Menu --- */
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 10;
+  width: 220px;
+  background-color: rgba(0, 0, 0, 0.95);
+  border: 1px solid #333;
+  padding: 10px 0;
+
+  /* Hidden by default */
+  display: none;
+  flex-direction: column;
+  z-index: 1001;
+}
+
+/* SHOW DROPDOWN WHEN ACTIVE CLASS IS PRESENT */
+.profile-container.active .profile-dropdown {
+  display: flex;
+  border-radius: 10px;
+  right: 10px;
+}
+
+/* Dropdown Content */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+}
+
+.profile-header img {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-name {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.profile-email {
+  color: #aaa;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+}
+
+.profile-dropdown hr {
+  border: 0;
+  border-top: 1px solid #333;
+  width: 100%;
+  margin: 5px 0;
+}
+
+.dropdown-item {
+  color: #fff;
+  padding: 10px 15px;
+  font-size: 13px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-item:active {
+  text-decoration: underline;
+}
+
+.sign-out {
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Mobile Responsiveness */
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  /* 1. Make the container visible */
+  .profile-container {
+    display: block;
+    margin-left: 0;
+    /* Pushes it to the right */
+    margin-right: 10px;
+    /* Adds space between profile and hamburger menu */
+  }
+
+  /* 2. Optional: Hide the email on very small screens to save space */
+
+  /* 3. Adjust dropdown position for mobile so it doesn't go off-screen */
+  .profile-dropdown {
+    right: 0px;
+    width: 200px;
+  }
+
+  .nav-links {
+    /* Ensure nav links don't interfere */
+    display: none;
+  }
+}
+/* Page Loader */
+#page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #141414;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s;
+}
+
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top: 5px solid blueviolet;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* 5. SERIES MODAL (Episodes & Details) */
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: #181818;
+  margin: 5% auto;
+  width: 90%;
+  max-width: 850px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  color: white;
+  animation: modalFadeIn 0.4s;
+}
+
+@keyframes modalFadeIn {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.close-modal {
+  color: #fff;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+}
+
+.close-modal:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Modal Hero */
+.modal-hero {
+  position: relative;
+  height: 400px;
+}
+
+.modal-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.modal-hero-text {
+  position: absolute;
+  bottom: 20px;
+  left: 40px;
+  width: 60%;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.modal-hero-text h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.modal-meta {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.modal-meta .match {
+  color: #46d369;
+  display: none;
+}
+
+.modal-meta .age {
+  border: 1px solid #aaa;
+  padding: 0 5px;
+  font-size: 0.8rem;
+}
+
+/* Episodes List */
+.modal-episodes-container {
+  padding: 20px 40px;
+}
+
+.episodes-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #404040;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.episode-row {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.episode-row:hover {
+  background-color: #333;
+}
+
+.ep-num {
+  font-size: 1.5rem;
+  color: #d2d2d2;
+  margin-right: 20px;
+  min-width: 30px;
+}
+
+.ep-thumb {
+  width: 120px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.ep-info {
+  flex-grow: 1;
+}
+
+.ep-title {
+  font-weight: bold;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.ep-desc {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.ep-duration {
+  font-size: 0.9rem;
+  min-width: 60px;
+  text-align: right;
+}
+
+.season-select {
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 5px 15px;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.season-select:hover {
+  background-color: #444;
+}
+
+@media (max-width: 768px) {
+  .ep-title {
+    font-weight: bold;
+    font-size: 10px;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .ep-desc {
+    font-size: 8px;
+    color: #aaa;
+    display: none;
+  }
+  .ep-thumb {
+    width: 140px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 20px;
+    padding: 10px;
+    border-radius: 15px;
+  }
+  .episode-row {
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    border-bottom: 1px solid #404040;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .ep-duration {
+    font-size: 8px;
+    min-width: 15px;
+    text-align: right;
+  }
+  .season-select {
+    height: 40px;
+    font-size: 12px;
+    transform: translateY(10px);
+  }
+  .ep-num {
+    font-size: 18px;
+    color: #d2d2d2;
+    margin-right: 10px;
+    min-width: 10px;
+  }
+  .modal-hero-text h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  #modal-desc {
+    font-size: 12px;
+  }
+}

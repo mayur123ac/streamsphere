@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How To Train Dragon - Full Movie</title>
+
+  <link rel="stylesheet" href="/css/playmovie.css" />
+
+  <style>
+    /* --- PRESERVED EXISTING STYLES (Assumed from external file) --- */
+    /* Only adding necessary styles for new features */
+
+    /* 1. LOADER */
+    .loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      z-index: 25;
+      display: none; /* Hidden by default */
+      pointer-events: none;
+    }
+
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* 2. START OVERLAY (For Autoplay Policy) */
+    .start-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      z-index: 20;
+      cursor: pointer;
+    }
+    .big-play-btn {
+      font-size: 5rem;
+      color: white;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    .hidden { display: none !important; }
+
+    /* 3. SKIP BUTTONS (Text Based) */
+    .skip-btn {
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      margin: 0 15px;
+      user-select: none;
+      font-family: sans-serif;
+      transition: transform 0.1s;
+    }
+    .skip-btn:active { transform: scale(0.9); }
+
+    /* 4. VOLUME GROUP */
+    .volume-control-group {
+      display: flex;
+      align-items: center;
+      margin: 0 10px;
+    }
+    #volumeControl {
+      width: 80px;
+      accent-color: #ffffff;
+      cursor: pointer;
+      margin-left: 8px;
+    }
+
+    /* 5. AUDIO MENU */
+    .audio-menu {
+      position: absolute;
+      bottom: 70px;
+      right: 60px;
+      background: rgba(20, 20, 20, 0.9);
+      border-radius: 8px;
+      padding: 10px;
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      z-index: 30;
+      min-width: 120px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .audio-menu.show { display: flex; }
+    .audio-option {
+      color: #ccc;
+      padding: 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: sans-serif;
+    }
+    .audio-option:hover { background: rgba(255,255,255,0.1); }
+    .audio-option.selected { color: #fff; font-weight: bold; background: rgba(128, 0, 128, 0.5); }
+
+    /* Smooth Cursor */
+    .progress-bar { cursor: pointer; }
+  </style>
+</head>
+
+<body>
+  <div class="player-container">
+    
+    <div id="loader" class="loader"></div>
+
+    <div class="start-overlay" id="startOverlay">
+      <div class="big-play-btn">▶</div>
+    </div>
+
+    <div class="top-overlay" id="topOverlay">
+      <div class="rating">| <h1></h1></div>
+      <div class="title">How To Train Dragon</div>
+      <div class="desc hidden1">Action • Adventure • Fantasy • Family • 4K HDR</div>
+    </div>
+
+    <video id="moviePlayer" preload="metadata" playsinline>
+      <source
+        src="https://my-movie-bucket01stremesphere.s3.eu-north-1.amazonaws.com/How+to+Train+Your+Dragon+(2025)+IMAX+1080p+BluRay+10bit+HEVC+%5BHindi+DDP+5.1+%2B+English+AAC+5.1%5D+x265+(PSA-UHDMovies)+(1).mkv"
+        />
+      <track label="English" kind="subtitles" srclang="en" src="/subtitles/en.vtt" default />
+      <track label="Hindi" kind="subtitles" srclang="hi" src="/subtitles/hi.vtt" />
+      Your browser does not support HTML5 video.
+    </video>
+
+    <div class="audio-menu" id="audioMenu"></div>
+
+    <div class="controls bottom-overlay hidden1" id="controls">
+      
+      <span class="skip-btn" id="rewindBtn">◀◀</span>
+
+      <span class="btn" id="playPause">▶</span>
+
+      <span class="skip-btn" id="forwardBtn">▶▶</span>
+
+      <div class="time" id="time">0:00 / 0:00</div>
+      
+      <div class="progress-bar" id="progressBar">
+        <div class="progress" id="progress"></div>
+      </div>
+
+      <div class="volume-control-group">
+        <span class="btn" id="volumeIcon">🔊</span>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.05" value="1.0">
+      </div>
+
+      <span class="btn" id="audioBtn">🎧 Audio</span>
+
+      <span class="btn" id="fullscreen">⛶</span>
+    </div>
+  </div>
+
+  <script>
+    const movie = document.getElementById("moviePlayer");
+    const container = document.querySelector(".player-container");
+    const playPause = document.getElementById("playPause");
+    const volumeIcon = document.getElementById("volumeIcon"); // Renamed from mute to volumeIcon for consistency
+    const volumeControl = document.getElementById("volumeControl");
+    const fullscreen = document.getElementById("fullscreen");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const timeLabel = document.getElementById("time");
+    const topOverlay = document.getElementById("topOverlay");
+    const controls = document.getElementById("controls");
+    
+    // New Elements
+    const loader = document.getElementById("loader");
+    const startOverlay = document.getElementById("startOverlay");
+    const rewindBtn = document.getElementById("rewindBtn");
+    const forwardBtn = document.getElementById("forwardBtn");
+    const audioBtn = document.getElementById("audioBtn");
+    const audioMenu = document.getElementById("audioMenu");
+
+    let hideControlsTimeout;
+    let isDragging = false;
+
+    // Helper: format time
+    const formatTime = (sec) => {
+      if (!sec || isNaN(sec)) return "0:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${m}:${s.toString().padStart(2, "0")}`;
+    };
+
+    /* ===================== LOADER LOGIC ===================== */
+    movie.addEventListener('waiting', () => loader.style.display = 'block');
+    movie.addEventListener('seeking', () => loader.style.display = 'block');
+    movie.addEventListener('playing', () => loader.style.display = 'none');
+    movie.addEventListener('canplay', () => loader.style.display = 'none');
+
+    /* ===================== INITIAL START ===================== */
+    startOverlay.addEventListener("click", () => {
+      startOverlay.classList.add("hidden");
+      movie.play().catch(e => console.error("Autoplay prevented", e));
+    });
+
+    /* ===================== PLAY/PAUSE ===================== */
+    playPause.onclick = (e) => {
+      e.stopPropagation();
+      if (movie.paused) {
+        movie.play();
+        startOverlay.classList.add("hidden");
+      } else {
+        movie.pause();
+      }
+    };
+
+    movie.onplay = () => {
+      playPause.textContent = "⏸";
+      loader.style.display = 'none';
+    };
+    
+    movie.onpause = () => {
+      playPause.textContent = "▶";
+    };
+
+    /* ===================== 10s SKIP LOGIC ===================== */
+    rewindBtn.onclick = (e) => {
+      e.stopPropagation();
+      movie.currentTime = Math.max(0, movie.currentTime - 10);
+    };
+
+    forwardBtn.onclick = (e) => {
+      e.stopPropagation();
+      movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
+    };
+
+    /* ===================== SMOOTH DRAG & SEEK ===================== */
+    const updateProgress = (clientX) => {
+      const rect = progressBar.getBoundingClientRect();
+      let percent = (clientX - rect.left) / rect.width;
+      percent = Math.max(0, Math.min(1, percent));
+      
+      progress.style.width = (percent * 100) + "%";
+      
+      if(movie.duration) {
+        const seekTime = percent * movie.duration;
+        timeLabel.textContent = `${formatTime(seekTime)} / ${formatTime(movie.duration)}`;
+      }
+      return percent;
+    };
+
+    progressBar.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      updateProgress(e.clientX);
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) updateProgress(e.clientX);
+    });
+
+    document.addEventListener('mouseup', (e) => {
+      if (isDragging) {
+        isDragging = false;
+        const percent = updateProgress(e.clientX);
+        if(movie.duration) movie.currentTime = percent * movie.duration;
+      }
+    });
+
+    // Touch Support
+    progressBar.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      updateProgress(e.touches[0].clientX);
+    }, {passive: false});
+
+    document.addEventListener('touchmove', (e) => {
+      if(isDragging) updateProgress(e.touches[0].clientX);
+    }, {passive: false});
+
+    document.addEventListener('touchend', (e) => {
+      if(isDragging) {
+        isDragging = false;
+        const percent = updateProgress(e.changedTouches[0].clientX);
+        if(movie.duration) movie.currentTime = percent * movie.duration;
+      }
+    });
+
+    /* ===================== REGULAR TIME UPDATE ===================== */
+    movie.ontimeupdate = () => {
+      if (!isDragging && movie.duration) {
+        const current = movie.currentTime;
+        const duration = movie.duration;
+        progress.style.width = (current / duration) * 100 + "%";
+        timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+      }
+    };
+
+    /* ===================== VOLUME CONTROL ===================== */
+    volumeControl.onclick = (e) => e.stopPropagation();
+    
+    volumeControl.oninput = (e) => {
+      movie.volume = parseFloat(e.target.value);
+      movie.muted = false;
+      updateVolumeIcon();
+    };
+
+    volumeIcon.onclick = (e) => {
+      e.stopPropagation();
+      if (!movie.muted) {
+        movie._lastVolume = movie.volume;
+        movie.volume = 0;
+        volumeControl.value = 0;
+        movie.muted = true;
+      } else {
+        const restore = movie._lastVolume || 0.5;
+        movie.volume = restore;
+        volumeControl.value = restore;
+        movie.muted = false;
+      }
+      updateVolumeIcon();
+    };
+
+    function updateVolumeIcon() {
+      if(movie.muted || movie.volume === 0) volumeIcon.textContent = "🔇";
+      else if(movie.volume < 0.5) volumeIcon.textContent = "🔈";
+      else volumeIcon.textContent = "🔊";
+    }
+
+    /* ===================== AUDIO TRACKS (MKV Support) ===================== */
+    function setupAudioTracks() {
+      audioMenu.innerHTML = '';
+      const hasNativeSupport = movie.audioTracks && movie.audioTracks.length > 0;
+      
+      let tracks = [];
+      if (hasNativeSupport) {
+        for (let i = 0; i < movie.audioTracks.length; i++) {
+          tracks.push({
+            id: i,
+            label: movie.audioTracks[i].label || movie.audioTracks[i].language || `Track ${i+1}`,
+            enabled: movie.audioTracks[i].enabled
+          });
+        }
+      } else {
+        // Fallback for browsers without MKV audio API support
+        tracks = [{ id: 'def', label: 'Default Audio', enabled: true }];
+      }
+
+      tracks.forEach(track => {
+        const div = document.createElement("div");
+        div.className = `audio-option ${track.enabled ? 'selected' : ''}`;
+        div.textContent = track.label;
+        div.onclick = (e) => {
+          e.stopPropagation();
+          // Visual update
+          document.querySelectorAll('.audio-option').forEach(el => el.classList.remove('selected'));
+          div.classList.add('selected');
+          // Actual switch (if supported)
+          if (hasNativeSupport) {
+            for (let i = 0; i < movie.audioTracks.length; i++) {
+              movie.audioTracks[i].enabled = (i === track.id);
+            }
+          }
+          audioMenu.classList.remove('show');
+        };
+        audioMenu.appendChild(div);
+      });
+    }
+
+    audioBtn.onclick = (e) => {
+      e.stopPropagation();
+      setupAudioTracks();
+      audioMenu.classList.toggle('show');
+    };
+
+    /* ===================== FULLSCREEN ===================== */
+    fullscreen.onclick = (e) => {
+      e.stopPropagation();
+      if (document.fullscreenElement) {
+        if(document.exitFullscreen) document.exitFullscreen();
+      } else {
+        if (container.requestFullscreen) container.requestFullscreen();
+        else if (movie.webkitEnterFullscreen) movie.webkitEnterFullscreen();
+      }
+    };
+
+    /* ===================== CONTROLS VISIBILITY ===================== */
+    const showControls = () => {
+      controls.style.opacity = 1;
+      topOverlay.style.opacity = 1;
+      clearTimeout(hideControlsTimeout);
+      hideControlsTimeout = setTimeout(hideControls, 3000);
+    };
+
+    const hideControls = () => {
+      if (movie.paused || isDragging || audioMenu.classList.contains('show')) return;
+      controls.style.opacity = 0;
+      topOverlay.style.opacity = 0;
+    };
+
+    container.addEventListener("mousemove", showControls);
+    container.addEventListener("click", (e) => {
+      if (e.target.closest('.controls') || e.target === startOverlay) return;
+      showControls();
+    });
+
+    // Initial Setup
+    showControls();
+  </script>
+  
+  <script src="/js/css.js"></script>
+</body>
+</html>

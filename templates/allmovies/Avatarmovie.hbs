@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Avatar: The Way of Water - Full Movie</title>
+
+    <link rel="stylesheet" href="/css/movie.css">
+    <link rel="stylesheet" href="/css/playmovie.css">
+
+    <style>
+        /* 🔹 FIX: Ensure container fills the actual mobile viewport */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        .player-container {
+            position: relative;
+            width: 100%;
+            height: 100dvh;
+            /* Dynamic viewport height for mobile browsers */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Netflix-style zoom */
+        .zoomed {
+            object-fit: cover !important;
+            transform: scale(1.12);
+        }
+
+        /* 🔹 FIX: Big Play Button Overlay for first interaction */
+        .start-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .big-play-btn {
+            font-size: 5rem;
+            color: white;
+            opacity: 0.8;
+            pointer-events: none;
+            /* Let clicks pass to container */
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Updated to Avatar Blue/Cyan */
+        .te {
+            color: purple;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="player-container" id="playerContainer">
+
+        <div class="top-overlay" id="topOverlay">
+            <h1 class="te"> | </h1>
+            <div class="title">Avatar: The Way of Water</div>
+            <div class="desc">Sci-Fi • Adventure • Action • 4K HDR</div>
+        </div>
+
+        <div class="start-overlay" id="startOverlay">
+            <div class="big-play-btn">▶</div>
+        </div>
+
+        <video id="moviePlayer" preload="metadata" playsinline>
+            <source src="https://mumbaimovie9821.s3.ap-south-1.amazonaws.com/movies/Avatar+-+The+Way+of+Water+(2022)+IMAX+1080p+10bit+%5B60FPS%5D+WEBRip+x265+HEVC+%5BOrg+Hindi+DSNP+5.1++English+AAC+5.1%5D+ESub+~+MrStrange.mkv" type="video/mp4" />
+
+            <track label="English" kind="subtitles" srclang="en" src="/subtitles/en.vtt" default>
+            <track label="Hindi" kind="subtitles" srclang="hi" src="/subtitles/hi.vtt">
+        </video>
+
+        <div class="controls bottom-overlay" id="controls">
+            <span class="btn" id="playPause">▶</span>
+            <div class="time" id="time">0:00 / 0:00</div>
+
+            <div class="progress-bar" id="progressBar">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <span class="btn" id="mute">🔊</span>
+            <span class="btn" id="zoom">🔍</span>
+            <span class="btn" id="fullscreen">⛶</span>
+        </div>
+
+    </div>
+
+    <script>
+        /* ===================== ELEMENTS ===================== */
+        const movie = document.getElementById("moviePlayer");
+        const container = document.getElementById("playerContainer");
+        const playPause = document.getElementById("playPause");
+        const mute = document.getElementById("mute");
+        const fullscreen = document.getElementById("fullscreen");
+        const zoomBtn = document.getElementById("zoom");
+        const progressBar = document.getElementById("progressBar");
+        const progress = document.getElementById("progress");
+        const timeLabel = document.getElementById("time");
+        const controls = document.getElementById("controls");
+        const topOverlay = document.getElementById("topOverlay");
+        const startOverlay = document.getElementById("startOverlay");
+
+        let hideTimeout;
+        let isZoomed = false;
+
+        /* ===================== HELPERS ===================== */
+        const formatTime = (sec = 0) => {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return `${m}:${s.toString().padStart(2, "0")}`;
+        };
+
+        /* ===================== MOBILE ROTATION & FULLSCREEN LOGIC ===================== */
+        async function enterImmersiveMode() {
+            try {
+                // 1. Request Fullscreen
+                if (!document.fullscreenElement) {
+                    if (container.requestFullscreen) {
+                        await container.requestFullscreen();
+                    } else if (container.webkitRequestFullscreen) { /* Safari */
+                        await container.webkitRequestFullscreen();
+                    } else if (movie.webkitEnterFullscreen) { /* iOS Native */
+                        movie.webkitEnterFullscreen();
+                    }
+                }
+
+                // 2. Lock Orientation (Android/Chrome only - iOS doesn't support this API)
+                if (screen.orientation && screen.orientation.lock) {
+                    // Small delay to ensure fullscreen is registered
+                    setTimeout(() => {
+                        screen.orientation.lock("landscape").catch((err) => {
+                            console.warn("Orientation lock failed (likely not supported on this device):", err);
+                        });
+                    }, 100);
+                }
+            } catch (err) {
+                console.log("Fullscreen/Orientation error:", err);
+            }
+        }
+
+        /* ===================== INITIAL START (The "Click" Handler) ===================== */
+        // We use the overlay to capture the FIRST user interaction.
+        // This is required to unmute audio and trigger fullscreen programmatically.
+        startOverlay.addEventListener("click", async () => {
+            startOverlay.classList.add("hidden"); // Hide the big button
+
+            // Play Video
+            try {
+                await movie.play();
+            } catch (err) {
+                console.error("Autoplay failed", err);
+            }
+
+            // Force Landscape on Mobile
+            if (window.innerWidth <= 768) {
+                await enterImmersiveMode();
+            }
+        });
+
+        /* ===================== PLAY / PAUSE ===================== */
+        playPause.onclick = (e) => {
+            e.stopPropagation(); // Prevent triggering container clicks
+            togglePlay();
+        };
+
+        function togglePlay() {
+            if (movie.paused) {
+                movie.play();
+                startOverlay.classList.add("hidden");
+            } else {
+                movie.pause();
+            }
+        }
+
+        movie.onplay = () => (playPause.textContent = "⏸");
+        movie.onpause = () => (playPause.textContent = "▶");
+
+        /* ===================== CLICK VIDEO TO TOGGLE CONTROLS ===================== */
+        // On mobile, tapping video usually shows controls. 
+        // We handle single tap for controls, double tap could be added for seek.
+        container.addEventListener("click", (e) => {
+            // Ignore clicks on controls bar
+            if (e.target.closest(".controls") || e.target === startOverlay) return;
+
+            showControls();
+            // Optional: Toggle play on click if you prefer that style
+            // togglePlay(); 
+        });
+
+        /* ===================== TIME UPDATE ===================== */
+        movie.ontimeupdate = () => {
+            if (!movie.duration) return;
+            progress.style.width = (movie.currentTime / movie.duration) * 100 + "%";
+            timeLabel.textContent =
+                `${formatTime(movie.currentTime)} / ${formatTime(movie.duration)}`;
+        };
+
+        /* ===================== SEEK ===================== */
+        progressBar.onclick = (e) => {
+            e.stopPropagation();
+            const rect = progressBar.getBoundingClientRect();
+            movie.currentTime =
+                ((e.clientX - rect.left) / rect.width) * movie.duration;
+        };
+
+        /* ===================== MUTE ===================== */
+        mute.onclick = (e) => {
+            e.stopPropagation();
+            movie.muted = !movie.muted;
+            mute.textContent = movie.muted ? "🔇" : "🔊";
+        };
+
+        /* ===================== FULLSCREEN TOGGLE ===================== */
+        fullscreen.onclick = async (e) => {
+            e.stopPropagation();
+            if (!document.fullscreenElement) {
+                await enterImmersiveMode();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
+            }
+        };
+
+        /* ===================== ZOOM ===================== */
+        zoomBtn.onclick = (e) => {
+            e.stopPropagation();
+            isZoomed = !isZoomed;
+            movie.classList.toggle("zoomed", isZoomed);
+            zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
+        };
+
+        /* ===================== CONTROLS AUTO-HIDE ===================== */
+        function showControls() {
+            controls.style.opacity = 1;
+            topOverlay.style.opacity = 1;
+            container.style.cursor = "default";
+
+            clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(hideControls, 3000);
+        }
+
+        function hideControls() {
+            if (movie.paused) return; // Don't hide if paused
+            controls.style.opacity = 0;
+            topOverlay.style.opacity = 0;
+            container.style.cursor = "none";
+        }
+
+        /* Mouse + Touch Interaction */
+        container.addEventListener("mousemove", showControls);
+        container.addEventListener("touchstart", showControls);
+
+        /* ===================== INIT ===================== */
+        showControls();
+
+    </script>
+
+    <script src="/js/css.js"></script>
+</body>
+
+</html>

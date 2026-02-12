@@ -29,7 +29,29 @@ body {
   font-weight: 400;
   font-size: 0.9rem; /* Netflix nav is usually quite small */
 }
-
+#heroVideo {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 1;
+  /* Sits on top of the image */
+}
+#heroImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ensures image/video fills the area without stretching */
+}
+.hero-media {
+      /* Adjust based on your design */
+      overflow: hidden;
+    }
+/* Active State: Class added by JS when video plays */
+#heroVideo.is-playing {
+  opacity: 1;
+}
 /* Update Description text */
 .hero-content .desc {
   font-weight: 400;

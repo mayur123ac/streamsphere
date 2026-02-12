@@ -7,7 +7,6 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"
   },
-  
   "keywords": [
     "express",
     "hbs",
@@ -20,11 +19,12 @@
   "license": "MIT",
   "dependencies": {
     "bcrypt": "^6.0.0",
-    "dotenv": "^17.2.3",
-    "express": "^4.19.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.4",
+    "express": "^4.22.1",
     "express-session": "^1.18.2",
     "hbs": "^4.2.0",
-    "mongoose": "^8.17.1",
+    "mongoose": "^8.23.0",
     "nodemailer": "^7.0.12",
     "openai": "^6.16.0",
     "react-router-dom": "^7.8.2",
@@ -32,5 +32,13 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mayur123ac/streamsphere.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mayur123ac/streamsphere/issues"
+  },
+  "homepage": "https://github.com/mayur123ac/streamsphere#readme"
 }

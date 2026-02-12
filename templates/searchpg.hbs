@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/homepage.css" />
     <link rel="stylesheet" href="/css/upload.css" />
-
+    <link rel="stylesheet" href="/css/series.css">
 </head>
 
 <body>
@@ -70,7 +70,8 @@
             <input type="text" id="searchInput" placeholder="Search titles, genres..." onkeyup="filterMovies()">
         </div>
     </div>
-    <h1 style="text-align: center;font-size: 1rem">We are continuosly working to add more movies and series...</h1>
+    <h1 style="text-align: center;font-size: 1rem">We are continuously working to add more movies and series...</h1>
+
     <div class="panel-overlay" id="movieModal">
         <div class="admin-panel">
             <span class="close-panel" onclick="toggleModal('movieModal')">&times;</span>
@@ -84,158 +85,172 @@
         </div>
     </div>
 
+    <div id="seriesModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeSeriesModal()">&times;</span>
+            <div class="modal-hero">
+                <img id="modal-hero-img" src="" alt="Series Banner">
+                <div class="modal-hero-text">
+                    <h1 id="modal-title"></h1>
+                    <div class="modal-meta">
+                        <span class="match">98% Match</span>
+                        <span id="modal-year"></span>
+                        <span class="age">18+</span>
+                        <span id="modal-seasons"></span>
+                    </div>
+                    <p id="modal-desc"></p>
+                </div>
+            </div>
+            <div class="modal-episodes-container">
+                <div class="episodes-header">
+                    <h3>Episodes</h3>
+                    <select id="season-select" class="season-select"></select>
+                </div>
+                <div class="episodes-list" id="episodes-list"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="results-container" id="resultsContainer"></div>
+
+    <script src="/js/movieData.js"></script> 
+    <script src="/js/episodes.js"></script> 
 
     <script>
         const currentUserEmail = "{{email}}";
         const ADMIN_EMAIL = "mayurac123@admin.com";
+        const API_URL = "/api/movies"; 
+        let allContent = [];
 
-        // Redirect logic for Analytics
-        function openAnalytics() {
-            window.location.href = "/analysis";
+        // --- 1. DATA MERGING ---
+        function transformSeriesData() {
+            if (typeof SERIES_DATA === 'undefined') return [];
+            return Object.keys(SERIES_DATA).map(key => {
+                if (key === 'default') return null;
+                const s = SERIES_DATA[key];
+                return { title: s.title, genre: "TV Series", description: s.desc, image: s.image, type: 'series', dataId: key };
+            }).filter(i => i);
         }
 
-        function toggleModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.toggle('active');
-        }
-
-        const defaultMovies = [
-            { title: "Demon Slayer: Infinity Castle", genre: "Anime • Action", description: "The Demon Slayer Corps plunges into the shifting Infinity Castle.", image: "https://m.media-amazon.com/images/M/MV5BOGQ3YWUzYjEtMTJiYy00ZjQ0LWI0YjktYjhiNGVhNGExYTM3XkEyXkFqcGc@._V1_.jpg", link: "/demonslayer" },
-            { title: "A Minecraft Movie", genre: "Adventure • Fantasy", description: "Four misfits are pulled through a mysterious portal into the Overworld.", image: "https://upload.wikimedia.org/wikipedia/en/6/66/A_Minecraft_Movie_poster.jpg", link: "https://vidlink.pro/movie/950387" },
-            { title: "F1 (2025)", genre: "Action • Sports", description: "A former Formula One driver returns to the grid to mentor a young prodigy.", image: "https://upload.wikimedia.org/wikipedia/en/3/38/F1_%282025_film%29.png", link: "/f1movie" },
-            { title: "Oppenheimer", genre: "Biography • Drama", description: "The story of American scientist J. Robert Oppenheimer.", image: "https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", link: "https://player.videasy.net/movie/872585" }
-        ];
-
-        let movies = [];
-
-        function loadMovies() {
-            const stored = localStorage.getItem('streamSphereDB');
-            movies = stored ? JSON.parse(stored) : defaultMovies;
-            if (!stored) localStorage.setItem('streamSphereDB', JSON.stringify(movies));
-            renderMovies(movies);
-        }
-
-        function renderMovies(data) {
-            const container = document.getElementById('resultsContainer');
-            container.innerHTML = "";
-
-            if (data.length === 0) {
-                container.innerHTML = "<p style='color:#777; margin-top:20px;'>No movies found.</p>";
-                return;
+        async function loadContent() {
+            try {
+                // Fetch DB Movies
+                const response = await fetch(API_URL);
+                const dbMovies = await response.json();
+                // Get Static Movies from movieData.js
+                const staticMovies = (typeof STATIC_MOVIES !== 'undefined') ? STATIC_MOVIES : [];
+                // Merge everything
+                allContent = [...dbMovies, ...transformSeriesData(), ...staticMovies];
+            } catch (err) {
+                console.error(err);
+                // Fallback if DB fails
+                allContent = [...transformSeriesData(), ...STATIC_MOVIES];
             }
+            renderContent(allContent);
+        }
 
-            data.forEach((movie, index) => {
-                let deleteButtonHTML = "";
-                // JS check for dynamic elements (Delete Button)
-                if (currentUserEmail === ADMIN_EMAIL) {
-                    deleteButtonHTML = `<button class="delete-btn" onclick="deleteMovie(${index})">✖</button>`;
-                }
+        function renderContent(data) {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = data.length ? "" : "<p style='color:#777;'>No results found.</p>";
 
-                const card = `
+            data.forEach(item => {
+                let actionBtn = item.type === 'series'
+                    ? `<button class="play-btn" onclick="openSeriesModal('${item.dataId}')">ℹ Episodes</button>`
+                    : `<a href="${item.link}"><button class="play-btn">▶ Play</button></a>`;
+
+                let deleteBtn = (currentUserEmail === ADMIN_EMAIL && item._id) 
+                    ? `<button class="delete-btn" onclick="deleteMovie('${item._id}')">✖</button>` : "";
+
+                container.insertAdjacentHTML('beforeend', `
                 <div class="carde">
-                    ${deleteButtonHTML}
-                    <img src="${movie.image}" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300'">
+                    ${deleteBtn}
+                    <img src="${item.image}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/200x300'">
                     <div class="info-right">
-                        <h3>${movie.title}</h3>
-                        <p class="genre">${movie.genre}</p>
-                        <p class="description">${movie.description}</p>
-                        <div class="btn-group">
-                            <a href="${movie.link}">
-                                <button class="play-btn">▶ Play</button>
-                            </a>
-                            <button class="add-btn" onclick="addToMyList(this)">+</button>
-                        </div>
+                        <h3>${item.title}</h3>
+                        <p class="genre">${item.genre}</p>
+                        <p class="description">${item.description || ''}</p>
+                        <div class="btn-group">${actionBtn}<button class="add-btn" onclick="addToMyList(this)">+</button></div>
                     </div>
-                </div>
-                `;
-                container.innerHTML += card;
+                </div>`);
             });
-
             attachCardEvents();
         }
 
+        // --- FIXED CARD EVENTS (Auto-Close Logic) ---
         function attachCardEvents() {
-            const container = document.getElementById('resultsContainer');
-            const cards = container.querySelectorAll(".carde");
-
-            cards.forEach((card) => {
+            const cards = document.querySelectorAll(".carde");
+            
+            cards.forEach(card => {
                 card.addEventListener("click", (e) => {
-                    // STOP expansion logic on mobile since info is already visible
-                    if (window.innerWidth <= 768) return;
+                    // Ignore clicks on buttons/links/mobile
+                    if (window.innerWidth <= 768 || e.target.closest("button") || e.target.closest("a") || e.target.classList.contains('delete-btn')) return;
+                    
+                    // Check if the clicked card is currently open
+                    const isAlreadyOpen = card.classList.contains("active");
 
-                    if (e.target.closest("button") || e.target.closest("a") || e.target.classList.contains('delete-btn')) { return; }
+                    // 1. Close ALL currently open cards (Reset width is crucial!)
+                    document.querySelectorAll(".carde.active").forEach(c => {
+                        c.classList.remove("active");
+                        c.style.width = ""; // Reset inline width style
+                    });
 
-                    const openCards = container.querySelectorAll(".carde.active");
-                    openCards.forEach((c) => { if (c !== card) { c.classList.remove("active"); c.style.width = ""; } });
-
-                    const isOpen = card.classList.contains("active");
-                    if (!isOpen) {
+                    // 2. If it wasn't open before, open it now
+                    if (!isAlreadyOpen) {
                         card.classList.add("active");
                         card.style.width = "420px";
-                    } else {
-                        card.classList.remove("active");
-                        card.style.width = "";
                     }
                 });
             });
         }
 
-        function addMovie() {
-            const title = document.getElementById('adminTitle').value;
-            const genre = document.getElementById('adminGenre').value;
-            const img = document.getElementById('adminImg').value;
-            const link = document.getElementById('adminLink').value;
-            const desc = document.getElementById('adminDesc').value;
-
-            if (!title || !img) { alert("Title and Image required"); return; }
-
-            movies.unshift({ title, genre, image: img, link, description: desc });
-            localStorage.setItem('streamSphereDB', JSON.stringify(movies));
-            renderMovies(movies);
-            toggleModal('movieModal');
-
-            document.getElementById('adminTitle').value = "";
-            document.getElementById('adminImg').value = "";
-            document.getElementById('adminLink').value = "";
-            document.getElementById('adminDesc').value = "";
-        }
-
-        function deleteMovie(index) {
-            if (confirm("Delete this movie?")) {
-                movies.splice(index, 1);
-                localStorage.setItem('streamSphereDB', JSON.stringify(movies));
-                renderMovies(movies);
-            }
-        }
-
         function filterMovies() {
             const q = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = movies.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q));
-            renderMovies(filtered);
+            renderContent(allContent.filter(m => m.title.toLowerCase().includes(q) || m.genre.toLowerCase().includes(q)));
         }
 
-        function addToMyList(btn) {
-            btn.innerText = btn.innerText === "+" ? "✓" : "+";
-            btn.style.borderColor = btn.innerText === "✓" ? "#2ed573" : "#777";
-            btn.style.color = btn.innerText === "✓" ? "#2ed573" : "#777";
+        // Admin Functions
+        async function addMovie() {
+            const title = document.getElementById('adminTitle').value;
+            const img = document.getElementById('adminImg').value;
+            if(!title || !img) return alert("Missing info");
+            
+            await fetch(API_URL, { method:'POST', headers:{'Content-Type':'application/json'}, 
+                body: JSON.stringify({
+                    title, 
+                    genre:document.getElementById('adminGenre').value, 
+                    image:img, 
+                    link:document.getElementById('adminLink').value, 
+                    description:document.getElementById('adminDesc').value
+                }) 
+            });
+            loadContent(); toggleModal('movieModal');
         }
 
-        const profile = document.querySelector('.profile-container');
-        profile.addEventListener('click', (e) => {
-            e.stopPropagation();
-            profile.classList.toggle('active');
+        async function deleteMovie(id) {
+            if(confirm("Delete?")) { await fetch(`${API_URL}/${id}`, {method:'DELETE'}); loadContent(); }
+        }
+
+        // UI Helpers
+        function toggleModal(id) { document.getElementById(id)?.classList.toggle('active'); }
+        function closeSeriesModal() { 
+            const modal = document.getElementById('seriesModal');
+            if(modal) { modal.style.display = "none"; document.body.style.overflow = "auto"; }
+        }
+        function openAnalytics() { window.location.href = "/analysis"; }
+        function addToMyList(btn) { btn.innerText = "✓"; btn.style.color = "#2ed573"; btn.style.borderColor = "#2ed573"; }
+
+        // Profile Dropdown
+        document.querySelector('.profile-container').addEventListener('click', (e) => {
+            e.stopPropagation(); document.querySelector('.profile-container').classList.toggle('active');
         });
-        document.addEventListener('click', () => profile.classList.remove('active'));
+        document.addEventListener('click', () => document.querySelector('.profile-container').classList.remove('active'));
 
-        loadMovies();
+        // Initialize
+        loadContent();
     </script>
-
-
+    
     <script src="/js/css.js"></script>
     <script src="/js/mobilescript.js"></script>
     <script src="/js/pageloader.js"></script>
-
 </body>
-
 </html>

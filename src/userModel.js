@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema({
     description: String,
     datePlayed: { type: Date, default: Date.now }
   }]
+
 });
+
 
 module.exports = mongoose.model("User", userSchema);

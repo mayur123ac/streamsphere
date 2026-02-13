@@ -29,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* Full Screen Container */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -39,7 +38,6 @@
             padding: 20px;
         }
 
-        /* Header */
         header {
             padding: 20px 0;
             display: flex;
@@ -56,7 +54,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* Messages Area */
         #chat-flow {
             flex: 1;
             overflow-y: auto;
@@ -97,13 +94,15 @@
             color: #efefef;
         }
 
-        .bot-message {
+        .bot-message-container {
             align-self: flex-start;
             display: flex;
             gap: 15px;
+            max-width: 90%;
         }
 
         .bot-avatar {
+            min-width: 32px;
             width: 32px;
             height: 32px;
             background: var(--gemini-gradient);
@@ -126,7 +125,6 @@
             }
         }
 
-        /* Input Bar */
         .input-wrapper {
             background: #1e1f20;
             border-radius: 30px;
@@ -164,7 +162,6 @@
             color: white;
         }
 
-        /* Suggested Prompts */
         .suggestions {
             display: flex;
             gap: 10px;
@@ -187,11 +184,53 @@
             background: #333;
         }
 
-        /* Links style */
-        .bot-message a {
+        .bot-message-content a {
             color: #8ab4f8;
             text-decoration: none;
             font-weight: bold;
+            border-bottom: 1px solid rgba(138, 180, 248, 0.3);
+        }
+
+        .bot-message-content strong {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            margin: 0 4px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
         }
     </style>
 </head>
@@ -201,27 +240,28 @@
     <div class="chat-container">
         <header>
             <div class="bot-avatar"></div>
-            <span class="logo-text">SphereBot AI</span>
+            <span class="logo-text">SphereBot Support</span>
         </header>
 
         <div id="chat-flow">
-            <div class="bot-message">
-                <div class="message">
-                    Hello! I'm SphereBot. I can help you find movies, check your watchlist, or guide you through
-                    StreamSphere. What's on your mind?
+            <div class="bot-message-container">
+                <div class="bot-avatar"></div>
+                <div class="message bot-message-content">
+                    Hello! I'm SphereBot. 🤖 I can check your <strong>subscription</strong>, suggest movies based on
+                    your <strong>mood</strong>, or help you <strong>watch</strong> something specific. How can I help?
                 </div>
             </div>
         </div>
 
         <div class="suggestions">
-            <div class="suggestion-chip" onclick="quickQuery('Do you have Avengers?')">🎬 Avengers?</div>
-            <div class="suggestion-chip" onclick="quickQuery('What anime is available?')">🏮 Anime</div>
-            <div class="suggestion-chip" onclick="quickQuery('Show me horror movies')">👻 Horror</div>
-            <div class="suggestion-chip" onclick="quickQuery('Payment')">$ Payment/Billing</div>
+            <div class="suggestion-chip" onclick="quickQuery('I feel sad')">😢 I feel sad</div>
+            <div class="suggestion-chip" onclick="quickQuery('Suggest an action movie')">🔥 Action</div>
+            <div class="suggestion-chip" onclick="quickQuery('Watch Interstellar')">🚀 Interstellar</div>
+            <div class="suggestion-chip" onclick="quickQuery('Is this free?')">💳 Is it free?</div>
         </div>
 
         <div class="input-wrapper">
-            <input type="text" id="userInput" placeholder="Ask SphereBot..." autocomplete="off">
+            <input type="text" id="userInput" placeholder="Type your mood or a movie name..." autocomplete="off">
             <button class="send-btn" onclick="handleSend()">➤</button>
         </div>
     </div>
@@ -234,43 +274,169 @@
             const text = userInput.value.trim();
             if (!text) return;
 
-            // Add User Message
-            appendMessage(text, 'user-message');
+            appendMessage(text, 'user');
             userInput.value = '';
 
-            // Add Loading State
-            const loadingDiv = appendMessage('...', 'bot-message', true);
+            // Show Typing Indicator
+            const typingId = showTypingIndicator();
 
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: text })
-                });
-                const data = await response.json();
+            // Simulate Thinking Delay
+            setTimeout(() => {
+                const typingElement = document.getElementById(typingId);
+                if (typingElement) typingElement.remove();
 
-                // Render result (supporting links)
-                loadingDiv.innerHTML = data.reply.replace(/(\/\w+)/g, '<a href="$1">$1</a>');
-            } catch (err) {
-                loadingDiv.innerText = "Connection lost. Please check index.js is running.";
-            }
+                const responseHTML = generateBotLogic(text);
+                appendMessage(responseHTML, 'bot');
+            }, 1500);
         }
 
-        function appendMessage(text, className, isBot = false) {
-            const wrapper = document.createElement('div');
-            wrapper.className = isBot ? 'bot-message' : 'user-message message';
+        // Movie Database Extracted from your HTML
+        const movieDatabase = {
+            "my oxford year": "https://player.videasy.net/movie/1307078",
+            "interstellar": "https://player.videasy.net/movie/157336",
+            "havoc": "https://player.videasy.net/movie/668489",
+            "eden": "/edenmovie",
+            "demon slayer infinity castle": "/demonslayer",
+            "spider-man homecoming": "https://player.videasy.net/movie/315635",
+            "incantation": "https://player.videasy.net/movie/864370",
+            "a minecraft movie": "https://player.videasy.net/movie/950387",
+            "hereditary": "https://player.videasy.net/movie/493922",
+            "the witch": "https://vidlink.pro/movie/1352445?primaryColor&secondaryColor&iconColor=2ed573",
+            "insidious the last key": "https://player.videasy.net/movie/406563",
+            "f1": "/f1movie",
+            "materialists": "/materialistsmovie",
+            "the avengers": "/theavengermovie",
+            "ballerina": "/ballerinamovie",
+            "final destination": "https://player.videasy.net/movie/574475",
+            "fantastic four": "/fantasticfourmovie",
+            "avatar the way of water": "/Avatarmovie",
+            "how to train your dragon": "/howtotraindragonmovie",
+            "kgf chapter 2": "https://player.videasy.net/movie/587412",
+            "saiyaara": "https://player.videasy.net/movie/1241634",
+            "kantara chapter 1": "https://player.videasy.net/movie/1083637",
+            "aap jaisa koi": "https://player.videasy.net/movie/1391013",
+            "article 370": "https://player.videasy.net/movie/1233531",
+            "metro in dino": "/metroindino",
+            "sector 36": "https://player.videasy.net/movie/1245700",
+            "ctrl": "https://player.videasy.net/movie/1146577",
+            "housefull 5": "https://player.videasy.net/movie/1146210",
+            "dhurandhar": "https://player.videasy.net/movie/1291608",
+            "burning betrayal": "https://player.videasy.net/movie/1173558",
+            "anora": "https://player.videasy.net/movie/1064213",
+            "love me love me": "https://player.videasy.net/movie/1317672",
+            "queen of chess": "https://player.videasy.net/movie/1596291",
+            "yeh jawaani hai deewani": "https://player.videasy.net/movie/185008",
+            "salaar": "https://player.videasy.net/movie/1212402",
+            "devara part 1": "https://player.videasy.net/movie/811941",
+            "i want to eat your pancreas": "https://player.videasy.net/movie/504253",
+            "5 centimeters per second": "https://player.videasy.net/movie/38142",
+            "your name": "https://player.videasy.net/movie/372058",
+            "spirited away": "https://player.videasy.net/movie/129",
+            "a silent voice": "https://player.videasy.net/movie/378064",
+            "princess mononoke": "https://player.videasy.net/movie/128",
+            "weathering with you": "https://player.videasy.net/movie/568160",
+            "howl's moving castle": "https://player.videasy.net/movie/4935",
+            "akira": "https://player.videasy.net/movie/149",
+            "my neighbor totoro": "https://player.videasy.net/movie/8392",
+            "demon slayer mugen train": "https://player.videasy.net/movie/635302",
+            "grave of the fireflies": "https://player.videasy.net/movie/12477",
+            "oppenheimer": "https://player.videasy.net/movie/872585",
+            "parasite": "https://player.videasy.net/movie/496243",
+            "everything everywhere all at once": "https://player.videasy.net/movie/545611",
+            "the godfather": "https://player.videasy.net/movie/238",
+            "la la land": "https://player.videasy.net/movie/313369",
+            "joker": "https://player.videasy.net/movie/475557",
+            "spider-man into the spider-verse": "https://player.videasy.net/movie/324857",
+            "1917": "https://player.videasy.net/movie/530915",
+            "rrr": "https://player.videasy.net/movie/579974",
+            "haq": "https://player.videasy.net/movie/1417941",
+            "tenet": "https://player.videasy.net/movie/577922",
+            "poor things": "https://player.videasy.net/movie/79230",
+            "train to busan": "https://player.videasy.net/movie/396535",
+            "oldboy": "https://player.videasy.net/movie/670",
+            "the handmaiden": "https://player.videasy.net/movie/290098",
+            "memories of murder": "https://player.videasy.net/movie/11423",
+            "i saw the devil": "https://player.videasy.net/movie/49797",
+            "the wailing": "https://player.videasy.net/movie/293670",
+            "exhuma": "https://player.videasy.net/movie/838209",
+            "a taxi driver": "https://player.videasy.net/movie/437068",
+            "the host": "https://player.videasy.net/movie/1255",
+            "decision to leave": "https://player.videasy.net/movie/705996",
+            "concrete utopia": "https://player.videasy.net/movie/729854",
+            "forgotten": "https://player.videasy.net/movie/488623",
+            "the roundup": "https://player.videasy.net/movie/619803"
+        };
 
-            if (isBot) {
-                wrapper.innerHTML = `<div class="bot-avatar" style="width:24px; height:24px;"></div><div class="message">${text}</div>`;
-                chatFlow.appendChild(wrapper);
-                chatFlow.scrollTop = chatFlow.scrollHeight;
-                return wrapper.querySelector('.message');
-            } else {
-                wrapper.innerText = text;
-                chatFlow.appendChild(wrapper);
-                chatFlow.scrollTop = chatFlow.scrollHeight;
-                return wrapper;
+
+        function generateBotLogic(input) {
+            const lowerInput = input.toLowerCase();
+
+            // 1. ALWAYS CHECK FOR SPECIFIC MOVIES FIRST
+            // This loops through your existing movieDatabase keys
+            for (const movie in movieDatabase) {
+                if (lowerInput.includes(movie)) {
+                    // Capitalize the first letter of each word for the UI
+                    const displayTitle = movie.replace(/\b\w/g, l => l.toUpperCase());
+
+                    return `I found <strong>${displayTitle}</strong> in the StreamSphere library! 🎬<br><br>
+                    👉 <a href="${movieDatabase[movie]}">Click here to Watch Now</a>`;
+                }
             }
+
+            // 2. SUBSCRIPTION LOGIC (Existing)
+            if (lowerInput.includes('subscription') || lowerInput.includes('free') || lowerInput.includes('pay') || lowerInput.includes('cost')) {
+                return `StreamSphere is completely <strong>FREE</strong>. You have unlimited access to our 4K HDR library at no cost!`;
+            }
+
+            // 3. MOOD SUGGESTIONS (Existing)
+            if (lowerInput.includes('sad') || lowerInput.includes('cry')) {
+                return `I'm sorry you're feeling down. 🫂 I highly recommend <strong>Your Name</strong> for an emotional watch. <br><br>
+                👉 <a href="${movieDatabase['your name']}">Watch Now</a>`;
+            }
+
+            if (lowerInput.includes('scary') || lowerInput.includes('horror')) {
+                return `Feeling brave? 👻 Check out <strong>Incantation</strong>. <br><br>
+                👉 <a href="${movieDatabase['incantation']}">Watch Now</a>`;
+            }
+
+            // 4. FALLBACK
+            return `I can help you find any movie on StreamSphere! Just type the name of a movie like <strong>"Interstellar"</strong> or <strong>"F1"</strong>.`;
+        }
+
+        function appendMessage(htmlContent, sender) {
+            const wrapper = document.createElement('div');
+            if (sender === 'bot') {
+                wrapper.className = 'bot-message-container';
+                wrapper.innerHTML = `
+                    <div class="bot-avatar"></div>
+                    <div class="message bot-message-content">${htmlContent}</div>
+                `;
+            } else {
+                wrapper.className = 'user-message message';
+                wrapper.innerText = htmlContent;
+            }
+            chatFlow.appendChild(wrapper);
+            chatFlow.scrollTop = chatFlow.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const id = 'typing-' + Date.now();
+            const wrapper = document.createElement('div');
+            wrapper.className = 'bot-message-container';
+            wrapper.id = id;
+            wrapper.innerHTML = `
+                <div class="bot-avatar"></div>
+                <div class="message" style="padding: 10px 20px;">
+                    <div class="typing-indicator">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            `;
+            chatFlow.appendChild(wrapper);
+            chatFlow.scrollTop = chatFlow.scrollHeight;
+            return id;
         }
 
         function quickQuery(query) {

@@ -7,13 +7,402 @@
 
   <link rel="stylesheet" href="/css/homepage.css" />
 
-
   <style>
     /* Default State: Video is hidden */
-    @media (max-width:768px){
-      #heroVideo{
+    @media (max-width:768px) {
+      #heroVideo {
         display: none;
         background-image: url("https://upload.wikimedia.org/wikipedia/en/3/38/F1_%282025_film%29.png");
+      }
+    }
+
+    /* --- SPHEREBOT CSS INTEGRATION --- */
+
+    /* 1. Assistive Ball */
+    .assistive-ball {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #0984e3, #6c5ce7);
+      border-radius: 50%;
+      box-shadow: 0 4px 15px rgba(9, 132, 227, 0.4);
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .assistive-ball:hover {
+      transform: scale(1.1) rotate(10deg);
+    }
+
+    .assistive-ball img {
+      width: 30px;
+      height: auto;
+      pointer-events: none;
+      margin-bottom: 2px;
+    }
+
+    .assistive-ball p {
+      margin: 0;
+      color: white;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    /* 2. Welcome Typing Bubble (Left of Ball) */
+    .sphere-welcome-text {
+      position: absolute;
+      bottom: 15px;
+      right: 75px;
+      /* Positions it to the LEFT of the ball */
+      background: #1E1F20;
+      color: #E3E3E3;
+      border: 1px solid #333;
+      padding: 10px 15px;
+      border-radius: 20px 20px 5px 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(10px) scale(0.9);
+      animation: popInMessage 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation-delay: 1.5s;
+    }
+
+    .sphere-welcome-text::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      bottom: 15px;
+      border-width: 8px 0 8px 8px;
+      border-style: solid;
+      border-color: transparent transparent transparent #fff;
+    }
+
+    .typing-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #0984e3;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      width: 0;
+      animation: typing 2.5s steps(30, end) forwards, blink-caret 0.75s step-end infinite;
+      animation-delay: 2s;
+    }
+
+    /* 3. Chat Window (Gemini Style) */
+    .sphere-chat-window {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 350px;
+      height: 500px;
+      background: #131314;
+      /* Gemini Dark Background */
+      border: 1px solid #2D2D30;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+      transform: scale(0);
+      transform-origin: bottom right;
+      transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease;
+      opacity: 0;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .sphere-chat-window.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .chat-header {
+      padding: 15px;
+      background: #1E1F20;
+      border-bottom: 1px solid #2D2D30;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-info img {
+      width: 25px;
+    }
+
+    .header-info h4 {
+      margin: 0;
+      color: #E3E3E3;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .header-info .status {
+      font-size: 0.7rem;
+      color: #2ed573;
+    }
+
+    .close-chat {
+      background: none;
+      border: none;
+      color: #9aa0a6;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Chat Body & Scrollbar */
+    .chat-body {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .chat-body::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .chat-body::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .chat-body::-webkit-scrollbar-thumb {
+      background-color: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+    }
+
+    .chat-body::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Messages */
+    .chat-msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .chat-msg.bot {
+      background: #1E1F20;
+      /* Surface color */
+      color: #E3E3E3;
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+
+    .chat-msg.user {
+      background: #0984e3;
+      /* Brand Blue */
+      color: white;
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+
+    /* Input Area */
+    .chat-input-area {
+      padding: 15px;
+      background: #131314;
+      border-top: 1px solid #2D2D30;
+      display: flex;
+      gap: 10px;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      background: #1E1F20;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 15px;
+      color: #E3E3E3;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .chat-input-area button {
+      background: #0984e3;
+      border: none;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Typing Animation (...) */
+    .typing-container {
+      background: #1E1F20;
+      padding: 12px 18px;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      display: inline-block;
+      align-self: flex-start;
+      margin-bottom: 5px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: #b2bec3;
+      border-radius: 50%;
+      animation: typingBounce 1.4s infinite ease-in-out both;
+      margin: 0 2px;
+    }
+
+    .typing-dot:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    /* Recommended Movie Card in Chat */
+    .chat-movie-card {
+      background: #1E1F20;
+      border-radius: 10px;
+      padding: 8px;
+      margin-top: 5px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      cursor: pointer;
+      border: 1px solid #333;
+      transition: 0.2s;
+    }
+
+    .chat-movie-card:hover {
+      border-color: #0984e3;
+      background: #252627;
+    }
+
+    .chat-movie-card img {
+      width: 45px;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .chat-movie-info h5 {
+      margin: 0 0 4px 0;
+      color: #fff;
+      font-size: 0.85rem;
+    }
+
+    .chat-movie-info p {
+      margin: 0;
+      color: #0984e3;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    /* Overlay */
+    .sphere-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      display: none;
+    }
+
+    .sphere-overlay.active {
+      display: block;
+    }
+
+    /* Keyframes */
+    @keyframes popInMessage {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes typing {
+      from {
+        width: 0;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink-caret {
+      50% {
+        border-color: transparent;
+      }
+    }
+
+    @keyframes typingBounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+        opacity: 0.5;
+      }
+
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sphere-chat-window {
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 85%;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .assistive-ball {
+        bottom: 70px;
+        right: 20px;
+      }
+
+      .sphere-welcome-text {
+        display: none;
       }
     }
   </style>
@@ -22,9 +411,11 @@
 
 
 <body>
+
   <div id="page-loader">
     <div class="loader-spinner"></div>
   </div>
+  <input type="hidden" id="userIdentifier" value="{{name}}">
   <div class="navbar" id="header">
     <div class="logo hidden1">
       <img src="/assets/hand1.png" alt="Streamsphere.png" />
@@ -2089,7 +2480,55 @@
   </div>
 
   {{!-- Scripts --}}
+  <div class="sphere-overlay" id="sphereOverlay" onclick="toggleSphereChat()"></div>
 
+  <div class="assistive-ball" id="assistiveBall" onclick="toggleSphereChat()">
+    <div class="sphere-welcome-text" id="sphereWelcome">
+      <div class="typing-text">Hi {{name}}! , I am SphereBot your personal assitant! Click me For more Info</div>
+    </div>
+    <p style="font-size: 9px; margin-top: 2px;">SphereBot</p>
+  </div>
+
+  <div class="sphere-chat-window" id="sphereChat">
+    <div class="chat-header">
+      <div class="header-info">
+        <img src="/assets/hand1.png" alt="Bot">
+        <div>
+          <h4>SphereBot</h4>
+          <span class="status">● Online & Sassy</span>
+        </div>
+      </div>
+      <button class="close-chat" onclick="toggleSphereChat()">×</button>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+    </div>
+
+    <div class="chat-input-area">
+      <input type="text" id="sphereInput" placeholder="How are you feeling?" autocomplete="off">
+      <button onclick="handleUserMessage()">➤</button>
+    </div>
+  </div>
+
+  <script>
+    // 4. Conversation Logic
+    function startConversation() {
+      showTyping();
+      setTimeout(() => {
+        removeTyping();
+        addMessage(`Hey ${sphereData.userName}! I'm SphereBot. 🤖`, 'bot');
+      }, 500);
+
+      setTimeout(() => {
+        showTyping();
+        setTimeout(() => {
+          removeTyping();
+          addMessage("Tell me how you are feeling (e.g., Sad, Bored, Excited) and I'll find the perfect watch for you!", 'bot');
+        }, 1500);
+      }, 1000);
+    }
+
+  </script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const video = document.getElementById("heroVideo");
@@ -2111,7 +2550,6 @@
       video.addEventListener("playing", showVideo);
 
       // 4. Handle Autoplay Promise (Best practice for modern browsers)
-      // Sometimes browsers block autoplay to save data/battery
       const playPromise = video.play();
 
       if (playPromise !== undefined) {
@@ -2120,13 +2558,12 @@
           showVideo();
         })
           .catch(error => {
-            // Autoplay was prevented or video failed to load.
-            // We do nothing here, so opacity stays 0 and the Image is shown.
             console.log("Autoplay prevented or video error. Showing fallback image.");
           });
       }
     });
   </script>
+  <script src="/js/algorithm.js"></script>
   <script src="/js/profile.js"></script>
   <script src="/js/episodes.js"></script>
   <script src="/js/scrolllogic.js"></script>

@@ -35,9 +35,11 @@
       color: #0056b3;
     }
 
-    #otp-feedback {
+    #otp-feedback, #login-feedback {
       margin-top: 10px;
       font-size: 0.9em;
+      text-align: center;
+      min-height: 20px;
     }
 
     .text-success {
@@ -45,15 +47,15 @@
     }
 
     .text-error {
-      color: #e50914;
-      /* Netflix Red */
+      color: #e50914; /* Netflix Red */
+      font-weight: bold;
     }
 
     @media (max-width: 720px) {
       .link-btn {
         color: #fff;
         padding: 5px 20px;
-        margin:0px;
+        margin: 0px;
       }
 
       .link-btn:hover {
@@ -87,19 +89,20 @@
           <p>Enter your password and you'll be watching in no time.</p>
         </div>
 
-        <form action="/login" method="post" class="form">
-          <input type="text" method="post" name="name" placeholder="Enter name" required />
-          <input type="email" name="email" placeholder="{{#if email}}{{email}}{{else}}Enter email{{/if}}" required />
-          <input type="password" name="password" placeholder="Enter password" required />
-
+        <form id="loginForm" class="form" method="post">
+          <input type="text" name="name" id="login-name" method="post" placeholder="Enter name" required />
+          <input type="email" name="email" id="login-email" placeholder="{{#if email}}{{email}}{{else}}Enter email{{/if}}" required />
+          <input type="password" name="password" id="login-password" placeholder="Enter password" required />
+          
           <button class="btn btn-primary" type="submit">Sign In</button>
+          
+          <div id="login-feedback"></div>
+
           <button type="button" class="link-btn" onclick="toggleView('forgot')">Forgot Password?</button>
         </form>
 
-        <p class="muted">New to Streamsphere?
-        </p>
-        <div style="#">
-
+        <p class="muted">New to Streamsphere?</p>
+        <div>
           <a href="/signup">Create an account</a>
         </div>
 
@@ -131,12 +134,6 @@
     </div>
   </main>
 
-  {{#if error}}
-  <div class="alert alert-danger" style="color: red; padding: 10px; text-align: center;">
-    {{error}}
-  </div>
-  {{/if}}
-
   <script src="/js/css.js"></script>
   <script src="/js/email.js"></script>
   <script src="/js/main.js"></script>
@@ -149,9 +146,11 @@
       const loginBox = document.getElementById('login-box');
       const forgotBox = document.getElementById('forgot-box');
       const feedback = document.getElementById('otp-feedback');
+      const loginFeedback = document.getElementById('login-feedback'); // Get login feedback
 
       // Clear old messages when switching views
       if (feedback) feedback.innerHTML = '';
+      if (loginFeedback) loginFeedback.innerHTML = ''; // Clear login error
 
       if (view === 'forgot') {
         loginBox.classList.add('hidden');
@@ -161,6 +160,54 @@
         forgotBox.classList.add('hidden');
       }
     }
+
+    // ----------------------------------------------------
+    // NEW: Handle Login without Page Reload
+    // ----------------------------------------------------
+    const loginForm = document.getElementById('loginForm');
+    
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault(); // STOP standard form submission
+
+      const feedback = document.getElementById('login-feedback');
+      feedback.innerHTML = '<span style="color:green;">Verifying...</span>';
+
+      // Gather form data
+      const name = document.getElementById('login-name').value;
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      // const rememberMe = document.getElementById('remember_me')?.checked ? "on" : "off"; 
+
+      try {
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json' // Send as JSON
+          },
+          body: JSON.stringify({ 
+            name: name, 
+            email: email, 
+            password: password,
+            // remember_me: rememberMe
+          })
+        });
+
+        if (response.ok) {
+          // Success! Redirect manually to where the server pointed (usually /homepage)
+          window.location.href = response.url; 
+        } else {
+          // Error! Read the text sent by server (e.g., "Invalid email or password")
+          const errorText = await response.text();
+          feedback.innerHTML = `<span class="text-error">${errorText}</span>`;
+        }
+
+      } catch (err) {
+        console.error(err);
+        feedback.innerHTML = '<span class="text-error">Connection failed. Please try again.</span>';
+      }
+    });
+    // ----------------------------------------------------
+
 
     // 2. REAL Logic to Send OTP
     async function sendOTP() {
@@ -205,13 +252,10 @@
       const confirmPass = document.getElementById('confirm-password').value;
       const feedback = document.getElementById('otp-feedback');
 
-      // --- NEW VALIDATION START ---
-      // Check for length, numbers, and letters
       if (newPass.length < 8 || !/\d/.test(newPass) || !/[a-zA-Z]/.test(newPass)) {
         feedback.innerHTML = '<span class="text-error">Password must be at least 8 characters long and contain both numbers and letters.</span>';
-        return; // Stop here, do not send to server
+        return; 
       }
-      // --- NEW VALIDATION END ---
       if (/(012|123|234|345|456|567|678|789)/.test(newPass)) {
         feedback.innerHTML = '<span class="text-error">Password cannot contain number sequences like "123" or "456".</span>';
         return;
@@ -239,7 +283,6 @@
 
           setTimeout(() => {
             toggleView('login');
-            // Reset the forgot password form state
             document.getElementById('step-1').classList.remove('hidden');
             document.getElementById('step-2').classList.add('hidden');
             document.getElementById('reset-email').value = '';

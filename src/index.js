@@ -6,7 +6,7 @@ const path = require("path");
 const bcrypt = require("bcrypt");
 const connectDB = require("./db");
 const User = require("./userModel");
-const Movie = require("./movieModel"); // <--- NEW: Imported Movie Model
+const Movie = require("./movieModel");
 const nodemailer = require("nodemailer");
 const session = require("express-session");
 const OpenAI = require("openai");
@@ -30,9 +30,9 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || "keyboard cat",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Changed to false for better login handling
     cookie: {
-      secure: false, 
+      secure: false, // Set to true if using https
       httpOnly: true,
       maxAge: 3600000 // 1 hour default
     },
@@ -132,12 +132,14 @@ app.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).send("❌ Invalid email or password");
 
+    // Set Session Data
     req.session.email = user.email;
     req.session.name = user.name || name || "User";
 
     if (remember_me === "on") req.session.cookie.maxAge = 172800000; // 2 Days
     else req.session.cookie.maxAge = 3600000; // 1 Hour
 
+    // Async Email Notification (Non-blocking)
     const mailOptions = {
       from: '"StreamSphere" <officialstreamsphere.help@gmail.com>',
       to: user.email,
@@ -146,10 +148,19 @@ app.post("/login", async (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (error) => {
-      if (error) console.log("Email error:", error);
+      if (error) console.log("Email warning:", error);
     });
 
-    res.redirect("/payment");
+    // FIXED: Redirect to Homepage, not Payment. 
+    // Explicitly saving session ensures the cookie is set before redirecting.
+    req.session.save(err => {
+      if(err) {
+        console.log(err);
+        return res.status(500).send("Session Error");
+      }
+      res.redirect("/homepage"); 
+    });
+
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).send("Error logging in");
@@ -211,8 +222,6 @@ app.get("/series", requireLogin, (req, res) => {
 // ==========================================
 
 // --- NEW: GLOBAL MOVIE DATABASE API ---
-// This allows you to add/delete movies visible to everyone
-
 // 1. GET ALL MOVIES
 app.get('/api/movies', async (req, res) => {
     try {
@@ -226,9 +235,6 @@ app.get('/api/movies', async (req, res) => {
 // 2. ADD A MOVIE (Admin Only)
 app.post('/api/movies', async (req, res) => {
     try {
-        // You can add an admin check here if you want extra security
-        // if (!res.locals.isAdmin) return res.status(403).json({error: "Admins only"});
-        
         const newMovie = new Movie(req.body);
         const savedMovie = await newMovie.save();
         res.json(savedMovie);
@@ -247,7 +253,7 @@ app.delete('/api/movies/:id', async (req, res) => {
     }
 });
 
-// --- EXISTING APIs (Chat, Recent, MyList) ---
+// --- EXISTING APIs ---
 
 app.post("/api/chat", async (req, res) => {
   const userMessage = req.body.message.toLowerCase();

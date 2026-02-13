@@ -39,7 +39,7 @@ header {
 
 .login-box {
   backdrop-filter: blur(15px);
-  padding: 20px;
+  padding: 35px 25px;
   border: 1px solid #999;
   border-radius: 20px;
   height: 530px;
@@ -85,7 +85,10 @@ a {
 
 #title {
   text-align: left;
-  padding: 10px 32px;
+  padding: 0px 20px;
+}
+#loginForm{
+  margin-bottom: 0;
 }
 
 h2 {
@@ -261,8 +264,8 @@ body {
   }
   input {
     width: 90%;
-    padding: 15px;
-    margin: 10px 0 10px;
+    padding: 20px;
+    margin: 5px 0;
     background: #000;
     border-radius: 5px;
     color: white;
@@ -289,279 +292,285 @@ body {
     color: #999;
   }
 }
- #page-loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #141414;
-    /* Dark background to match theme */
-    z-index: 9999;
-    /* Must be higher than navbar and modal */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.5s ease, visibility 0.5s;
+#page-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #141414;
+  /* Dark background to match theme */
+  z-index: 9999;
+  /* Must be higher than navbar and modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition:
+    opacity 0.5s ease,
+    visibility 0.5s;
+}
+
+/* The Spinner Animation */
+.loader-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(255, 255, 255, 0.2);
+  border-top: 5px solid blueviolet;
+
+  /* Red accent color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Animation Keyframes */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
 
-  /* The Spinner Animation */
-  .loader-spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(255, 255, 255, 0.2);
-    border-top: 5px solid blueviolet;
-   
-    /* Red accent color */
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  100% {
+    transform: rotate(360deg);
   }
+}
 
-  /* Animation Keyframes */
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
+/* Class to hide the loader */
+.loader-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  /* Ensures you can click through it once hidden */
+}
 
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+.modal {
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  z-index: 2000;
+  /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: rgba(0, 0, 0, 0.8);
+  /* Black w/ opacity */
+  backdrop-filter: blur(5px);
+}
 
-  /* Class to hide the loader */
-  .loader-hidden {
+.modal-content {
+  background-color: #181818;
+  margin: 5% auto;
+  /* 5% from top and centered */
+  width: 90%;
+  max-width: 850px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  color: white;
+  animation: modalFadeIn 0.4s;
+}
+
+@keyframes modalFadeIn {
+  from {
+    transform: translateY(50px);
     opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    /* Ensures you can click through it once hidden */
   }
 
-  .modal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    z-index: 2000;
-    /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.8);
-    /* Black w/ opacity */
-    backdrop-filter: blur(5px);
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
+}
 
-  .modal-content {
-    background-color: #181818;
-    margin: 5% auto;
-    /* 5% from top and centered */
-    width: 90%;
-    max-width: 850px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    position: relative;
-    overflow: hidden;
-    color: white;
-    animation: modalFadeIn 0.4s;
-  }
+.close-modal {
+  color: #fff;
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+}
 
-  @keyframes modalFadeIn {
-    from {
-      transform: translateY(50px);
-      opacity: 0;
-    }
+.close-modal:hover {
+  background: #fff;
+  color: #000;
+}
 
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+/* Modal Hero */
+.modal-hero {
+  position: relative;
+  height: 400px;
+}
 
-  .close-modal {
-    color: #fff;
-    position: absolute;
-    top: 15px;
-    right: 25px;
-    font-size: 35px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.5);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    text-align: center;
-    line-height: 40px;
-  }
+.modal-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
 
-  .close-modal:hover {
-    background: #fff;
-    color: #000;
-  }
+.modal-hero-text {
+  position: absolute;
+  bottom: 20px;
+  left: 40px;
+  width: 60%;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
 
-  /* Modal Hero */
+.modal-hero-text h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.modal-meta {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.modal-meta .match {
+  color: #46d369;
+}
+
+.modal-meta .age {
+  border: 1px solid #aaa;
+  padding: 0 5px;
+  font-size: 0.8rem;
+}
+
+/* Episodes List */
+.modal-episodes-container {
+  padding: 20px 40px;
+}
+
+.episodes-header {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #404040;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.episode-row {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.episode-row:hover {
+  background-color: #333;
+}
+
+.ep-num {
+  font-size: 1.5rem;
+  color: #d2d2d2;
+  margin-right: 20px;
+  min-width: 30px;
+}
+
+.ep-thumb {
+  width: 120px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-right: 20px;
+}
+
+.ep-info {
+  flex-grow: 1;
+}
+
+.ep-title {
+  font-weight: bold;
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.ep-desc {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.ep-duration {
+  font-size: 0.9rem;
+  min-width: 60px;
+  text-align: right;
+}
+
+/* Season Dropdown Styling */
+.season-select {
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 5px 15px;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.season-select:hover {
+  background-color: #444;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
   .modal-hero {
-    position: relative;
-    height: 400px;
-  }
-
-  .modal-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 100%);
-  }
-
-  .modal-hero-text {
-    position: absolute;
-    bottom: 20px;
-    left: 40px;
-    width: 60%;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
-  }
-
-  .modal-hero-text h1 {
-    font-size: 3rem;
-    margin-bottom: 10px;
-  }
-
-  .modal-meta {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    margin-bottom: 15px;
-    font-weight: bold;
+    height: 250px;
   }
 
   .modal-meta .match {
     color: #46d369;
+    font-size: 12px;
   }
 
-  .modal-meta .age {
-    border: 1px solid #aaa;
-    padding: 0 5px;
-    font-size: 0.8rem;
+  .modal-hero-text h1 {
+    font-size: 20px;
   }
 
-  /* Episodes List */
   .modal-episodes-container {
-    padding: 20px 40px;
-  }
-
-  .episodes-header {
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid #404040;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-  }
-
-  .episode-row {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #404040;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .episode-row:hover {
-    background-color: #333;
-  }
-
-  .ep-num {
-    font-size: 1.5rem;
-    color: #d2d2d2;
-    margin-right: 20px;
-    min-width: 30px;
+    padding: 10px 15px;
   }
 
   .ep-thumb {
-    width: 120px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: 20px;
+    width: 90px;
+    height: 55px;
   }
 
-  .ep-info {
-    flex-grow: 1;
+  .ep-desc {
+    display: none;
+  }
+
+  #modal-desc {
+    font-size: 12px;
   }
 
   .ep-title {
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 12px;
     display: block;
     margin-bottom: 5px;
   }
 
-  .ep-desc {
-    font-size: 0.85rem;
-    color: #aaa;
-  }
-
-  .ep-duration {
-    font-size: 0.9rem;
-    min-width: 60px;
-    text-align: right;
-  }
-
-  /* Season Dropdown Styling */
-  .season-select {
-    background-color: #333;
-    color: white;
-    border: 1px solid #555;
-    padding: 5px 15px;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    outline: none;
-  }
-
-  .season-select:hover {
-    background-color: #444;
-  }
-
-  /* Mobile Adjustments */
-  @media (max-width: 768px) {
-    .modal-hero {
-      height: 250px;
-    }
-
-    .modal-meta .match {
-      color: #46d369;
-      font-size: 12px;
-    }
-
-    .modal-hero-text h1 {
-      font-size: 20px;
-    }
-
-    .modal-episodes-container {
-      padding: 10px 15px;
-    }
-
-    .ep-thumb {
-      width: 90px;
-      height: 55px;
-    }
-
-    .ep-desc {
-      display: none;
-    }
-
-    #modal-desc {
-      font-size: 12px;
-    }
-
-    .ep-title {
-      font-weight: bold;
-      font-size: 12px;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    /* Hide description on small screens */
-  }
+  /* Hide description on small screens */
+}

@@ -1,8 +1,12 @@
+/* =========================================
+   Global Styles & Reset
+   ========================================= */
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   font-family: sans-serif;
 }
+
 body {
   background: #000;
   background-image:
@@ -14,81 +18,28 @@ body {
   background-repeat: no-repeat;
   max-width: 100%;
   height: 100%;
-}
-header {
-  height: 10vh;
-  margin: 10px;
-}
-.logo img {
-  width: 17rem;
-  margin: 10px 0;
-}
-.login-container {
-  width: 1000px;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-}
-
-.logo {
-  width: 150px;
-  margin-bottom: 20px;
-}
-
-.login-box {
-  backdrop-filter: blur(15px);
-  padding: 35px 25px;
-  border: 1px solid #999;
-  border-radius: 20px;
-  height: 530px;
-  width: 600px;
-}
-
-input {
-  width: 90%;
-  padding: 18px;
-  margin: 5px 0;
-  background: #000;
-  border-radius: 5px;
-  color: white;
-  border: none;
-  /* height: 1rem; */
-
-  font-size: 14px;
-}
-
-button {
-  padding: 15px;
-  font-size: 1rem;
-  margin: 10px 0;
-  border-radius: 5px;
-  color: white;
-  background: linear-gradient(45deg, blue, purple, blue);
-  background-size: 200% 200%; /* Allows movement/stretch */
-  background-position: 0% 50%;
-  border: none;
-  cursor: pointer;
-  width: 90%;
-  transition: background-position 0.5s ease;
+  margin: 0; /* Added reset for body margin usually needed */
 }
 
 a {
   display: block;
-
   color: #999;
   text-align: left;
   padding: 5px 33px;
   font-size: 0.9em;
+  text-decoration: none; /* Usually desired for links */
 }
 
-#title {
+p {
   text-align: left;
-  padding: 0px 20px;
+  padding: 5px 33px;
+  margin: 5px 0px;
+  font-weight: 500;
+  color: #fff;
 }
-#loginForm{
-  margin-bottom: 0;
+
+p.muted {
+  padding-bottom: 0;
 }
 
 h2 {
@@ -102,196 +53,148 @@ h2 {
   text-decoration: none;
 }
 
-p {
-  text-align: left;
-  padding: 5px 33px;
-  margin: 5px 0px;
-  font-weight: 500;
-  /* background-image: linear-gradient(344deg, #00fff1, #c700dc);
-        background-clip: text;
-        -webkit-text-fill-color: transparent; */
-  color: #fff;
+/* =========================================
+   Layout & Components
+   ========================================= */
+header {
+  height: 10vh;
+  margin: 10px;
 }
-p.muted {
-  padding-bottom: 0;
+
+.logo {
+  width: 150px;
+  margin-bottom: 20px;
 }
+
+.logo img {
+  width: 17rem;
+  margin: 10px 0;
+}
+
+.login-container {
+  width: 1000px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.login-box {
+  backdrop-filter: blur(15px);
+  padding: 35px 25px;
+  border: 1px solid #999;
+  border-radius: 20px;
+  height: 530px;
+  width: 600px;
+}
+
 #logincon {
   margin-top: 20px;
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-  font-family: sans-serif;
+#title {
+  text-align: left;
+  padding: 0px 20px;
 }
 
-body {
+#loginForm {
+  margin-bottom: 0;
+}
+
+/* =========================================
+   Form Elements
+   ========================================= */
+input {
+  width: 90%;
+  padding: 18px;
+  margin: 5px 0;
   background: #000;
-  background-image:
-    linear-gradient(rgba(0, 0.8, 0, 0.8), rgba(0.1, 0, 0, 0.8)),
-    url("../assets/maincont.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  max-width: 100%;
-  height: 100%;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  font-size: 14px;
 }
 
-/* hidden1 */
+button {
+  padding: 15px;
+  font-size: 1rem;
+  margin: 10px 0;
+  border-radius: 5px;
+  color: white;
+  background: linear-gradient(45deg, blue, purple, blue);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  border: none;
+  cursor: pointer;
+  width: 90%;
+  transition: background-position 0.5s ease;
+}
+
+/* =========================================
+   Animations & Transitions
+   ========================================= */
+/* Hidden 0 (Default) */
+.hidden {
+  opacity: 0;
+  filter: blur(5px);
+  transform: translateX(35%) scale(1.4);
+  transition: all 1s;
+}
+
+.show {
+  opacity: 1;
+  filter: blur(0);
+  width: 100%;
+  transform: translateX(0) scale(1);
+}
+
+/* Hidden 1 */
 .hidden1 {
   opacity: 0;
   filter: blur(5px);
   transform: translateY(100%);
   transition: all 1s;
 }
+
 .show1 {
   opacity: 1;
   filter: blur(0);
   transform: translateY(0);
 }
 
-/* hidden0 */
-.hidden {
-  opacity: 0;
-  filter: blur(5px);
-  transform: translateX(35%);
-  transition: all 1s;
-  transform: scale(1.4);
-}
-.show {
-  opacity: 1;
-  filter: blur(0);
-  width: 100%;
-  transform: translateX(0);
-  transform: scale(1);
-}
-
-/* hidden2 */
+/* Hidden 2 */
 .hidden2 {
   opacity: 0;
   filter: blur(5px);
-  transform: translateX(-35%);
+  transform: translateX(-35%) scale(1.1);
   transition: all 1s;
-  transform: scale(1.1);
 }
+
 .show2 {
   opacity: 1;
   filter: blur(0);
   width: 100%;
-  transform: translateX(0);
-  transform: scale(1);
+  transform: translateX(0) scale(1);
 }
 
-/* hidden3 */
-
+/* Hidden 3 */
 .hidden3 {
   opacity: 0;
   filter: blur(5px);
   transform: translateX(20%);
   transition: all 1s;
 }
+
 .show3 {
   opacity: 1;
   filter: blur(0);
   transform: translateX(0);
 }
 
-/* For mobile screens (max-width: 480px) */
-@media (max-width: 480px) {
-  .logo {
-    width: 8rem;
-    margin-bottom: 0;
-  }
-  header {
-    height: 10vh;
-    margin: 0px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-  body {
-    background-size: cover;
-    background-position: top;
-  }
-  .logo img {
-    width: 10rem;
-  }
-  .login-container {
-    width: 92%;
-    padding: 15px;
-  }
-  h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 550;
-    background-image: linear-gradient(344deg, #00fff1, #c700dc);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    padding: 2px;
-    color: transparent;
-    text-decoration: none;
-  }
-  .login-box {
-    width: 90%;
-    height: auto;
-    padding: 15px 15px 25px 15px;
-  }
-
-  #logincon {
-    margin-top: 0px;
-  }
-  #title {
-    padding: 15px 15px 0px;
-  }
-}
-/* For small tablets (max-width: 720px) */
-@media (max-width: 720px) {
-  body {
-    background-size: cover;
-    background-position: center;
-  }
-  header {
-    height: 10vh;
-    margin: 0px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-  }
-  .logo {
-    width: 8rem;
-    margin-bottom: 0;
-  }
-  input {
-    width: 90%;
-    padding: 20px;
-    margin: 5px 0;
-    background: #000;
-    border-radius: 5px;
-    color: white;
-    border: none;
-    /* height: 1rem; */
-    font-size: 14px;
-    width: 92%;
-  }
-  .logo img {
-    width: 12rem;
-  }
-  .login-container {
-    width: 92%;
-    padding: 15px;
-  }
-  .login-box {
-    width: 90%;
-    height: auto;
-    transform: translateY(5%);
-  }
-
-  a {
-    padding: 5px 20px;
-    color: #999;
-  }
-}
+/* =========================================
+   Loader
+   ========================================= */
 #page-loader {
   position: fixed;
   top: 0;
@@ -299,69 +202,52 @@ body {
   width: 100%;
   height: 100%;
   background-color: #141414;
-  /* Dark background to match theme */
   z-index: 9999;
-  /* Must be higher than navbar and modal */
   display: flex;
   justify-content: center;
   align-items: center;
-  transition:
-    opacity 0.5s ease,
-    visibility 0.5s;
+  transition: opacity 0.5s ease, visibility 0.5s;
 }
 
-/* The Spinner Animation */
 .loader-spinner {
   width: 50px;
   height: 50px;
   border: 5px solid rgba(255, 255, 255, 0.2);
   border-top: 5px solid blueviolet;
-
-  /* Red accent color */
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-/* Animation Keyframes */
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Class to hide the loader */
 .loader-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  /* Ensures you can click through it once hidden */
 }
 
+/* =========================================
+   Modal
+   ========================================= */
 .modal {
   display: none;
-  /* Hidden by default */
   position: fixed;
   z-index: 2000;
-  /* Sit on top */
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  /* Enable scroll if needed */
   background-color: rgba(0, 0, 0, 0.8);
-  /* Black w/ opacity */
   backdrop-filter: blur(5px);
 }
 
 .modal-content {
   background-color: #181818;
   margin: 5% auto;
-  /* 5% from top and centered */
   width: 90%;
   max-width: 850px;
   border-radius: 10px;
@@ -373,15 +259,8 @@ body {
 }
 
 @keyframes modalFadeIn {
-  from {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .close-modal {
@@ -454,6 +333,22 @@ body {
   font-size: 0.8rem;
 }
 
+/* Season Dropdown */
+.season-select {
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 5px 15px;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+.season-select:hover {
+  background-color: #444;
+}
+
 /* Episodes List */
 .modal-episodes-container {
   padding: 20px 40px;
@@ -517,60 +412,129 @@ body {
   text-align: right;
 }
 
-/* Season Dropdown Styling */
-.season-select {
-  background-color: #333;
-  color: white;
-  border: 1px solid #555;
-  padding: 5px 15px;
-  font-size: 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  outline: none;
-}
+/* =========================================
+   Media Queries
+   ========================================= */
 
-.season-select:hover {
-  background-color: #444;
-}
-
-/* Mobile Adjustments */
+/* Max-width: 768px (Tablets) */
 @media (max-width: 768px) {
   .modal-hero {
     height: 250px;
   }
-
   .modal-meta .match {
     color: #46d369;
     font-size: 12px;
   }
-
   .modal-hero-text h1 {
     font-size: 20px;
   }
-
   .modal-episodes-container {
     padding: 10px 15px;
   }
-
   .ep-thumb {
     width: 90px;
     height: 55px;
   }
-
   .ep-desc {
     display: none;
   }
-
   #modal-desc {
     font-size: 12px;
   }
-
   .ep-title {
     font-weight: bold;
     font-size: 12px;
     display: block;
     margin-bottom: 5px;
   }
+}
 
-  /* Hide description on small screens */
+/* Max-width: 720px (Small Tablets) */
+@media (max-width: 720px) {
+  body {
+    background-size: cover;
+    background-position: center;
+  }
+  header {
+    height: 10vh;
+    margin: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .logo {
+    width: 8rem;
+    margin-bottom: 0;
+  }
+  .logo img {
+    width: 12rem;
+  }
+  input {
+    padding: 20px;
+    margin: 5px 0;
+    background: #000;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    font-size: 14px;
+    width: 90%;
+  }
+  .login-container {
+    width: 92%;
+    padding: 15px;
+  }
+  .login-box {
+    width: 87%;
+    height: auto;
+    transform: translateY(5%);
+    padding: 20px;
+  }
+  a {
+    padding: 5px 20px;
+    color: #999;
+  }
+}
+
+/* Max-width: 480px (Mobile) */
+@media (max-width: 480px) {
+  .logo {
+    width: 8rem;
+    margin-bottom: 0;
+  }
+  header {
+    height: 10vh;
+    margin: 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  body {
+    background-size: cover;
+    background-position: top;
+  }
+  .logo img {
+    width: 10rem;
+  }
+  .login-container {
+    width: 92%;
+    padding: 15px;
+  }
+ 
+  #logincon {
+    margin-top: 0px;
+  }
+  #title {
+    padding: 15px 15px 0px;
+  }
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 550;
+    background-image: linear-gradient(344deg, #00fff1, #c700dc);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 2px;
+    color: transparent;
+    text-decoration: none;
+  }
 }

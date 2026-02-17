@@ -84,21 +84,78 @@ const seriesData = {
     year: "2020",
     desc: "Obsessed gamer Arisu finds himself in a parallel Tokyo.",
     image: "https://m.media-amazon.com/images/M/MV5BMzlmNmRkOTEtOTYxOC00MTJjLTg1MTgtZGE0Yjk2YjM2ZjUyXkEyXkFqcGc@._V1_.jpg",
-    episodes: {}
+    episodes: {
+      1: [
+        { num: 1, title: "Episode 1", time: "48m", img: "https://image.tmdb.org/t/p/w300/758JlWhBQjnvRBKKdxH6nEuuyBr.jpg", link: "https://player.videasy.net/tv/110316/1/1" },
+        { num: 2, title: "Episode 2", time: "47m", img: "https://image.tmdb.org/t/p/w300/At7tagPr0drQWBLAW8dUD8zLsXn.jpg", link: "https://player.videasy.net/tv/110316/1/2" },
+        { num: 3, title: "Episode 3", time: "47m", img: "https://image.tmdb.org/t/p/w300/m3Jrm1fdV10oweHAQbYviCOWilg.jpg", link: "https://player.videasy.net/tv/110316/1/3" },
+        { num: 4, title: "Episode 4", time: "52m", img: "https://image.tmdb.org/t/p/w300/rNX5GmJdgVGdp2uBGzPxeVEzXVb.jpg", link: "https://player.videasy.net/tv/110316/1/4" },
+        { num: 5, title: "Episode 5", time: "46m", img: "https://image.tmdb.org/t/p/w300/fpyXJ8bPwvgJpBe6aFnzrMj01CR.jpg", link: "https://player.videasy.net/tv/110316/1/5" },
+        { num: 6, title: "Episode 6", time: "48m", img: "https://image.tmdb.org/t/p/w300/9JMqIduUuKncLb7qnh8nlMrmA2K.jpg", link: "https://player.videasy.net/tv/110316/1/6" },
+        { num: 7, title: "Episode 7", time: "45m", img: "https://image.tmdb.org/t/p/w300/9YZHiAop1YrYQVInKMjPcKCS4GL.jpg", link: "https://player.videasy.net/tv/110316/1/7" },
+        { num: 8, title: "Episode 8", time: "41m", img: "https://image.tmdb.org/t/p/w300/cRf1dBhxukElDsvZOHchFLNVZKe.jpg", link: "https://player.videasy.net/tv/110316/1/8" },
+      ],
+      2: [
+        { num: 1, title: "Episode 1", time: "55m", img: "https://image.tmdb.org/t/p/w300/1V0ZFcwu5s3z82SHslTI0mx0GtM.jpg", link: "https://player.videasy.net/tv/110316/2/1" },
+        { num: 2, title: "Episode 2", time: "49m", img: "https://image.tmdb.org/t/p/w300/1Kow0FYRnYqO13VHH7eAU4T1n3H.jpg", link: "https://player.videasy.net/tv/110316/2/2" },
+        { num: 3, title: "Episode 3", time: "57m", img: "https://image.tmdb.org/t/p/w300/cmwEKPJH1M1GcnU7dR07mZusQ2b.jpg", link: "https://player.videasy.net/tv/110316/2/3" },
+        { num: 4, title: "Episode 4", time: "52m", img: "https://image.tmdb.org/t/p/w300/b6msgAHnXitenrzuIALBywoMhd5.jpg", link: "https://player.videasy.net/tv/110316/2/4" },
+        { num: 5, title: "Episode 5", time: "54m", img: "https://image.tmdb.org/t/p/w300/4OeGJCVIIUHb3GOTNnbgPUCIUBa.jpg", link: "https://player.videasy.net/tv/110316/2/5" },
+        { num: 6, title: "Episode 6", time: "55m", img: "https://image.tmdb.org/t/p/w300/w5rtXSsHO2IWT9nc6u3lTRBXT4k.jpg", link: "https://player.videasy.net/tv/110316/2/6" },
+        { num: 7, title: "Episode 7", time: "50m", img: "https://image.tmdb.org/t/p/w300/pEFurMsytMcarSUY0QpaX0D3hOC.jpg", link: "https://player.videasy.net/tv/110316/2/7" },
+        { num: 8, title: "Episode 8", time: "1h 20m", img: "https://image.tmdb.org/t/p/w300/fsmrzXj35GMiya2Exsv1BzAyBTu.jpg", link: "https://player.videasy.net/tv/110316/2/8" },
+      ],
+      3: [
+        { num: 1, title: "Episode 1", time: "55m", img: "https://ntvb.tmsimg.com/assets/p18828973_b_h10_aa.jpg?w=1280&h=720", link: "https://player.videasy.net/tv/110316/3/1" },
+        { num: 2, title: "Episode 2", time: "50m", img: "https://ntvb.tmsimg.com/assets/p18828973_b_h10_aa.jpg?w=1280&h=720", link: "https://player.videasy.net/tv/110316/3/2" },
+        { num: 3, title: "Episode 3", time: "58m", img: "https://ntvb.tmsimg.com/assets/p18828973_b_h10_aa.jpg?w=1280&h=720", link: "https://player.videasy.net/tv/110316/3/3" },
+        { num: 4, title: "Episode 4", time: "52m", img: "https://ntvb.tmsimg.com/assets/p18828973_b_h10_aa.jpg?w=1280&h=720", link: "https://player.videasy.net/tv/110316/3/4" },
+        { num: 5, title: "Episode 5", time: "1h", img: "https://ntvb.tmsimg.com/assets/p18828973_b_h10_aa.jpg?w=1280&h=720", link: "https://player.videasy.net/tv/110316/3/5" },
+        { num: 6, title: "Episode 6", time: "1h 15m", img: "https://ntvb.tmsimg.com/assets/p18828973_b_h10_aa.jpg?w=1280&h=720", link: "https://player.videasy.net/tv/110316/3/6" },
+      ]
+    }
   },
   "all-of-us-dead": {
     title: "All of Us Are Dead",
     year: "2022",
     desc: "Trapped students must escape their high school which has become ground zero for a zombie virus outbreak.",
     image: "https://m.media-amazon.com/images/M/MV5BNTcyZjZjNjMtMzFhZC00ZDMyLTkyY2QtYzZlM2JjOGJhNzQyXkEyXkFqcGc@._V1_.jpg",
-    episodes: {}
+    episodes: {
+      1: [
+        { num: 1, title: "Episode 1", time: "1h 6m", img: "https://image.tmdb.org/t/p/w300/eTCe1kQo3Rzm1sqcOycSEgKzF3z.jpg", link: "https://player.videasy.net/tv/99966/1/1" },
+        { num: 2, title: "Episode 2", time: "1h 10m", img: "https://image.tmdb.org/t/p/w300/s1ejjHUlB4S6SxkOkGmPQ7CfRgu.jpg", link: "https://player.videasy.net/tv/99966/1/2" },
+        { num: 3, title: "Episode 3", time: "1h", img: "https://image.tmdb.org/t/p/w300/cvNAL8Osgrca3uXUS4qGy8qrgNY.jpg", link: "https://player.videasy.net/tv/99966/1/3" },
+        { num: 4, title: "Episode 4", time: "54m", img: "https://image.tmdb.org/t/p/w300/2MA0irna8738Zr6FO9v9YfygdNV.jpg", link: "https://player.videasy.net/tv/99966/1/4" },
+        { num: 5, title: "Episode 5", time: "56m", img: "https://image.tmdb.org/t/p/w300/inEDM5TP6uk0CFnvRwedE8yVvrU.jpg", link: "https://player.videasy.net/tv/99966/1/5" },
+        { num: 6, title: "Episode 6", time: "55m", img: "https://image.tmdb.org/t/p/w300/e6b835B0LWhflIrq2knNQL3VLCX.jpg", link: "https://player.videasy.net/tv/99966/1/6" },
+        { num: 7, title: "Episode 7", time: "57m", img: "https://image.tmdb.org/t/p/w300/jm5s8jAhUPQBUJJPH8wOpEnlt0v.jpg", link: "https://player.videasy.net/tv/99966/1/7" },
+        { num: 8, title: "Episode 8", time: "1h 2m", img: "https://image.tmdb.org/t/p/w300/gO0onHP51fbSTITwJJ289kUriDL.jpg", link: "https://player.videasy.net/tv/99966/1/8" },
+        { num: 9, title: "Episode 9", time: "1h 7m", img:"https://image.tmdb.org/t/p/w300/hTjFMfoL9Js4gQrMqRNxZPM8VRo.jpg", link: "https://player.videasy.net/tv/99966/1/9" },
+        { num: 10, title: "Episode 10", time: "1h 3m", img: "https://image.tmdb.org/t/p/w300/fd5lPDdoXgKOKe39LrWoBTiMEJE.jpg", link: "https://player.videasy.net/tv/99966/1/10" },
+        { num: 11, title: "Episode 11", time: "1h", img: "https://image.tmdb.org/t/p/w300/1v95gKxVA5vPevto1iQB7s8Xa7i.jpg", link: "https://player.videasy.net/tv/99966/1/11" },
+        { num: 12, title: "Episode 12", time: "53m", img: "https://image.tmdb.org/t/p/w300/qXf3fb6dXPOIUWRtnMvCAxA9MUN.jpg", link: "https://player.videasy.net/tv/99966/1/12" },
+      ]
+    }
   },
   "last-of-us": {
     title: "The Last of Us",
     year: "2023",
     desc: "After a global pandemic destroys civilization, a hardened survivor takes charge of a 14-year-old girl.",
     image: "https://m.media-amazon.com/images/M/MV5BYWI3ODJlMzktY2U5NC00ZjdlLWE1MGItNWQxZDk3NWNjN2RhXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
-    episodes: {}
+    episodes: {
+      1: [
+        { num: 1, title: "When You're Lost in the Darkness", time: "1h 21m", img: "https://image.tmdb.org/t/p/w300/aRquEWm8wWF1dfa9uZ1TXLvVrKD.jpg", link: "https://player.videasy.net/tv/100088/1/1" },
+        { num: 2, title: "Infected", time: "53m", img: "https://image.tmdb.org/t/p/w300/vGf7chl6XL7o3yYc8A5m3kjz8px.jpg", link: "https://player.videasy.net/tv/100088/1/2" },
+        { num: 3, title: "Long, Long Time", time: "1h 16m", img: "https://image.tmdb.org/t/p/w300/bzy4hAtkY3OOInY4q6MJigLmC1m.jpg", link: "https://player.videasy.net/tv/100088/1/3" },
+        { num: 4, title: "Please Hold to My Hand", time: "46m", img: "https://image.tmdb.org/t/p/w300/szQ95jxKNrYWnCAJx8VC51iws5d.jpg", link: "https://player.videasy.net/tv/100088/1/4" },
+        { num: 5, title: "Endure and Survive", time: "59m", img: "https://image.tmdb.org/t/p/w300/cX2z8FO9lKqZmBBTVF2G2favQRE.jpg", link: "https://player.videasy.net/tv/100088/1/5" },
+        { num: 6, title: "Kin", time: "59m", img: "https://image.tmdb.org/t/p/w300/zW9AIy0PVhYfmukqBcUvlvi4mKc.jpg", link: "https://player.videasy.net/tv/100088/1/6" },
+        { num: 7, title: "Left Behind", time: "56m", img: "https://image.tmdb.org/t/p/w300/oNyC68bnOoVAiJnKVsRNY9YDbl6.jpg", link: "https://player.videasy.net/tv/100088/1/7" },
+        { num: 8, title: "When We Are in Need", time: "51m", img: "https://image.tmdb.org/t/p/w300/6DHQgB85iKMcabcKvC9HSDH3UDo.jpg", link: "https://player.videasy.net/tv/100088/1/8" },
+        { num: 9, title: "Look for the Light", time: "43m", img: "https://image.tmdb.org/t/p/w300/qFouIBgN3Jgba7LnuRmkTAohh07.jpg", link: "https://player.videasy.net/tv/100088/1/9" },
+      ]
+
+  }
   },
   "default": {
     title: "Series Title",

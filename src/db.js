@@ -1,10 +1,14 @@
+// db.js
 const mongoose = require("mongoose");
+require("dotenv").config({ path: ".env.local" });
 
 const connectDB = async () => {
   try {
-    // ⚠️ WARNING: Hardcoding credentials exposes your password if you push to public GitHub.
-    // For production, use a .env file.
-    const db = "mongodb+srv://mayurac123_db_user:0U8fL4aioRxB2A9j@cluster0.a0a7hwd.mongodb.net/netflixAuth?appName=Cluster0";
+    const db = process.env.MONGO_URI;
+
+    if (!db) {
+      throw new Error("MONGO_URI is not defined in environment variables");
+    }
 
     await mongoose.connect(db, {
       useNewUrlParser: true,

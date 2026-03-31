@@ -12,7 +12,8 @@ const session = require("express-session");
 const OpenAI = require("openai");
 
 const app = express();
-
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 // ---------- OpenAI Setup ----------
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "place_holder_key_if_missing",
@@ -121,6 +122,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+
 // --- LOGIN ---
 app.post("/login", async (req, res) => {
   const { name, email, password, remember_me } = req.body;
@@ -136,23 +138,22 @@ app.post("/login", async (req, res) => {
     req.session.email = user.email;
     req.session.name = user.name || name || "User";
 
-    if (remember_me === "on") req.session.cookie.maxAge = 172800000; // 2 Days
-    else req.session.cookie.maxAge = 3600000; // 1 Hour
+    // ✅ Changed to 5 days for both cases
+    if (remember_me === "on") req.session.cookie.maxAge = 5 * 24 * 60 * 60 * 1000; // 5 Days
+    else req.session.cookie.maxAge = 5 * 24 * 60 * 60 * 1000;                      // 5 Days
 
-    // Async Email Notification (Non-blocking)
     const mailOptions = {
       from: '"StreamSphere" <officialstreamsphere.help@gmail.com>',
       to: user.email,
       subject: "Login Alert - StreamSphere",
-      html: `<h3>Welcome back, ${req.session.name}!</h3><p>You have successfully logged into StreamSphere.</p>`,
+      html: `<h3>Welcome back, ${req.session.name}!</h3>
+      <p>You have successfully signed in to StreamSphere. Continue where you left off and enjoy your content.</p>`,
     };
 
     transporter.sendMail(mailOptions, (error) => {
       if (error) console.log("Email warning:", error);
     });
 
-    // FIXED: Redirect to Homepage, not Payment. 
-    // Explicitly saving session ensures the cookie is set before redirecting.
     req.session.save(err => {
       if(err) {
         console.log(err);
@@ -338,7 +339,9 @@ app.post("/api/send-otp", async (req, res) => {
     user.otpExpires = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    const mailOptions = { from: "Streamsphere Support", to: email, subject: "Password Reset OTP", text: `Your OTP is: ${otp}` };
+    const mailOptions = { from: "Streamsphere Support", to: email, subject: "Password Reset OTP", text: `You requested to reset your password.
+    Please use the following OTP to proceed: ${otp}
+    This OTP is valid for the next few minutes. If you did not request this, please ignore this email.` };
     transporter.sendMail(mailOptions, (error) => {
       if (error) return res.status(500).json({ error: "Failed to send email" });
       return res.json({ message: "OTP sent" });
@@ -353,18 +356,21 @@ app.post("/api/reset-password", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user || user.resetOTP !== otp || user.otpExpires < Date.now()) {
-      return res.status(400).json({ error: "Invalid or Expired OTP" });
+      return res.status(400).json({ error: "The One-Time Password (OTP) you entered is no longer valid or may be incorrect. Please request a new OTP and try again." });
     }
     user.password = await bcrypt.hash(newPassword, 10);
     user.resetOTP = undefined;
     user.otpExpires = undefined;
     await user.save();
-    res.json({ message: "Password updated" });
+    res.json({ message: "All set! Your password has been updated successfully." });
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
 });
 
+app.get('/Streamsphere', (req, res) => {
+    res.render('Streamsphere'); // This renders streamsphere.hbs
+});
 // ==========================================
 // 8. ADMIN ANALYSIS
 // ==========================================

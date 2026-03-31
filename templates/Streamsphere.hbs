@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Streamesphere</title>
+  <title>StreamSphere</title>
   <link rel="stylesheet" href="/css/styles.css">
 
 
@@ -16,7 +16,7 @@
   </div>
   <div class="bg-blur"></div>
   <nav>
-    <div class="logo hidden3">
+    <div class="logo hidden3" id="hero">
       <img src="../assets/newlogo.png" alt="Netflix logo" />
     </div>
     <div class="header">
@@ -27,7 +27,7 @@
         </select>
       </div>
       <div class="s hidden">
-        <button id="Signup"><a class="btn1" href="/signup">Sign Up</a></button>
+        <button><a class="btn1" href="/Signup" style="color: beige; text-decoration:none;">Sign Up</a></button>
       </div>
     </div>
   </nav>
@@ -56,62 +56,82 @@
         <button class="slide-btn prev" onclick="scrollContainerLeft()">
           &#10094;
         </button>
-        <div class="movie">
-          <h1>1</h1>
-          <img src="https://upload.wikimedia.org/wikipedia/en/3/38/F1_%282025_film%29.png" alt="Movie 1" />
-        </div>
-        <div class="movie">
-          <h1>2</h1>
-          <img
-            src="https://m.media-amazon.com/images/M/MV5BZmFkNzExNTQtNjY4Ny00NmVjLWIwYjYtOWY5YzkwNmU4YWI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
-            alt="Movie 2" />
-        </div>
-        <div class="movie">
-          <h1>3</h1>
-          <img
-            src="https://m.media-amazon.com/images/M/MV5BMTk2ZmFhYjctYWZiYy00N2IxLWEzMWItZGRiMDY4ZDQwZWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
-            alt="Movie 3" />
-        </div>
-        <div class="movie">
-          <h1>4</h1>
-          <img
-            src="https://m.media-amazon.com/images/M/MV5BOGQ3YWUzYjEtMTJiYy00ZjQ0LWI0YjktYjhiNGVhNGExYTM3XkEyXkFqcGc@._V1_.jpg"
-            alt="Movie 4" />
-        </div>
-        <div class="movie">
-          <h1>5</h1>
-          <img
-            src="https://blogger.googleusercontent.com/img/a/AVvXsEhrtfy5-njtZdc_TexzhB_t-_Nloe1hkJWRgn8ac8E_6vjuKurgPIrgoCZvqV5RDlJLtQLm8xs-kbm6aDWastEDPO7BAma8SuB_5imAyDjOsJjZ-uSQozX-y56rNNlonrwo0Hi0dSZmqYDWmAkgBZsCn2ChvlhCu4wFKafUa1-fz4fVw2feFjPrhPKdy80"
-            alt="Movie 5" />
-        </div>
-        <div class="movie">
-          <h1>6</h1>
-          <img
-            src="https://m.media-amazon.com/images/M/MV5BMGM4MmE2YTMtOWQ1ZS00M2NkLWE2OGItNTAzMWYyNDdiYWE5XkEyXkFqcGc@._V1_.jpg"
-            alt="Movie 6" />
-        </div>
-        <div class="movie">
-          <h1>7</h1>
-          <img
-            src="https://m.media-amazon.com/images/M/MV5BZTkxMjg1MWEtZjI4Mi00MzBmLTlhZjMtY2EwNzhkZWMyNzc5XkEyXkFqcGc@._V1_.jpg"
-            alt="Movie 4" />
-        </div>
-        <div class="movie">
-          <h1>8</h1>
-          <img
-            src="https://m.media-amazon.com/images/S/pv-target-images/bf7f2a22e80d133d2c596e1e1eaf0933fb0b338bd096f43073376b0d5ffed938.jpg"
-            alt="Movie 5" />
-        </div>
-        <div class="movie">
-          <h1>9</h1>
-          <img
-            src="https://blogger.googleusercontent.com/img/a/AVvXsEiMnE54ALi9RaK6Mp5tdcL2zh9LOSB8Ha0LPCUriSObCxR5W__rNk3_Ogo36RR0n63SXwTOreUVcwmm7fn7UelaAFeaU20ZiLpSb-YlVnzyT7RpBIBDjXHdEVIZ_kKKp2x0t3ursCVkHJNmUAA7EEbmb23ml2TdlxAAVZU9yPXL_LUfScAZF5aL1R762HI"
-            alt="Movie 6" />
-        </div>
-        <div class="movie">
-          <h1>10</h1>
-          <img src="https://upload.wikimedia.org/wikipedia/en/0/08/Aap_Jaisa_Koi_%282025_film%29.jpg" alt="Movie 6" />
-        </div>
+        <a href="#hero">
+          <div class="movie">
+            <h1>1</h1>
+            <img src="https://upload.wikimedia.org/wikipedia/en/3/38/F1_%282025_film%29.png" alt="Movie 1" style="cursor:pointer" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>2</h1>
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BZmFkNzExNTQtNjY4Ny00NmVjLWIwYjYtOWY5YzkwNmU4YWI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+              alt="Movie 2" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>3</h1>
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BMTk2ZmFhYjctYWZiYy00N2IxLWEzMWItZGRiMDY4ZDQwZWFlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+              alt="Movie 3" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>4</h1>
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BOGQ3YWUzYjEtMTJiYy00ZjQ0LWI0YjktYjhiNGVhNGExYTM3XkEyXkFqcGc@._V1_.jpg"
+              alt="Movie 4" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>5</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEhrtfy5-njtZdc_TexzhB_t-_Nloe1hkJWRgn8ac8E_6vjuKurgPIrgoCZvqV5RDlJLtQLm8xs-kbm6aDWastEDPO7BAma8SuB_5imAyDjOsJjZ-uSQozX-y56rNNlonrwo0Hi0dSZmqYDWmAkgBZsCn2ChvlhCu4wFKafUa1-fz4fVw2feFjPrhPKdy80"
+              alt="Movie 5" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>6</h1>
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BMGM4MmE2YTMtOWQ1ZS00M2NkLWE2OGItNTAzMWYyNDdiYWE5XkEyXkFqcGc@._V1_.jpg"
+              alt="Movie 6" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>7</h1>
+            <img
+              src="https://m.media-amazon.com/images/M/MV5BZTkxMjg1MWEtZjI4Mi00MzBmLTlhZjMtY2EwNzhkZWMyNzc5XkEyXkFqcGc@._V1_.jpg"
+              alt="Movie 4" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>8</h1>
+            <img
+              src="https://m.media-amazon.com/images/S/pv-target-images/bf7f2a22e80d133d2c596e1e1eaf0933fb0b338bd096f43073376b0d5ffed938.jpg"
+              alt="Movie 5" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>9</h1>
+            <img
+              src="https://blogger.googleusercontent.com/img/a/AVvXsEiMnE54ALi9RaK6Mp5tdcL2zh9LOSB8Ha0LPCUriSObCxR5W__rNk3_Ogo36RR0n63SXwTOreUVcwmm7fn7UelaAFeaU20ZiLpSb-YlVnzyT7RpBIBDjXHdEVIZ_kKKp2x0t3ursCVkHJNmUAA7EEbmb23ml2TdlxAAVZU9yPXL_LUfScAZF5aL1R762HI"
+              alt="Movie 6" />
+          </div>
+        </a>
+        <a href="#hero">
+          <div class="movie">
+            <h1>10</h1>
+            <img src="/assets/ap1.png" alt="Movie 6" />
+          </div>
+        </a>
       </div>
       <button class="slide-btn next" onclick="scrollRight()">&#10095;</button>
     </div>

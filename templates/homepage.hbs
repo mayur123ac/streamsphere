@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StreamSphere</title>
+  <title>StreamSphere OTT</title>
 
   <link rel="stylesheet" href="/css/homepage.css" />
 
@@ -17,391 +17,479 @@
       video{
         display: none;
       }
-    }
-
-    /* --- SPHEREBOT CSS INTEGRATION --- */
-
-    /* 1. Assistive Ball */
-    .assistive-ball {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(135deg, #0984e3, #6c5ce7);
-      border-radius: 50%;
-      box-shadow: 0 4px 15px rgba(9, 132, 227, 0.4);
-      cursor: pointer;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      animation: float 6s ease-in-out infinite;
-    }
-
-    .assistive-ball:hover {
-      transform: scale(1.1) rotate(10deg);
-    }
-
-    .assistive-ball img {
-      width: 30px;
-      height: auto;
-      pointer-events: none;
-      margin-bottom: 2px;
-    }
-
-    .assistive-ball p {
-      margin: 0;
-      color: white;
-      font-weight: bold;
-      pointer-events: none;
-    }
-
-    @keyframes float {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-10px);
+      #unmutebtn{
+        display: none;
       }
     }
 
-    /* 2. Welcome Typing Bubble (Left of Ball) */
-    .sphere-welcome-text {
-      position: absolute;
-      bottom: 15px;
-      right: 75px;
-      background: #1E1F20;
-      color: #E3E3E3;
-      border: 1px solid #333;
-      padding: 10px 15px;
-      border-radius: 20px 20px 5px 20px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transform: translateY(10px) scale(0.9);
-      animation: popInMessage 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      animation-delay: 1.5s;
-    }
+    /* ── SPHEREBOT v2 UI — Gemini-Inspired Premium Chat ── */
 
-    .sphere-welcome-text::after {
-      content: '';
-      position: absolute;
-      right: -8px;
-      bottom: 15px;
-      border-width: 8px 0 8px 8px;
-      border-style: solid;
-      border-color: transparent transparent transparent #fff;
-    }
+  /* ── Trigger Ball ── */
+  .assistive-ball {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: conic-gradient(from 180deg at 50% 50%, #0984e3 0deg, #6c5ce7 120deg, #00cec9 240deg, #0984e3 360deg);
+    box-shadow: 0 0 0 0 rgba(9,132,227,0.4);
+    cursor: pointer;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    animation: spherePulse 3s ease-in-out infinite, sphereFloat 6s ease-in-out infinite;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .assistive-ball:hover { transform: scale(1.12); }
+  .assistive-ball p {
+    margin: 0;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+  @keyframes spherePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(9,132,227,0.5); }
+    50%      { box-shadow: 0 0 0 14px rgba(9,132,227,0); }
+  }
+  @keyframes sphereFloat {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
 
-    .typing-text {
-      display: inline-block;
-      overflow: hidden;
-      white-space: nowrap;
-      border-right: 2px solid #0984e3;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 0.85rem;
-      width: 0;
-      animation: typing 2.5s steps(30, end) forwards, blink-caret 0.75s step-end infinite;
-      animation-delay: 2s;
-    }
+  /* ── Welcome Bubble ── */
+  .sphere-welcome-text {
+    position: absolute;
+    bottom: 14px;
+    right: 68px;
+    background: rgba(19,19,20,0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #e3e3e3;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px 16px;
+    border-radius: 16px 16px 4px 16px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(8px) scale(0.9);
+    animation: bubblePop 0.5s cubic-bezier(0.34,1.56,0.64,1) 1.5s forwards;
+    font-size: 0.8rem;
+    font-weight: 500;
+  }
+  @keyframes bubblePop {
+    to { opacity: 1; transform: translateX(0) scale(1); }
+  }
+  .typing-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid #0984e3;
+    font-size: 0.8rem;
+    font-weight: 600;
+    width: 0;
+    animation: typeReveal 2.5s steps(35,end) 2s forwards, blinkCursor 0.75s step-end infinite 2s;
+  }
+  @keyframes typeReveal { to { width: 100%; } }
+  @keyframes blinkCursor { 50% { border-color: transparent; } }
 
-    /* 3. Chat Window (Gemini Style) */
-    .sphere-chat-window {
+  /* ── Full-Screen Overlay ── */
+  .sphere-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    z-index: 1998;
+    display: none;
+    transition: background 0.4s ease, backdrop-filter 0.4s ease;
+  }
+  .sphere-overlay.active {
+    display: block;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    animation: overlayIn 0.4s ease forwards;
+  }
+  @keyframes overlayIn { from { opacity:0; } to { opacity:1; } }
+
+  /* ── Main Chat Window ── */
+  .sphere-chat-window {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .sphere-chat-window.active {
+    pointer-events: all;
+    opacity: 1;
+  }
+
+  .sphere-chat-inner {
+    width: min(700px, 96vw);
+    height: min(82vh, 760px);
+    background: rgba(13,13,15,0.92);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(9,132,227,0.1),
+      0 32px 80px rgba(0,0,0,0.6),
+      0 0 120px rgba(9,132,227,0.06) inset;
+    transform: scale(0.92) translateY(24px);
+    transition: transform 0.4s cubic-bezier(0.34,1.1,0.64,1);
+    position: relative;
+  }
+  .sphere-chat-window.active .sphere-chat-inner {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Ambient glow */
+  .sphere-chat-inner::before {
+    content: '';
+    position: absolute;
+    top: -60px; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 120px;
+    background: radial-gradient(ellipse, rgba(9,132,227,0.25) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Chat Header ── */
+  .chat-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  .header-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* Orb avatar */
+  .sphere-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: conic-gradient(from 180deg at 50% 50%, #0984e3 0deg, #6c5ce7 120deg, #00cec9 240deg, #0984e3 360deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    animation: orbSpin 8s linear infinite;
+    box-shadow: 0 0 20px rgba(9,132,227,0.3);
+  }
+  @keyframes orbSpin {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
+  }
+
+  .header-text h4 {
+    margin: 0;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .status-line {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    background: #00cec9;
+    border-radius: 50%;
+    animation: statusBlink 2s ease-in-out infinite;
+  }
+  @keyframes statusBlink {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.5; transform: scale(0.8); }
+  }
+  .status-label {
+    font-size: 0.72rem;
+    color: #00cec9;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  .close-chat {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.5);
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+    line-height: 1;
+  }
+  .close-chat:hover {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    transform: rotate(90deg);
+  }
+
+  /* ── Chat Body ── */
+  .chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+    scroll-behavior: smooth;
+  }
+  .chat-body::-webkit-scrollbar { width: 4px; }
+  .chat-body::-webkit-scrollbar-track { background: transparent; }
+  .chat-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+  }
+
+  /* ── Messages ── */
+  .chat-msg {
+    max-width: 78%;
+    padding: 12px 18px;
+    border-radius: 20px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    word-break: break-word;
+    animation: msgIn 0.3s cubic-bezier(0.34,1.2,0.64,1) both;
+  }
+  @keyframes msgIn {
+    from { opacity:0; transform: translateY(10px) scale(0.97); }
+    to   { opacity:1; transform: translateY(0) scale(1); }
+  }
+
+  .chat-msg.bot {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    color: #e8e8e8;
+    border-bottom-left-radius: 6px;
+    align-self: flex-start;
+    max-width: 82%;
+  }
+  .chat-msg.user {
+    background: linear-gradient(135deg, #0984e3 0%, #6c5ce7 100%);
+    color: #fff;
+    border-bottom-right-radius: 6px;
+    align-self: flex-end;
+    box-shadow: 0 4px 20px rgba(9,132,227,0.25);
+  }
+
+  /* ── Typing Indicator ── */
+  .typing-container {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 14px 18px;
+    border-radius: 20px;
+    border-bottom-left-radius: 6px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    align-self: flex-start;
+    width: fit-content;
+    animation: msgIn 0.25s ease both;
+  }
+  .typing-dot {
+    width: 7px; height: 7px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 50%;
+    animation: dotBounce 1.4s ease-in-out infinite both;
+  }
+  .typing-dot:nth-child(1) { animation-delay: 0s; }
+  .typing-dot:nth-child(2) { animation-delay: 0.18s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.36s; }
+  @keyframes dotBounce {
+    0%,60%,100% { transform: translateY(0); background: rgba(255,255,255,0.25); }
+    30%          { transform: translateY(-6px); background: #0984e3; }
+  }
+
+  /* ── Movie Cards ── */
+  .chat-movie-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    text-decoration: none;
+    margin-top: 4px;
+    animation: msgIn 0.3s ease both;
+  }
+  .chat-movie-card:hover {
+    background: rgba(9,132,227,0.12);
+    border-color: rgba(9,132,227,0.35);
+    transform: translateX(4px);
+  }
+  .chat-movie-card img {
+    width: 48px; height: 68px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .chat-movie-info h5 {
+    margin: 0 0 3px;
+    color: #fff;
+    font-size: 0.83rem;
+    font-weight: 600;
+  }
+  .chat-movie-info p {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #0984e3;
+  }
+
+  /* ── Suggested Chip Row ── */
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px 0 8px;
+  }
+  .sphere-chip {
+    background: rgba(9,132,227,0.1);
+    border: 1px solid rgba(9,132,227,0.25);
+    color: #74b9ff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    white-space: nowrap;
+  }
+  .sphere-chip:hover {
+    background: rgba(9,132,227,0.25);
+    border-color: rgba(9,132,227,0.5);
+    transform: translateY(-2px);
+    color: #fff;
+  }
+
+  /* ── Input Area ── */
+  .chat-input-area {
+    padding: 16px 24px 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .chat-input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 0 16px;
+    transition: border-color 0.2s, background 0.2s;
+    gap: 8px;
+  }
+  .chat-input-wrap:focus-within {
+    border-color: rgba(9,132,227,0.5);
+    background: rgba(9,132,227,0.06);
+    box-shadow: 0 0 0 3px rgba(9,132,227,0.08);
+  }
+
+  .chat-input-wrap input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: #e8e8e8;
+    font-size: 0.9rem;
+    padding: 14px 0;
+    font-family: inherit;
+    caret-color: #0984e3;
+  }
+  .chat-input-wrap input::placeholder { color: rgba(255,255,255,0.3); }
+
+  .chat-send-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #0984e3, #6c5ce7);
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    box-shadow: 0 4px 14px rgba(9,132,227,0.35);
+  }
+  .chat-send-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(9,132,227,0.5);
+  }
+  .chat-send-btn:active { transform: scale(0.95); }
+
+  /* ── Mobile ── */
+  @media (max-width: 600px) {
+    .sphere-chat-inner {
+      width: 100vw;
+      height: 92vh;
+      border-radius: 24px 24px 0 0;
       position: fixed;
-      bottom: 100px;
-      right: 30px;
-      width: 350px;
-      height: 500px;
-      background: #131314;
-      border: 1px solid #2D2D30;
-      border-radius: 20px;
-      display: flex;
-      flex-direction: column;
-      z-index: 999;
-      transform: scale(0);
-      transform-origin: bottom right;
-      transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease;
-      opacity: 0;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-      overflow: hidden;
-    }
-
-    .sphere-chat-window.active {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    .chat-header {
-      padding: 15px;
-      background: #1E1F20;
-      border-bottom: 1px solid #2D2D30;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-info {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .header-info img {
-      width: 25px;
-    }
-
-    .header-info h4 {
-      margin: 0;
-      color: #E3E3E3;
-      font-size: 1rem;
-      font-weight: 500;
-    }
-
-    .header-info .status {
-      font-size: 0.7rem;
-      color: #2ed573;
-    }
-
-    .close-chat {
-      background: none;
-      border: none;
-      color: #9aa0a6;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    /* Chat Body & Scrollbar */
-    .chat-body {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .chat-body::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .chat-body::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .chat-body::-webkit-scrollbar-thumb {
-      background-color: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
-    }
-
-    .chat-body::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-    }
-
-    /* Messages */
-    .chat-msg {
-      max-width: 85%;
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      word-wrap: break-word;
-    }
-
-    .chat-msg.bot {
-      background: #1E1F20;
-      color: #E3E3E3;
-      border-bottom-left-radius: 4px;
-      align-self: flex-start;
-    }
-
-    .chat-msg.user {
-      background: #0984e3;
-      color: white;
-      border-bottom-right-radius: 4px;
-      align-self: flex-end;
-    }
-
-    /* Input Area */
-    .chat-input-area {
-      padding: 15px;
-      background: #131314;
-      border-top: 1px solid #2D2D30;
-      display: flex;
-      gap: 10px;
-    }
-
-    .chat-input-area input {
-      flex: 1;
-      background: #1E1F20;
-      border: none;
-      border-radius: 20px;
-      padding: 10px 15px;
-      color: #E3E3E3;
-      outline: none;
-      font-family: 'Inter', sans-serif;
-    }
-
-    .chat-input-area button {
-      background: #0984e3;
-      border: none;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      color: white;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Typing Animation (...) */
-    .typing-container {
-      background: #1E1F20;
-      padding: 12px 18px;
-      border-radius: 18px;
-      border-bottom-left-radius: 4px;
-      display: inline-block;
-      align-self: flex-start;
-      margin-bottom: 5px;
-      width: fit-content;
-    }
-
-    .typing-dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background-color: #b2bec3;
-      border-radius: 50%;
-      animation: typingBounce 1.4s infinite ease-in-out both;
-      margin: 0 2px;
-    }
-
-    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-    /* Recommended Movie Card in Chat */
-    .chat-movie-card {
-      background: #1E1F20;
-      border-radius: 10px;
-      padding: 8px;
-      margin-top: 5px;
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      cursor: pointer;
-      border: 1px solid #333;
-      transition: 0.2s;
-    }
-
-    .chat-movie-card:hover {
-      border-color: #0984e3;
-      background: #252627;
-    }
-
-    .chat-movie-card img {
-      width: 45px;
-      height: 65px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
-
-    .chat-movie-info h5 {
-      margin: 0 0 4px 0;
-      color: #fff;
-      font-size: 0.85rem;
-    }
-
-    .chat-movie-info p {
-      margin: 0;
-      color: #0984e3;
-      font-size: 0.75rem;
-      font-weight: bold;
-    }
-
-    /* Overlay */
-    .sphere-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 998;
-      display: none;
+      left: 0;
+      transform: translateY(40px) scale(1);
     }
-
-    .sphere-overlay.active {
-      display: block;
+    .sphere-chat-window.active .sphere-chat-inner {
+      transform: translateY(0) scale(1);
     }
-
-    /* Keyframes */
-    @keyframes popInMessage {
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+    .sphere-chat-window {
+      align-items: flex-end;
+      justify-content: center;
     }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 100%; }
+    .assistive-ball {
+      bottom: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
     }
-
-    @keyframes blink-caret {
-      50% { border-color: transparent; }
-    }
-
-    @keyframes typingBounce {
-      0%, 80%, 100% {
-        transform: scale(0);
-        opacity: 0.5;
-      }
-      40% {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .sphere-chat-window {
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 85%;
-        border-radius: 20px 20px 0 0;
-      }
-
-      .assistive-ball {
-        bottom: 70px;
-        right: 20px;
-      }
-
-      .sphere-welcome-text {
-        width: 200px;
-        height: auto;
-        white-space: normal; 
-        line-height: 1.4; 
-      }
-
-      .typing-text {
-        white-space: normal; 
-        width: auto; 
-        border-right: none;
-        animation: none; 
-      }
-      video{
-        display: none;
-      }
-      #unmuteBtn{
-        display: none;
-      }
-    }
+    .chat-body { padding: 16px 16px; }
+    .chat-header { padding: 16px 18px 12px; }
+    .chat-input-area { padding: 12px 16px 16px; }
+    .sphere-welcome-text { display: none; }
+  }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
@@ -535,7 +623,7 @@
           alt="High Tide" />
         <div class="info-right">
           <h3>Interstellar</h3>
-          <p class="genre">Sci Fi • Thriller • Cosmic</p>
+          <p class="genre">Sci-Fi • Thriller • Mystery</p>
           <p class="description"> A cerebral sci-fi epic directed by Christopher Nolan, following astronaut Cooper
             (Matthew McConaughey) as he leads a mission through a wormhole near Saturn to find a habitable planet for
             humanity.</p>
@@ -573,7 +661,7 @@
           alt="Eden" />
         <div class="info-right">
           <h3>Eden (2025)</h3>
-          <p class="genre">Thriller • Drama • Survival</p>
+          <p class="genre">Thriller • Drama • Mystery</p>
           <p class="description">Driven by a desire for change, a group of Europeans flee to the uninhabited Galápagos
             Islands to build a utopia, only to discover that paradise comes at a deadly cost.</p>
           <div class="btn-group">
@@ -629,7 +717,7 @@
           alt="Incantation" />
         <div class="info-right">
           <h3>Incantation (2022)</h3>
-          <p class="genre">Horror • Found Footage • Supernatural</p>
+          <p class="genre">Horror • Supernatural</p>
           <p class="description">Six years after breaking a religious taboo, a woman must fight to protect her daughter
             from the deadly curse that has come back to haunt them.</p>
           <div class="btn-group">
@@ -666,7 +754,7 @@
           alt="Hereditary" />
         <div class="info-right">
           <h3>Hereditary (2018)</h3>
-          <p class="genre">Horror • Drama • Mystery</p>
+          <p class="genre">Horror • Drama • Psychological</p>
           <p class="description">After the family matriarch passes away, a grieving family is haunted by tragic and
             disturbing occurrences and begins to unravel dark secrets about their ancestry.</p>
           <div class="btn-group">
@@ -802,7 +890,7 @@
           alt="Ballerina" />
         <div class="info-right">
           <h3>Ballerina (2024)</h3>
-          <p class="genre">Action • Thriller • Crime</p>
+          <p class="genre">Action • Thriller • Crime • Revenge</p>
           <p class="description">A deadly assassin trained in the traditions of the Ruska Roma seeks revenge against
             those who destroyed her family.</p>
           <div class="btn-group">
@@ -838,7 +926,7 @@
           alt="Fantastic Four" />
         <div class="info-right">
           <h3>Fantastic Four (2025)</h3>
-          <p class="genre">Action • Superhero • Sci-Fi</p>
+          <p class="genre">Action • Sci-Fi</p>
           <p class="description">Four astronauts gain extraordinary powers after a space mission goes wrong and must
             unite to protect Earth from cosmic threats.</p>
           <div class="btn-group">
@@ -856,7 +944,7 @@
           alt="Eden" />
         <div class="info-right">
           <h3>Eden (2025)</h3>
-          <p class="genre">Thriller • Survival • Drama</p>
+          <p class="genre">Thriller • Drama • Mystery</p>
           <p class="description">A group of people abandon society to forge a new life in the remote Galapagos, only to
             discover that paradise comes at a terrifying price.</p>
           <div class="btn-group">
@@ -1028,7 +1116,7 @@
           alt="K.G.F: Chapter 2" />
         <div class="info-right">
           <h3>K.G.F: Chapter 2</h3>
-          <p class="genre">Action • Thriller</p>
+          <p class="genre">Indian • Action • Thriller</p>
           <p class="description">The blood-soaked land of Kolar Gold Fields (KGF) has a new overlord now - Rocky, whose
             name strikes fear in the heart of his foes.</p>
           <div class="btn-group">
@@ -1046,7 +1134,7 @@
           alt="Saiyaara" />
         <div class="info-right">
           <h3>Saiyaara (2025)</h3>
-          <p class="genre">Drama • Musical • Romantic</p>
+          <p class="genre">Indian • Drama • Musical • Romance</p>
           <p class="description">An intense love story filled with soulful music that will break your heart and heal it
             at the same time.</p>
           <div class="btn-group">
@@ -1064,7 +1152,7 @@
           alt="Kantara: Chapter 1" />
         <div class="info-right">
           <h3>Kantara: Chapter 1 (2025) Kannada</h3>
-          <p class="genre">Action • Fantasy • Thriller</p>
+          <p class="genre">Indian • Action • Fantasy • Thriller</p>
           <p class="description">Set during the reign of the Kadambas of Banavasi, this prequel explores the origins of
             the Panjurli Daiva and the intense conflict between nature, humanity, and the divine.</p>
           <div class="btn-group">
@@ -1081,7 +1169,7 @@
           alt="Aap Jaisa Koi" />
         <div class="info-right">
           <h3>Aap Jaisa Koi (2025)</h3>
-          <p class="genre">Romance • Drama</p>
+          <p class="genre">Indian • Romance • Drama</p>
           <p class="description">A heartwarming tale of love and self-discovery as a lonely teacher finds an unexpected
             connection.</p>
           <div class="btn-group">
@@ -1099,7 +1187,7 @@
           alt="Article 370" />
         <div class="info-right">
           <h3>Article 370</h3>
-          <p class="genre">Political • Action • Drama</p>
+          <p class="genre">Indian • Action • Drama • History</p>
           <p class="description">An intense political drama that evokes a sense of nationalism while exploring the
             events behind the historic decision.</p>
           <div class="btn-group">
@@ -1117,7 +1205,7 @@
           alt="Metro In Dino" />
         <div class="info-right">
           <h3>Metro In Dino (2025)</h3>
-          <p class="genre">Drama • Romance</p>
+          <p class="genre">Indian • Drama • Romance</p>
           <p class="description">An anthology exploring bittersweet relationships and the various moods of love in a
             contemporary metropolis.</p>
           <div class="btn-group">
@@ -1135,7 +1223,7 @@
           alt="Sector 36" />
         <div class="info-right">
           <h3>Sector 36</h3>
-          <p class="genre">Crime • Thriller</p>
+          <p class="genre">Indian • Crime • Thriller</p>
           <p class="description">Based on true events, this harrowing thriller exposes the dark underbelly of a city and
             a corrupt system.</p>
           <div class="btn-group">
@@ -1153,7 +1241,7 @@
           alt="CTRL" />
         <div class="info-right">
           <h3>CTRL (2024)</h3>
-          <p class="genre">Thriller • Sci-Fi</p>
+          <p class="genre">Indian • Thriller • Sci-Fi</p>
           <p class="description">An influencer couple’s perfect life unravels when they turn to an AI app to fix their
             problems, but it takes control.</p>
           <div class="btn-group">
@@ -1171,7 +1259,7 @@
           alt="Housefull 5" />
         <div class="info-right">
           <h3>Housefull 5 (2025)</h3>
-          <p class="genre">Comedy • Thriller</p>
+          <p class="genre">Indian • Comedy • Thriller</p>
           <p class="description">India’s biggest comedy franchise returns with 5x the madness, chaos, and confusion set
             entirely on a cruise ship.</p>
           <div class="btn-group">
@@ -1197,7 +1285,7 @@
           alt="Dhurandhar" />
         <div class="info-right">
           <h3>Dhurandhar</h3>
-          <p class="genre">Action • Thriller</p>
+          <p class="genre">Indian • Action • Thriller</p>
           <p class="description">A mysterious traveller slips into the underworld to tear apart a deadly nexus from
             within.</p>
           <div class="btn-group">
@@ -1289,7 +1377,7 @@
           alt="Yeh Jawaani Hai Deewani" />
         <div class="info-right">
           <h3>Yeh Jawaani Hai Deewani</h3>
-          <p class="genre">Comedy • Thriller</p>
+          <p class="genre">Indian • Bollywood • Comedy • Romance</p>
           <p class="description">A mysterious traveller slips into the underworld to tear apart a deadly nexus from
             within.</p>
           <div class="btn-group">
@@ -1308,7 +1396,7 @@
           alt="Salaar" />
         <div class="info-right">
           <h3>Salaar</h3>
-          <p class="genre">Action • Thriller</p>
+          <p class="genre">Indian • Action • Thriller</p>
           <p class="description">A mysterious traveller slips into the underworld to tear apart a deadly nexus from
             within.</p>
           <div class="btn-group">
@@ -1327,7 +1415,7 @@
           alt="K.G.F: Chapter 2" />
         <div class="info-right">
           <h3>K.G.F: Chapter 2</h3>
-          <p class="genre">Action • Thriller</p>
+          <p class="genre">Indian • Action • Thriller</p>
           <p class="description">The blood-soaked land of Kolar Gold Fields (KGF) has a new overlord now - Rocky, whose
             name strikes fear in the heart of his foes.</p>
           <div class="btn-group">
@@ -1346,7 +1434,7 @@
           alt="Devara: Part 1" />
         <div class="info-right">
           <h3>Devara: Part 1</h3>
-          <p class="genre">Action • Thriller</p>
+          <p class="genre">Indian • Action • Thriller</p>
           <p class="description">Devara, a fearless man from a coastal region, embarks on a perilous journey into the
             treacherous world of the sea to safeguard the lives of his people.</p>
           <div class="btn-group">
@@ -1377,7 +1465,7 @@
           alt="Toxic" />
         <div class="info-right">
           <h3>Toxic (2026)</h3>
-          <p class="genre">Action • Thriller</p>
+          <p class="genre">Indian • Action • Thriller</p>
           <p class="description">A Fairy Tale for Grown-ups. A gripping tale of crime and deception set in the drug
             cartel world of 1980s Goa.</p>
           <div class="btn-group">
@@ -1395,7 +1483,7 @@
           alt="Chatha Pacha: The Ring of Rowdies" />
         <div class="info-right">
           <h3>Chatha Pacha: The Ring of Rowdies (2026)</h3>
-          <p class="genre">Action • Comedy • Sports</p>
+          <p class="genre">Indian • Action • Comedy • Sports</p>
           <p class="description">
             "The Ring of Rowdies." In the vibrant streets of Fort Kochi, a ragtag
             group of locals gets drawn into a WWE-inspired wrestling tournament.
@@ -1415,7 +1503,7 @@
           alt="Varanasi (2027)" />
         <div class="info-right">
           <h3>Varanasi (2027)</h3>
-          <p class="genre">Action • Adventure • Fantasy</p>
+          <p class="genre">Indian • Action • Adventure • Fantasy</p>
           <p class="description">
             S.S. Rajamouli's global epic. Mahesh Babu stars as Rudhra in a time-spanning
             mythological adventure that bridges ancient Kashi with the modern world.
@@ -1437,7 +1525,7 @@
           alt="Tu Meri Main Tera" />
         <div class="info-right">
           <h3>Tu Meri Main Tera...</h3>
-          <p class="genre">Romance • Comedy</p>
+          <p class="genre">Indian • Bollywood • Romance • Comedy</p>
           <p class="description">A vibrant romantic comedy exploring the chaos of modern relationships and love.</p>
           <div class="btn-group">
             <a href="#">
@@ -1454,7 +1542,7 @@
           alt="Ikkis" />
         <div class="info-right">
           <h3>Ikkis (2026)</h3>
-          <p class="genre">Biographical • Patriotic</p>
+          <p class="genre">Indian • Biography • War</p>
           <p class="description">A war drama based on the life of Second Lieutenant Arun Khetarpal, the youngest Param
             Vir Chakra recipient.</p>
           <div class="btn-group">
@@ -1472,7 +1560,7 @@
           alt="Ramayana" />
         <div class="info-right">
           <h3>Ramayana: Part 1</h3>
-          <p class="genre">Mythological • Drama</p>
+          <p class="genre">Indian • Drama • Fantasy</p>
           <p class="description">A grand retelling of the epic Ramayana, capturing the timeless battle between good and
             evil.</p>
           <div class="btn-group">
@@ -1490,7 +1578,7 @@
           alt="Mahaavtar" />
         <div class="info-right">
           <h3>Mahaavtar (2025)</h3>
-          <p class="genre">Mythological • Action • Animation</p>
+          <p class="genre">Indian • Action • Animation • Fantasy</p>
           <p class="description">When Faith is Challenged, He Appears. A visually stunning story of Lord Vishnu's
             avatars.</p>
           <div class="btn-group">
@@ -1520,7 +1608,7 @@
           alt="I Want to Eat Your Pancreas" />
         <div class="info-right">
           <h3>I Want to Eat Your Pancreas</h3>
-          <p class="genre">Drama • Romance • Slice of Life</p>
+          <p class="genre">Anime • Drama • Romance • Slice of Life</p>
           <p class="description">
             An aloof high schooler discovers a diary belonging to his popular classmate, Sakura, revealing her secret
             terminal illness.
@@ -1539,7 +1627,7 @@
           alt="5 Centimeters Per Second" />
         <div class="info-right">
           <h3>5 Centimeters Per Second</h3>
-          <p class="genre">Drama • Romance • Slice of Life</p>
+          <p class="genre">Anime • Drama • Romance • Slice of Life</p>
           <p class="description">
             Told in three interconnected segments, a young man named Takaki navigates life as cruel winters, technology,
             and adulthood test his distance from a childhood love.
@@ -1559,7 +1647,7 @@
           alt="Your Name" />
         <div class="info-right">
           <h3>Your Name</h3>
-          <p class="genre">Romance • Fantasy • Drama</p>
+          <p class="genre">Anime • Romance • Fantasy • Drama</p>
           <p class="description">
             Two high schoolers engage in a mysterious body-swapping connection that draws them together to save a town
             from an impending disaster.
@@ -1578,7 +1666,7 @@
           alt="Spirited Away" />
         <div class="info-right">
           <h3>Spirited Away</h3>
-          <p class="genre">Fantasy • Adventure • Animation</p>
+          <p class="genre">Anime • Fantasy • Adventure • Animation</p>
           <p class="description">
             A young girl wanders into a world of spirits ruled by a sorceress and must work in a magical bathhouse to
             free her parents and return to the human world.
@@ -1598,7 +1686,7 @@
           alt="A Silent Voice" />
         <div class="info-right">
           <h3>A Silent Voice</h3>
-          <p class="genre">Drama • Romance • Slice of Life</p>
+          <p class="genre">Anime • Drama • Romance • Slice of Life</p>
           <p class="description">
             A former bully attempts to make amends with the deaf girl he tormented in elementary school, seeking
             redemption and self-forgiveness.
@@ -1616,7 +1704,7 @@
         <img src="https://m.media-amazon.com/images/I/81jSJRqb9IL._AC_UF1000,1000_QL80_.jpg" alt="Princess Mononoke" />
         <div class="info-right">
           <h3>Princess Mononoke</h3>
-          <p class="genre">Action • Adventure • Fantasy</p>
+          <p class="genre">Anime • Action • Adventure • Fantasy</p>
           <p class="description">
             Afflicted by a deadly curse, a young warrior travels west and becomes entangled in a war between a mining
             colony and the gods of the forest.
@@ -1636,7 +1724,7 @@
           alt="Weathering with You" />
         <div class="info-right">
           <h3>Weathering with You</h3>
-          <p class="genre">Romance • Fantasy • Drama</p>
+          <p class="genre">Anime • Romance • Fantasy • Drama</p>
           <p class="description">
             A runaway high school student in a constantly raining Tokyo befriends an orphan girl who has the mysterious
             ability to manipulate the weather.
@@ -1656,7 +1744,7 @@
           alt="Howl's Moving Castle" />
         <div class="info-right">
           <h3>Howl's Moving Castle</h3>
-          <p class="genre">Fantasy • Adventure • Romance</p>
+          <p class="genre">Anime • Fantasy • Adventure • Romance</p>
           <p class="description">
             When an unconfident young woman is cursed with an old body by a spiteful witch, her only chance of breaking
             the spell lies with a self-indulgent yet insecure young wizard and his companions in his legged, walking
@@ -1675,7 +1763,7 @@
         <img src="https://upload.wikimedia.org/wikipedia/en/5/5d/AKIRA_%281988_poster%29.jpg" alt="Akira" />
         <div class="info-right">
           <h3>Akira</h3>
-          <p class="genre">Sci-Fi • Action • Cyberpunk</p>
+          <p class="genre">Anime • Sci-Fi • Action</p>
           <p class="description">
             In a future Neo-Tokyo, a biker gang member acquires telekinetic powers that threaten to destroy the city,
             forcing his childhood friend to fight him to save the world.
@@ -1695,7 +1783,7 @@
           alt="My Neighbor Totoro" />
         <div class="info-right">
           <h3>My Neighbor Totoro</h3>
-          <p class="genre">Fantasy • Family • Adventure</p>
+          <p class="genre">Anime • Fantasy • Family • Animation</p>
           <p class="description">
             Two sisters move to the countryside to be near their ailing mother and discover a world of magical forest
             spirits, including the lovable giant, Totoro.
@@ -1715,7 +1803,7 @@
           alt="Demon Slayer: Mugen Train" />
         <div class="info-right">
           <h3>Demon Slayer: Mugen Train</h3>
-          <p class="genre">Action • Dark Fantasy • Supernatural</p>
+          <p class="genre">Anime • Action • Dark Fantasy • Supernatural</p>
           <p class="description">
             Tanjiro and his friends join the Flame Hashira Kyojuro Rengoku on a train to hunt down a demon that has
             killed many demon slayers and trapped the passengers in nightmares.
@@ -1735,7 +1823,7 @@
           alt="Grave of the Fireflies" />
         <div class="info-right">
           <h3>Grave of the Fireflies</h3>
-          <p class="genre">War • Drama • Tragedy</p>
+          <p class="genre">Anime • War • Drama • Emotional</p>
           <p class="description">
             A devastating story of two siblings, Seita and Setsuko, struggling to survive on their own in Japan during
             the final months of the Second World War.
@@ -1788,7 +1876,7 @@
           alt="Parasite" />
         <div class="info-right">
           <h3>Parasite (2019)</h3>
-          <p class="genre">Thriller • Drama • Comedy</p>
+          <p class="genre">Korean • Thriller • Drama • Comedy</p>
           <p class="description">
             Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park
             family and the destitute Kim clan. Best Picture Winner.
@@ -1808,7 +1896,7 @@
           alt="Everything Everywhere All At Once" />
         <div class="info-right">
           <h3>Everything Everywhere All At Once</h3>
-          <p class="genre">Action • Adventure • Sci-Fi</p>
+          <p class="genre">Action • Adventure • Sci-Fi • Mind-Bending</p>
           <p class="description">
             A middle-aged Chinese immigrant is swept into an insane adventure in which she alone can save the world by
             exploring other universes. Best Picture Winner.
@@ -1848,7 +1936,7 @@
           alt="La La Land" />
         <div class="info-right">
           <h3>La La Land</h3>
-          <p class="genre">Comedy • Drama • Music</p>
+          <p class="genre">Comedy • Drama • Musical</p>
           <p class="description">
             While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to
             reconcile their aspirations for the future.
@@ -1868,7 +1956,7 @@
           alt="Joker" />
         <div class="info-right">
           <h3>Joker (2019)</h3>
-          <p class="genre">Crime • Drama • Thriller</p>
+          <p class="genre">Crime • Drama • Psychological</p>
           <p class="description">
             In Gotham City, mentally troubled comedian Arthur Fleck is disregarded and mistreated by society. He then
             embarks on a downward spiral of revolution and bloody crime.
@@ -1927,7 +2015,7 @@
           alt="RRR" />
         <div class="info-right">
           <h3>RRR</h3>
-          <p class="genre">Action • Drama </p>
+          <p class="genre">Indian • Action • Drama</p>
           <p class="description">
             A fictional history of two legendary revolutionaries' journey away from home before they began fighting for
             their country in the 1920s.
@@ -1947,7 +2035,7 @@
           alt="HAQ" />
         <div class="info-right">
           <h3>HAQ</h3>
-          <p class="genre">Biography • Drama • History</p>
+          <p class="genre">Indian • Biography • Drama • History</p>
           <p class="description">
             In 1980s India, Shazia Bano takes her husband to court after he abandons her and their children, sparking a
             national battle over faith, women’s rights, and justice.
@@ -1967,7 +2055,7 @@
           alt="The Queen's Gambit" />
         <div class="info-right">
           <h3>The Queen's Gambit</h3>
-          <p class="genre">Drama • Sport</p>
+          <p class="genre">Drama • Sports</p>
           <p class="description">
             Orphaned at the tender age of nine, prodigious introvert Beth Harmon discovers and masters the game of chess
             in 1960s USA. Winner of 11 Primetime Emmys.
@@ -2027,7 +2115,7 @@
           alt="Tenet" />
         <div class="info-right">
           <h3>Tenet</h3>
-          <p class="genre">Action • Thriller • Sci-Fi</p>
+          <p class="genre">Action • Thriller • Sci-Fi • Mind-Bending</p>
           <p class="description">
             Armed with only one word - Tenet - and fighting for the survival of the entire world, the Protagonist
             journeys through a twilight world of international espionage on a mission that will unfold in something
@@ -2101,7 +2189,7 @@
           alt="Parasite" />
         <div class="info-right">
           <h3>Parasite (2019)</h3>
-          <p class="genre">Thriller • Black Comedy</p>
+          <p class="genre">Korean • Thriller • Drama • Comedy</p>
           <p class="description">Greed and class discrimination threaten the newly formed symbiotic relationship between
             the wealthy Park family and the destitute Kim clan.</p>
           <div class="btn-group">
@@ -2120,7 +2208,7 @@
           alt="Train to Busan" />
         <div class="info-right">
           <h3>Train to Busan (2016)</h3>
-          <p class="genre">Horror • Action</p>
+          <p class="genre">Korean • Horror • Action</p>
           <p class="description">While a zombie virus breaks out in South Korea, passengers struggle to survive on the
             train from Seoul to Busan.</p>
           <div class="btn-group">
@@ -2139,7 +2227,7 @@
           alt="Oldboy" />
         <div class="info-right">
           <h3>Oldboy (2003)</h3>
-          <p class="genre">Action • Mystery</p>
+          <p class="genre">Korean • Action • Mystery • Revenge</p>
           <p class="description">After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to
             find that he must find his captor in five days.</p>
           <div class="btn-group">
@@ -2158,7 +2246,7 @@
           alt="The Handmaiden" />
         <div class="info-right">
           <h3>The Handmaiden (2016)</h3>
-          <p class="genre">Thriller • Romance</p>
+          <p class="genre">Korean • Thriller • Romance • Mystery</p>
           <p class="description">A woman is hired as a handmaiden to a Japanese heiress, but secretly she is involved in
             a plot to defraud her.</p>
           <div class="btn-group">
@@ -2177,7 +2265,7 @@
           alt="Memories of Murder" />
         <div class="info-right">
           <h3>Memories of Murder (2003)</h3>
-          <p class="genre">Crime • Drama</p>
+          <p class="genre">Korean • Crime • Drama • Mystery</p>
           <p class="description">In a small Korean province in 1986, two detectives struggle with the case of multiple
             young women being found raped and murdered.</p>
           <div class="btn-group">
@@ -2196,7 +2284,7 @@
           alt="I Saw the Devil" />
         <div class="info-right">
           <h3>I Saw the Devil (2010)</h3>
-          <p class="genre">Thriller • Action</p>
+          <p class="genre">Korean • Thriller • Action • Revenge</p>
           <p class="description">A secret agent exacts revenge on a serial killer through a series of captures and
             releases.</p>
           <div class="btn-group">
@@ -2215,7 +2303,7 @@
           alt="The Wailing" />
         <div class="info-right">
           <h3>The Wailing (2016)</h3>
-          <p class="genre">Horror • Mystery</p>
+          <p class="genre">Korean • Horror • Mystery • Supernatural</p>
           <p class="description">A stranger arrives in a little village and soon after a mysterious sickness starts
             spreading.</p>
           <div class="btn-group">
@@ -2234,7 +2322,7 @@
           alt="Exhuma" />
         <div class="info-right">
           <h3>Exhuma (2024)</h3>
-          <p class="genre">Horror • Thriller</p>
+          <p class="genre">Korean • Horror • Thriller • Supernatural</p>
           <p class="description">A wealthy family contacts a shaman duo to save their newborn, leading them to a
             mysterious grave in South Korea.</p>
           <div class="btn-group">
@@ -2255,7 +2343,7 @@
           alt="A Taxi Driver" />
         <div class="info-right">
           <h3>A Taxi Driver (2017)</h3>
-          <p class="genre">Action • History</p>
+          <p class="genre">Korean • Action • History</p>
           <p class="description">A taxi driver from Seoul helps a German reporter cover the Gwangju Uprising in 1980.
           </p>
           <div class="btn-group">
@@ -2273,7 +2361,7 @@
           alt="The Host" />
         <div class="info-right">
           <h3>The Host (2006)</h3>
-          <p class="genre">Sci-Fi • Horror</p>
+          <p class="genre">Korean • Sci-Fi • Horror</p>
           <p class="description">A monster emerges from Seoul's Han River and attacks people. One victim's loving family
             does what it can to rescue her.</p>
           <div class="btn-group">
@@ -2292,7 +2380,7 @@
           alt="Decision to Leave" />
         <div class="info-right">
           <h3>Decision to Leave (2022)</h3>
-          <p class="genre">Mystery • Romance</p>
+          <p class="genre">Korean • Mystery • Romance</p>
           <p class="description">A detective investigating a man's death in the mountains meets the dead man's
             mysterious wife in the course of his dogged sleuthing.</p>
           <div class="btn-group">
@@ -2311,7 +2399,7 @@
           alt="Concrete Utopia" />
         <div class="info-right">
           <h3>Concrete Utopia (2023)</h3>
-          <p class="genre">Thriller • Sci-Fi</p>
+          <p class="genre">Korean • Thriller • Sci-Fi • Drama</p>
           <p class="description">Survivors gather at the only apartment building remaining in Seoul after a massive
             earthquake.</p>
           <div class="btn-group">
@@ -2330,7 +2418,7 @@
           alt="Forgotten" />
         <div class="info-right">
           <h3>Forgotten (2017)</h3>
-          <p class="genre">Mystery • Thriller</p>
+          <p class="genre">Korean • Mystery • Thriller • Twist</p>
           <p class="description">Jin-seok's brother returns after being kidnapped for 19 days with no memory of what
             happened.</p>
           <div class="btn-group">
@@ -2349,7 +2437,7 @@
           alt="The Roundup" />
         <div class="info-right">
           <h3>The Roundup (2022)</h3>
-          <p class="genre">Action • Crime</p>
+          <p class="genre">Korean • Action • Crime</p>
           <p class="description">Follows Ma Seok-do, who heads to a foreign country to extradite a suspect, but
             discovers additional murder cases.</p>
           <div class="btn-group">
@@ -2476,56 +2564,75 @@
     </div>
   </div>
 
-  {{!-- Scripts --}}
-  <div class="sphere-overlay" id="sphereOverlay" onclick="toggleSphereChat()"></div>
+ <div class="sphere-overlay" id="sphereOverlay" onclick="toggleSphereChat()"></div>
 
   <div class="assistive-ball" id="assistiveBall" onclick="toggleSphereChat()">
     <div class="sphere-welcome-text" id="sphereWelcome">
-      <div class="typing-text">Hi {{name}}! , I am SphereBot. Need help? Click me.</div>
+      <div class="typing-text">Hi {{name}}! I'm SphereBot — click me 👋</div>
     </div>
-    <p style="font-size: 9px; margin-top: 2px;">SphereBot</p>
+    <p>SphereBot</p>
   </div>
 
   <div class="sphere-chat-window" id="sphereChat">
-    <div class="chat-header">
-      <div class="header-info">
-        <img src="/assets/hand1.png" alt="Bot">
-        <div>
-          <h4>SphereBot</h4>
-          <span class="status">● Online & Sassy</span>
+    <div class="sphere-chat-inner">
+
+      <div class="chat-header">
+        <div class="header-info">
+          <div class="sphere-avatar">✦</div>
+          <div class="header-text">
+            <h4>SphereBot</h4>
+            <div class="status-line">
+              <div class="status-dot"></div>
+              <span class="status-label">Online · AI-Powered</span>
+            </div>
+          </div>
         </div>
+        <button class="close-chat" onclick="toggleSphereChat()" aria-label="Close">✕</button>
       </div>
-      <button class="close-chat" onclick="toggleSphereChat()">×</button>
-    </div>
 
-    <div class="chat-body" id="chatBody">
-    </div>
+      <div class="chat-body" id="chatBody"></div>
 
-    <div class="chat-input-area">
-      <input type="text" id="sphereInput" placeholder="How are you feeling?" autocomplete="off">
-      <button onclick="handleUserMessage()">➤</button>
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <input
+            type="text"
+            id="sphereInput"
+            placeholder="Ask SphereBot anything…"
+            autocomplete="off"
+          />
+        </div>
+        <button class="chat-send-btn" onclick="handleUserMessage()" aria-label="Send">➤</button>
+      </div>
+
     </div>
   </div>
 
-  <script>
-    // 4. Conversation Logic
-    function startConversation() {
-      showTyping();
-      setTimeout(() => {
-        removeTyping();
-        addMessage(`Hey ${sphereData.userName}! I'm SphereBot. 🤖`, 'bot');
-      }, 500);
+ <script>
+    // Override addChips to use new class name
+    const _origAddChips = typeof addChips !== 'undefined' ? addChips : null;
 
-      setTimeout(() => {
-        showTyping();
-        setTimeout(() => {
-          removeTyping();
-          addMessage("Tell me how you are feeling (e.g., Sad, Bored, Excited) and I'll find the perfect watch for you!", 'bot');
-        }, 1500);
-      }, 1000);
+    function addChips(options) {
+      const wrap = document.createElement("div");
+      wrap.className = "chips-row";
+      wrap.id = "quickChips";
+
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "sphere-chip";
+        btn.innerText = opt;
+        btn.onclick = () => {
+          document.getElementById("quickChips")?.remove();
+          document.getElementById("sphereInput").value = opt;
+          handleUserMessage();
+        };
+        wrap.appendChild(btn);
+      });
+
+      document.getElementById("chatBody").appendChild(wrap);
+      document.getElementById("chatBody").scrollTop = 99999;
     }
-
   </script>
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const video = document.getElementById("heroVideo");

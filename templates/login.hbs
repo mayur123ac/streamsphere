@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login</title>
+  <title>StreamSphere - Login</title>
   <link rel="stylesheet" href="/css/login.css">
 
   <style>
@@ -300,6 +300,22 @@
         feedback.innerHTML = '<span class="text-error">Server connection failed.</span>';
       }
     }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const name     = sessionStorage.getItem('autofill_name');
+      const email    = sessionStorage.getItem('autofill_email');
+      const password = sessionStorage.getItem('autofill_password');
+
+      if (name)     document.getElementById('login-name').value     = name;
+      if (email)    document.getElementById('login-email').value    = email;
+      if (password) document.getElementById('login-password').value = password;
+
+      // Clear after use so it doesn't persist
+      sessionStorage.removeItem('autofill_name');
+      sessionStorage.removeItem('autofill_email');
+      sessionStorage.removeItem('autofill_password');
+    });
   </script>
 </body>
 

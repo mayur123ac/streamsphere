@@ -9,17 +9,15 @@
   <link rel="stylesheet" href="/css/playmovie.css" />
 
   <style>
-    /* 🔹 FIX: Force player to fit mobile screen exactly */
     .player-container {
       height: 100dvh !important;
       width: 100%;
       position: relative;
       overflow: hidden;
       background: black;
-      user-select: none; /* Prevent text selection */
+      user-select: none;
     }
 
-    /* 🔹 FIX: Lift controls up */
     .controls {
       position: absolute;
       bottom: 0;
@@ -30,6 +28,8 @@
       padding-left: 20px;
       padding-right: 20px;
       z-index: 2147483647;
+      display: flex;
+      align-items: center;
     }
 
     .zoomed {
@@ -37,9 +37,6 @@
       transform: scale(1.12);
     }
 
-    /* --- NEW STYLES --- */
-
-    /* Loader */
     .loader {
       position: absolute;
       top: 50%;
@@ -60,7 +57,6 @@
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* Skip Buttons */
     .skip-btn {
       font-size: 18px;
       font-weight: bold;
@@ -73,7 +69,17 @@
     }
     .skip-btn:active { transform: scale(0.9); }
 
-    .progress-bar { cursor: pointer; }
+    .progress-bar { cursor: pointer; flex-grow: 1; margin: 0 15px; }
+    
+    .btn {
+      cursor: pointer;
+      margin: 0 10px;
+      font-size: 18px;
+      user-select: none;
+    }
+    
+    /* Highlight Cast Button when active */
+    .cast-active { color: #4285F4 !important; }
   </style>
 </head>
 
@@ -83,9 +89,7 @@
     <div id="loader" class="loader"></div>
 
     <div class="top-overlay" id="topOverlay">
-      <div class="rating">
-        | <h1></h1>
-      </div>
+      <div class="rating">| <h1></h1></div>
       <div class="title">The Avengers 2012</div>
       <div class="desc hidden1">Action • Thriller • Revenge • 4K HDR</div>
     </div>
@@ -94,18 +98,14 @@
       <source
         src="https://my-movie-bucket01stremesphere.s3.eu-north-1.amazonaws.com/The+Avengers+(2012)+2160p+4K+BluRay+x265+10bit+HDR++%5BHindi+DD5.1+640Kbps+%2B+English+7.1%5D+Esub+~+PSA.mkv"
         type="video/mp4" />
-      
       <track label="English" kind="subtitles" srclang="en" src="/subtitles/en.vtt" default />
       <track label="Hindi" kind="subtitles" srclang="hi" src="/subtitles/hi.vtt" />
       Your browser does not support HTML5 video.
     </video>
 
     <div class="controls bottom-overlay hidden1" id="controls">
-      
       <span class="skip-btn" id="rewindBtn">◀◀</span>
-
       <span class="btn" id="playPause">▶</span>
-
       <span class="skip-btn" id="forwardBtn">▶▶</span>
 
       <div class="time" id="time">0:00 / 0:00</div>
@@ -116,6 +116,7 @@
       
       <span class="btn" id="mute">🔊</span>
       <span class="btn" id="zoom">🔍</span>
+      <span class="btn" id="castBtn" title="Cast to TV">📺</span>
       <span class="btn" id="fullscreen">⛶</span>
     </div>
   </div>
@@ -131,17 +132,15 @@
     const topOverlay = document.getElementById("topOverlay");
     const controls = document.getElementById("controls");
     const zoomBtn = document.getElementById("zoom"); 
-    
-    // New Elements
     const loader = document.getElementById("loader");
     const rewindBtn = document.getElementById("rewindBtn");
     const forwardBtn = document.getElementById("forwardBtn");
+    const castBtn = document.getElementById("castBtn");
 
     let hideControlsTimeout;
     let isZoomed = false; 
-    let isDragging = false; // Smooth Drag Flag
+    let isDragging = false; 
 
-    // Helper: format time
     const formatTime = (sec) => {
       if(!sec || isNaN(sec)) return "0:00";
       const m = Math.floor(sec / 60);
@@ -149,148 +148,77 @@
       return `${m}:${s.toString().padStart(2, "0")}`;
     };
 
-    /* ===================== LOADER LOGIC ===================== */
+    /* --- STANDARD PLAYER CONTROLS --- */
     movie.addEventListener('waiting', () => loader.style.display = 'block');
     movie.addEventListener('seeking', () => loader.style.display = 'block');
     movie.addEventListener('playing', () => loader.style.display = 'none');
     movie.addEventListener('canplay', () => loader.style.display = 'none');
 
-    /* ===================== SKIP BUTTONS ===================== */
-    rewindBtn.onclick = (e) => {
-      e.stopPropagation();
-      movie.currentTime = Math.max(0, movie.currentTime - 10);
-    };
+    rewindBtn.onclick = (e) => { e.stopPropagation(); movie.currentTime = Math.max(0, movie.currentTime - 10); };
+    forwardBtn.onclick = (e) => { e.stopPropagation(); movie.currentTime = Math.min(movie.duration, movie.currentTime + 10); };
 
-    forwardBtn.onclick = (e) => {
-      e.stopPropagation();
-      movie.currentTime = Math.min(movie.duration, movie.currentTime + 10);
-    };
-
-    /* ===================== SMOOTH DRAG LOGIC ===================== */
     const updateProgress = (clientX) => {
       const rect = progressBar.getBoundingClientRect();
-      let percent = (clientX - rect.left) / rect.width;
-      percent = Math.max(0, Math.min(1, percent));
+      let percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
       progress.style.width = (percent * 100) + "%";
-      
-      if(movie.duration) {
-        const seekTime = percent * movie.duration;
-        timeLabel.textContent = `${formatTime(seekTime)} / ${formatTime(movie.duration)}`;
-      }
+      if(movie.duration) timeLabel.textContent = `${formatTime(percent * movie.duration)} / ${formatTime(movie.duration)}`;
       return percent;
     };
 
-    progressBar.addEventListener('mousedown', (e) => {
-      e.stopPropagation();
-      isDragging = true;
-      updateProgress(e.clientX);
-    });
-
-    document.addEventListener('mousemove', (e) => {
-      if (isDragging) updateProgress(e.clientX);
-    });
-
-    document.addEventListener('mouseup', (e) => {
+    const handleDragEnd = (clientX) => {
       if (isDragging) {
         isDragging = false;
-        const percent = updateProgress(e.clientX);
-        if(movie.duration) movie.currentTime = percent * movie.duration;
+        if(movie.duration) movie.currentTime = updateProgress(clientX) * movie.duration;
       }
-    });
+    };
 
-    // Touch Support
-    progressBar.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      isDragging = true;
-      updateProgress(e.touches[0].clientX);
-    }, { passive: false });
+    progressBar.addEventListener('mousedown', (e) => { e.stopPropagation(); isDragging = true; updateProgress(e.clientX); });
+    document.addEventListener('mousemove', (e) => { if (isDragging) updateProgress(e.clientX); });
+    document.addEventListener('mouseup', (e) => handleDragEnd(e.clientX));
 
-    document.addEventListener('touchmove', (e) => {
-      if (isDragging) updateProgress(e.touches[0].clientX);
-    }, { passive: false });
+    progressBar.addEventListener('touchstart', (e) => { e.stopPropagation(); isDragging = true; updateProgress(e.touches[0].clientX); }, { passive: false });
+    document.addEventListener('touchmove', (e) => { if (isDragging) updateProgress(e.touches[0].clientX); }, { passive: false });
+    document.addEventListener('touchend', (e) => handleDragEnd(e.changedTouches[0].clientX));
 
-    document.addEventListener('touchend', (e) => {
-      if (isDragging) {
-        isDragging = false;
-        const percent = updateProgress(e.changedTouches[0].clientX);
-        if(movie.duration) movie.currentTime = percent * movie.duration;
-      }
-    });
-
-    /* ===================== EXISTING LOGIC ===================== */
-    // Update time & progress
     movie.ontimeupdate = () => {
       if (!isDragging && movie.duration) {
-        const current = movie.currentTime;
-        const duration = movie.duration;
-        progress.style.width = (current / duration) * 100 + "%";
-        timeLabel.textContent = `${formatTime(current)} / ${formatTime(duration)}`;
+        progress.style.width = (movie.currentTime / movie.duration) * 100 + "%";
+        timeLabel.textContent = `${formatTime(movie.currentTime)} / ${formatTime(movie.duration)}`;
       }
     };
 
-    // Play/Pause toggle
     playPause.onclick = (e) => {
       e.stopPropagation();
-      if (movie.paused) {
-        movie.play();
-        playPause.textContent = "⏸";
-      } else {
-        movie.pause();
-        playPause.textContent = "▶";
-      }
+      movie.paused ? movie.play() : movie.pause();
+      playPause.textContent = movie.paused ? "▶" : "⏸";
     };
 
-    // Mute toggle
     mute.onclick = (e) => {
       e.stopPropagation();
       movie.muted = !movie.muted;
       mute.textContent = movie.muted ? "🔇" : "🔊";
     };
 
-    // Fullscreen
     fullscreen.onclick = (e) => {
       e.stopPropagation();
-      if (movie.parentElement.requestFullscreen) {
-        movie.parentElement.requestFullscreen();
-      } else if (movie.parentElement.webkitRequestFullscreen) {
-        movie.parentElement.webkitRequestFullscreen();
-      } else if (movie.parentElement.msRequestFullscreen) {
-        movie.parentElement.msRequestFullscreen();
-      }
+      const parent = movie.parentElement;
+      if (parent.requestFullscreen) parent.requestFullscreen();
+      else if (parent.webkitRequestFullscreen) parent.webkitRequestFullscreen();
+      else if (parent.msRequestFullscreen) parent.msRequestFullscreen();
     };
 
-    // Show controls
     const showControls = () => {
-      controls.style.opacity = 1;
-      topOverlay.style.opacity = 1;
+      controls.style.opacity = 1; topOverlay.style.opacity = 1;
       clearTimeout(hideControlsTimeout);
-      hideControlsTimeout = setTimeout(hideControls, 3000);
-    };
-
-    // Hide controls
-    const hideControls = () => {
-      if(movie.paused || isDragging) return;
-      controls.style.opacity = 0;
-      topOverlay.style.opacity = 0;
+      hideControlsTimeout = setTimeout(() => {
+        if(!movie.paused && !isDragging) { controls.style.opacity = 0; topOverlay.style.opacity = 0; }
+      }, 3000);
     };
 
     document.addEventListener("mousemove", showControls);
     document.addEventListener("touchstart", showControls);
-    document.addEventListener("click", (e) => {
-       if (e.target.closest(".controls")) return;
-       showControls();
-    });
+    document.addEventListener("click", (e) => { if (!e.target.closest(".controls")) showControls(); });
 
-    window.onload = () => {
-      movie.play().catch(() => {});
-      if (movie.parentElement.requestFullscreen) {
-        movie.parentElement.requestFullscreen();
-      }
-      hideControlsTimeout = setTimeout(hideControls, 3000);
-    };
-
-    // Zoom Logic
     zoomBtn.onclick = (e) => {
       e.stopPropagation();
       isZoomed = !isZoomed;
@@ -298,8 +226,83 @@
       zoomBtn.textContent = isZoomed ? "🧭" : "🔍";
     };
 
+    /* ===================== NEW CHROMECAST LOGIC ===================== */
+    
+    // 1. Initialize the API once the script loads
+    window.__onGCastApiAvailable = function(isAvailable) {
+      if (isAvailable) {
+        console.log("Cast API is available. Initializing context...");
+        cast.framework.CastContext.getInstance().setOptions({
+          receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+          autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+        });
+      }
+    };
+
+    // 2. Handle the Custom Button Click
+    castBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      
+      console.log("Cast button clicked.");
+
+      if (!window.cast || !window.cast.framework) {
+        console.error("Cast framework not detected.");
+        alert("Chromecast is not available. Ensure you are on Chrome and using a secure local server (HTTPS/localhost).");
+        return;
+      }
+
+      const context = cast.framework.CastContext.getInstance();
+      
+      // Request a session to open the Chrome Cast Menu
+      context.requestSession().then(
+        function() {
+          console.log("Cast session created successfully.");
+          loadMediaToCast();
+        },
+        function(error) {
+          console.error("Cast session failed or was canceled by user:", error);
+        }
+      );
+    });
+
+    // 3. Load the video onto the TV
+    function loadMediaToCast() {
+      const castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+      if (!castSession) {
+        console.error("No active cast session found to load media into.");
+        return;
+      }
+
+      console.log("Loading media to Chromecast...");
+      
+      // Grab the exact video URL from the source
+      const videoSrc = document.querySelector('#moviePlayer source').src;
+      
+      // Tell Chromecast what type of file this is
+      const mediaInfo = new chrome.cast.media.MediaInfo(videoSrc, 'video/mp4');
+      const request = new chrome.cast.media.LoadRequest(mediaInfo);
+      
+      // Start the TV at the exact timestamp the user is currently watching
+      request.currentTime = movie.currentTime; 
+
+      castSession.loadMedia(request).then(
+        function() {
+          console.log("Media successfully loaded on TV!");
+          movie.pause(); // Pause the laptop/phone video
+          playPause.textContent = "▶";
+          castBtn.classList.add("cast-active"); // Highlight the button
+        },
+        function(errorCode) {
+          console.error("Failed to load media on TV. Error code:", errorCode);
+          alert("The TV failed to load the video. Check the console for details.");
+        }
+      );
+    }
   </script>
+  
   <script src="/js/css.js"></script>
+  
+  <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 
 </body>
 </html>
